@@ -1,0 +1,15 @@
+header.menu .mContent .mItems ul.mList li{
+    &.in-poker {
+      display: none;
+    }
+} 
+@media(max-width: 640px){ 
+    header.menu .mContent .mItems ul.mList li{
+        display: none;
+    } 
+    header.menu.menu-show .mContent .mItems ul.mList li {
+        &.in-poker {
+            display: block;
+        }
+    }
+}

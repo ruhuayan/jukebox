@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  token: 'b2ccf222fe88457480f46c69bbdea37d', 
+  // apikey: '6f32ad9311957490ad3fd85af8512862',
+  // apikey: 'a6230220d8msh94568b531d6a5f3p1ad27ejsn69eb45dd9ca4',
+  musixApi: '4d07c6031853884831fd0d79f32d3cbf'
+  // rapidURL: 'https://musixmatchcom-musixmatch.p.rapidapi.com/wsr/1.1/'
 };
 
 /*

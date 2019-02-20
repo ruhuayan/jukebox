@@ -1,0 +1,23 @@
+<div class="chat-title">
+  <div class="chat-icon"><img src="assets/imgs/chatbot.svg" alt="Chatbot avatar" /></div>
+  <div class="chat-name">Chatbot</div>
+  <a class="chat-close" href="javascript:;" (click)="closeChat()"><img src="assets/imgs/close.svg" alt="chat close" /></a>
+</div>
+<div class="chat-list">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let msg of messages" [ngClass]="{'user': msg.sender ==='user'}">
+        <img [src]="msg.sender ==='user'? 'assets/imgs/user.svg': 'assets/imgs/chatbot.svg'" class="avatar"  />
+        <div class="message">
+            {{msg.content}}
+        </div>
+        <!-- <div class="timeform">
+            <i class="fa fa-clock-o" aria-hidden="true"></i> <span class="timestamp">at {{message.timestamp | date : 'dd/MM/yyyy' }}</span>
+        </div> -->
+      </li>
+    </ul>
+</div>
+<div class="chat-control" [class.show] = "show">
+    <textarea aria-label="Enter a message" class="" [(ngModel)]="message.content"></textarea>
+    <!-- <input type="text" class="form-control chatinput" [(ngModel)]="message.content"/> -->
+    <a class="sendbtn" (click)="sendMessage()"><img src="assets/imgs/send.svg" alt="send" /></a>
+</div>
