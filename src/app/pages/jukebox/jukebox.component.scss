@@ -2,12 +2,14 @@
     Created on : Oct 28, 2017, 3:28:53 PM
     Author     : ruhua
 */
-.content .conLeft canvas {
-  width: calc(100% - 1px);
-  margin: 0 auto;
+.conText .conLeft canvas {
+  width: 570px;
+  // width: calc(100% - 1px);
+  // margin: 0 auto;
   height: 250px;
-  background-color: #000;
-  border: 1px solid #000; }
+  // background-color: #000;
+  // border: 1px solid #000; 
+}
 
 #myProgress {
   width: 100%;

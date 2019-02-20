@@ -9,7 +9,7 @@ import { DialogflowService } from './dialogflow.service';
 })
 export class ChatbotComponent implements OnInit {
 
-  messages: Message[] = [new Message('Hi', null, 'chatbot')];
+  messages: Message[] = [new Message('Hi, buddy', null, 'chatbot')];
   message: Message = new Message('', null, 'user');
   @HostBinding('class.show') show = true;
   constructor(private dialogService: DialogflowService) { }
@@ -33,7 +33,7 @@ export class ChatbotComponent implements OnInit {
     this.show = false;
   }
 }
-class Message {
+export class Message {
   sender: string;
   content: string;
   timestamp: Date;

@@ -169,8 +169,20 @@ body{
             width: 30px;
             height: 30px;
           }
+          .message {
+            padding-top: 10px;
+            padding-left: 10px;
+            padding-bottom: 5px;
+            font-size: 14px;
+            color: var(--main-gray-accessible-light);
+          }
           &.user{
             flex-direction: row-reverse;
+            .message {
+              color: var(--main-blue);
+              padding-right: 10px;
+              padding-left: 0;
+            }
           }
         }
       }

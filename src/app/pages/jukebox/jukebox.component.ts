@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 declare let window: any;
 import './string.extensions';
 @Component({
-  selector: 'app-points',
+  selector: 'app-jukebox',
   templateUrl: './jukebox.component.html',
   styleUrls: ['./jukebox.component.scss']
 })
@@ -16,8 +16,9 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   private musics =  ['assets/jukebox/musics/iLoveRocknRoll.mp3', 'assets/jukebox/musics/bailando.mp3',
                       'assets/jukebox/musics/SeuOlharMeChama.mp3'];
   private jukebox: Jukebox;
-  private canvas: any;
-  private drawContext: any;
+  private theme = 1; 
+  // private canvas: any;
+  // private drawContext: any;
   private beatSubsription: Subscription;
   private loadSubscription: Subscription;
   private metadataSubscription: Subscription;
@@ -36,41 +37,60 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.jukebox = new Jukebox(this.context, this.musics, this.beatService);
-    this.canvas = this.el.nativeElement.querySelector('#canvas');
-    this.drawContext = this.canvas.getContext('2d');
+    const canvas = this.el.nativeElement.querySelector('#canvas');
+    const drawContext = canvas.getContext('2d');
     const progressbar = this.el.nativeElement.querySelector('#myBar');
     const lyricDiv = this.el.nativeElement.querySelector('#conSubTitle');
 
-    const WIDTH = 570, HEIGHT = 250;
+    const HEIGHT = 250, WIDTH = 570;
     this.loadSubscription = this.jukebox.load().subscribe((res) => {
       if (res) {
-
         this.beatSubsription = this.beatService.getBeat().subscribe( beat => {
-
+          // const WIDTH = canvas.offsetWidth; console.log(WIDTH);
           this.render.setStyle(progressbar, 'width', beat.timelapse + '%');
-          if (this.lyricArr) {
-            const lyric = this.lyricArr.filter(str => +str.match(/\d+/)[0] === Math.round(beat.timelapse))[0];
-            if (typeof lyric !== 'undefined') {
-              this.render.setProperty(lyricDiv, 'innerHTML', lyric.replace(/{[^}]*}/g,'').replace(/<\/?[^>]+(>|$)/g, ''));
-            }
-          }
-          // const barWidth = WIDTH / beat.frequencyBinCount;
+          // if (this.lyricArr) {
+          //   const lyric = this.lyricArr.filter(str => +str.match(/\d+/)[0] === Math.round(beat.timelapse))[0];
+          //   if (typeof lyric !== 'undefined') {
+          //     this.render.setProperty(lyricDiv, 'innerHTML', lyric.replace(/{[^}]*}/g,'').replace(/<\/?[^>]+(>|$)/g, ''));
+          //   }
+          // }
+          const barWidth = WIDTH / beat.frequencyBinCount;
           let x = 0;
-          this.drawContext.fillStyle = 'rgb(255, 255, 255)';
-          this.drawContext.fillRect(0, 0, WIDTH, HEIGHT);
+          const rowbar = HEIGHT / 15;
+          const bar = (WIDTH - 36) / 10;
+          drawContext.fillStyle = 'rgb(255, 255, 255)';
+          drawContext.fillRect(0, 0, WIDTH, HEIGHT);
+
           for (let i = 0; i < beat.frequencyBinCount; i++) {
-
             const value = beat.freqs[i];
-            const bar = (WIDTH - 36) / 10;
-
-            this.drawContext.fillStyle = 'rgb(0, 0, 0)';
-            this.drawContext.fillRect(x, HEIGHT - value, bar, value);
-            x += bar + 4;
-            const rowbar = HEIGHT / 15;
-            for (let j = 0; j < 15; j++) {
-                this.drawContext.fillStyle = 'rgb(255,255,255)';
-                this.drawContext.fillRect(0, HEIGHT - rowbar * j, WIDTH, 2);
+            
+            drawContext.fillStyle = 'rgb(0, 0, 0)';
+            drawContext.fillRect(x, HEIGHT - value, bar, value);
+            if (this.theme === 1) {
+              x += bar + 4;
+              for (let j = 0; j < 15; j++) {
+                  drawContext.fillStyle = 'rgb(255,255,255)';
+                  drawContext.fillRect(0, HEIGHT - rowbar * j, WIDTH, 2);
+              }
+              
+            } else {
+              const ROWS = 10, COLS = 10, PADDING = 2;
+              const w = WIDTH / COLS; 
+              const h = HEIGHT / ROWS;
+              
+              drawContext.fillStyle = "rgb(255,255,255)";
+              for(let j = 1; j < ROWS; j++) {
+                  drawContext.fillRect(0, h*j, WIDTH, PADDING);
+                  drawContext.fillRect(w*j, 0, PADDING, HEIGHT);
+              }           
+              const percent = value / 256;
+              const height = HEIGHT * percent;
+              const offset = HEIGHT - height;
+              const j = Math.round(offset / (h - PADDING)) * ROWS + Math.round(i * barWidth / (w  -PADDING)) ;
+              if(j < ROWS * COLS) 
+                  drawContext.fillRect((j%COLS)*w, Math.round(j / ROWS)*h, w-2, h-2);     
             }
+            
           }
         });
       }
