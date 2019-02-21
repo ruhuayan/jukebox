@@ -1,12 +1,16 @@
 import { Message, ChatbotComponent } from './chatbot.component';
-import {  ComponentFixture, TestBed, async } from '@angular/core/testing';
+import {  ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { DialogflowService } from './dialogflow.service';
+import { HttpClientModule } from '@angular/common/http';
+import { By } from '@angular/platform-browser';
 
 describe('Message', () => {
     let mes: Message;
     beforeEach(() => {
         mes = new Message('test', new Date());
     });
-    it('should have send equals to user', () => {
+    it('should have default sender to user', () => {
         expect(mes.sender).toEqual('user');
     });
 });
@@ -17,7 +21,9 @@ describe('ChatbotCompenont', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ ChatbotComponent ]
+            imports: [FormsModule, HttpClientModule],
+            declarations: [ ChatbotComponent ], 
+            providers: [DialogflowService]
         }).compileComponents();
     }));
     beforeEach(() => {
@@ -25,7 +31,28 @@ describe('ChatbotCompenont', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
+
     it('should create', () => {
         expect(component).toBeDefined();
-    })
+    });
+
+    it(`should init with chatbot icon`, () => {
+        const icon = fixture.debugElement.nativeElement.querySelector('.chatbot-icon');
+        expect(icon).toBeTruthy();
+    });
+
+    it('should toggle chatbot icon', fakeAsync( () => {
+        
+        spyOn(component, 'toggleChat'); 
+        const icon = fixture.debugElement.query(By.css('.chatbot-icon'));
+        icon.triggerEventHandler('click', null);
+        fixture.detectChanges();
+        tick();
+        expect(component.toggleChat).toHaveBeenCalled();console.log(component.show)
+    }));
+
+    // it(`Service: DialogService`, () => {
+
+    // });
+
 });

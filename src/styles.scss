@@ -122,6 +122,10 @@ body{
     transition: right, .3s ease-in-out;
     &.show {
       right: 0;
+      .chatbot-icon {
+        opacity: 0;
+        z-index: -1;
+      }
     }
     .chat-title{
       display: flex;
@@ -200,15 +204,38 @@ body{
         padding: 5px;
         // padding-right: 50px;
       }
-      a {
+      button {
         position: absolute;
         bottom: 10px;
         margin-left: 240px;
-        // right: 10px;
+        background: none;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        &:disabled {
+          display: none;
+        }
         img {
           width: 30px;
           height: auto;
         }
+      }
+    }
+    .chatbot-icon {
+      background: var(--main-blue);
+      border-radius: 30px;
+      padding: 10px;
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      cursor: pointer;
+      opacity: .8;
+      z-index: 5;
+      transition: opacity .5s ease-in-out;
+      box-shadow: 2px 2px 5px var(--main-gray);
+      img {
+        widows: 30px;
+        height: 30px;
       }
     }
   }

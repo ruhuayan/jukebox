@@ -8,9 +8,10 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChatbotModule } from './chatbot/chatbox.module';
 
+
 @NgModule({
   declarations: [
-    AppComponent, HeaderComponent, FooterComponent, NotFoundComponent
+    AppComponent, HeaderComponent, FooterComponent, NotFoundComponent, 
   ],
   imports: [
     BrowserModule,

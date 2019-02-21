@@ -1,7 +1,7 @@
 <div class="chat-title">
   <div class="chat-icon"><img src="assets/imgs/chatbot.svg" alt="Chatbot avatar" /></div>
   <div class="chat-name">Chatbot</div>
-  <a class="chat-close" href="javascript:;" (click)="closeChat()"><img src="assets/imgs/close.svg" alt="chat close" /></a>
+  <a class="chat-close" href="javascript:;" (click)="toggleChat()"><img src="assets/imgs/close.svg" alt="chat close" /></a>
 </div>
 <div class="chat-list">
     <ul class="list-group">
@@ -16,8 +16,12 @@
       </li>
     </ul>
 </div>
-<div class="chat-control" [class.show] = "show">
-    <textarea aria-label="Enter a message" class="" [(ngModel)]="message.content"></textarea>
-    <!-- <input type="text" class="form-control chatinput" [(ngModel)]="message.content"/> -->
-    <a class="sendbtn" (click)="sendMessage()"><img src="assets/imgs/send.svg" alt="send" /></a>
+<div class="chat-control">
+    <form name="msgForm" role='form' (ngSubmit)='sendMessage()' #msgForm="ngForm">
+        <textarea aria-label="Enter a message" class="message" name="message" ngModel #message="ngModel" required ></textarea>
+        <button class="sendbtn" type="submit"  [disabled]="msgForm.form.invalid"><img src="assets/imgs/send.svg" alt="send" /></button>
+    </form>
+</div>
+<div class="chatbot-icon" (click) = "toggleChat()">
+    <img src="assets/imgs/chatbot.svg" alt="Chatbot avatar" />
 </div>
