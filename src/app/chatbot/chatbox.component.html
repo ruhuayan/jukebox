@@ -19,7 +19,7 @@
 <div class="chat-control">
     <form name="msgForm" role='form' (ngSubmit)='sendMessage()' #msgForm="ngForm">
         <textarea aria-label="Enter a message" class="message" name="message" [(ngModel)]="message.content" #messageTA required (keydown)="onKeydown($event)" ></textarea>
-        <button class="sendbtn" type="submit"  [disabled]="msgForm.form.invalid"><img src="assets/imgs/send.svg" alt="send" /></button>
+        <button class="sendbtn" type="submit"  [disabled]="msgForm.invalid"><img src="assets/imgs/send.svg" alt="send" /></button>
     </form>
 </div>
 <div class="chatbot-icon" (click) = "toggleChat()">

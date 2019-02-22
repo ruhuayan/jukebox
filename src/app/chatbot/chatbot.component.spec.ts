@@ -48,11 +48,17 @@ describe('ChatbotCompenont', () => {
         icon.triggerEventHandler('click', null);
         fixture.detectChanges();
         tick();
-        expect(component.toggleChat).toHaveBeenCalled();console.log(component.show)
+        expect(component.toggleChat).toHaveBeenCalled();
     }));
 
-    // it(`Service: DialogService`, () => {
+    it(`message textarea invalid when empty`, () => {
+        expect(component.msgForm.value.Message).toBeFalsy();
+    });
 
-    // });
+    it('submitting a form emits a msg', () => { // console.log(component.msgForm);
+        // expect(component.msgForm.valid).toBeFalsy();
+        component.msgForm.value.message = 'test';
+        expect(component.msgForm.valid).toBeTruthy();
+      });
 
 });

@@ -19,6 +19,7 @@ export class Message {
 })
 export class ChatbotComponent implements OnInit, OnDestroy {
   private dialogSubscription: Subscription;
+  @ViewChild('msgForm') msgForm: any;
   @ViewChild('messageTA') messageTA: ElementRef;
   @ViewChild('msgList') msgList: ElementRef;
   messages: Message[] = [new Message('Hi, buddy', null, 'chatbot')];
@@ -30,7 +31,7 @@ export class ChatbotComponent implements OnInit, OnDestroy {
 
   public sendMessage(): void {
     this.message.content = this.message.content.trim();
-    if (this.message.content !== '') { console.log(this.message.content.length)
+    if (this.message.content !== '') {
       this.message.timestamp = new Date();
       this.messages.push(this.message);
       this.dialogSubscription = this.dialogService.getResponse(this.message.content).subscribe(res => {
@@ -48,7 +49,7 @@ export class ChatbotComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.dialogSubscription.unsubscribe();
+    if (this.dialogSubscription) this.dialogSubscription.unsubscribe();
   }
   toggleChat() {
     this.show = !this.show;
