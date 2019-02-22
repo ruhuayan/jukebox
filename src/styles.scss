@@ -161,14 +161,37 @@ body{
 
     .chat-list{
       flex: 1;
-      padding: 10px;
+      padding-left: 10px;
+      padding-right: 0px;
       overflow: hidden;
-      .list-group{
+      ul.list-group{
         list-style: none;
         margin: 0;
         padding: 0;
+        height: 100%;
+        overflow-y: scroll;
+        &::-webkit-scrollbar-track{
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+          background-color: #F5F5F5;
+        }
+
+        &::-webkit-scrollbar{
+          width: 10px;
+          background-color: #F5F5F5;
+        }
+
+        &::-webkit-scrollbar-thumb{
+          background-color: var(--main-blue);
+          // border: 1px solid var(--main-blue-light);
+        }
         li {
           display: flex;
+          &:first-child {
+            margin-top: 10px;
+          }
+          &:last-child {
+            margin-bottom: 10px;
+          }
           img{
             width: 30px;
             height: 30px;
@@ -223,7 +246,7 @@ body{
     }
     .chatbot-icon {
       background: var(--main-blue);
-      border-radius: 30px;
+      border-radius: 25px;
       padding: 10px;
       position: fixed;
       bottom: 1rem;
@@ -234,8 +257,8 @@ body{
       transition: opacity .5s ease-in-out;
       box-shadow: 2px 2px 5px var(--main-gray);
       img {
-        widows: 30px;
-        height: 30px;
+        widows: 25px;
+        height: 25px;
       }
     }
   }

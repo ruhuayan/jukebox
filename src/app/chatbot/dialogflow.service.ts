@@ -14,7 +14,7 @@ export class DialogflowService {
     let data = {
       query : query,
       lang: 'en',
-      sessionId: '12345'
+      sessionId: Math.round(Math.random() * 100000)
     }
 
     const httpOptions = {

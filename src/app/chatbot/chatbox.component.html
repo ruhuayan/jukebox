@@ -4,7 +4,7 @@
   <a class="chat-close" href="javascript:;" (click)="toggleChat()"><img src="assets/imgs/close.svg" alt="chat close" /></a>
 </div>
 <div class="chat-list">
-    <ul class="list-group">
+    <ul class="list-group" #msgList>
       <li class="list-group-item" *ngFor="let msg of messages" [ngClass]="{'user': msg.sender ==='user'}">
         <img [src]="msg.sender ==='user'? 'assets/imgs/user.svg': 'assets/imgs/chatbot.svg'" class="avatar"  />
         <div class="message">
@@ -18,7 +18,7 @@
 </div>
 <div class="chat-control">
     <form name="msgForm" role='form' (ngSubmit)='sendMessage()' #msgForm="ngForm">
-        <textarea aria-label="Enter a message" class="message" name="message" ngModel #message="ngModel" required ></textarea>
+        <textarea aria-label="Enter a message" class="message" name="message" [(ngModel)]="message.content" #messageTA required (keydown)="onKeydown($event)" ></textarea>
         <button class="sendbtn" type="submit"  [disabled]="msgForm.form.invalid"><img src="assets/imgs/send.svg" alt="send" /></button>
     </form>
 </div>
