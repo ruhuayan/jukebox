@@ -17,8 +17,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
                       'assets/jukebox/musics/SeuOlharMeChama.mp3'];
   private jukebox: Jukebox;
   private theme = 1; 
-  // private canvas: any;
-  // private drawContext: any;
   private beatSubsription: Subscription;
   private loadSubscription: Subscription;
   private metadataSubscription: Subscription;
@@ -100,7 +98,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       if (m.title) {
         this.jukeService.getLyrics(m.artist, m.title).subscribe(res => {
 
-          if (res['text']) {
+          if (res['text']) { 
             this.lyricArr = res['text'].split('<br>').filter(str => str !== '').map((str, i) => `{${3*i}}${str}`);
             console.log(this.lyricArr);
           } else {

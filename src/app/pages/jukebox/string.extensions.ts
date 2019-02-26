@@ -19,6 +19,6 @@ String.prototype.removeCodeZero = function(): string {
   const arr = Array.from(str).filter(ch => ch.charCodeAt(0) > 0);
   return arr.join('');
 }
-String.prototype.removeHtmlTag = function(): string {
-  return null;
-}
+// String.prototype.removeHtmlTag = function(): string {
+//   return null;
+// }
