@@ -157,7 +157,10 @@ input[type=range]:focus::-ms-fill-upper {
     height: 200px;
     border: 1px solid #000;
     color: #fff;
-    background: #000; }
+    background: #000; 
+    text-align: center;
+    line-height: 200px;
+  }
   #musicInfo #musicMeta {
     width: 40%;
     color: #003333;

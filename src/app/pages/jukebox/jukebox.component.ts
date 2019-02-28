@@ -21,10 +21,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   private loadSubscription: Subscription;
   private metadataSubscription: Subscription;
   private playingSubscription: Subscription;
+  private infoSubscription: Subscription;
+  private infos: any;
   metadata: Metadata;
-  lyric = 'Music Loading, please wait....';
   isPlaying = false;
-  lyricArr: string[];
   constructor(private titleService: Title,
               private beatService: BeatService,
               private el: ElementRef,
@@ -34,24 +34,40 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.context = new (window.AudioContext || window.webkitAudioContext)();
   }
   ngOnInit() {
+    this.infoSubscription = this.jukeService.getMusicInfo().subscribe(res => {
+      if (res && res.length) {
+        this.infos = res;
+      }
+    });
     this.jukebox = new Jukebox(this.context, this.musics, this.beatService);
     const canvas = this.el.nativeElement.querySelector('#canvas');
     const drawContext = canvas.getContext('2d');
     const progressbar = this.el.nativeElement.querySelector('#myBar');
     const lyricDiv = this.el.nativeElement.querySelector('#conSubTitle');
+    const albumDiv = this.el.nativeElement.querySelector('#album');
 
     const HEIGHT = 250, WIDTH = 570;
     this.loadSubscription = this.jukebox.load().subscribe((res) => {
       if (res) {
-        this.beatSubsription = this.beatService.getBeat().subscribe( beat => {
+        let lyrics = []; 
+        const info = this.infos[this.jukebox.mIndex];
+        if (info) {
+          lyrics = info.lyrics;
+          this.render.setProperty(albumDiv, 'innerHTML', `<img src=${info.album_url} width="200px" height="200px" />` );
+        } else {
+          this.render.setProperty(lyricDiv, 'innerHTML', '  Lyric Not Available');
+          this.render.setProperty(albumDiv, 'innerHTML', ' Album Cover Not Found' );
+        }
+        this.beatSubsription = this.beatService.getBeat().subscribe( beat => {    console.log(beat.timelapse);
           // const WIDTH = canvas.offsetWidth; console.log(WIDTH);
           this.render.setStyle(progressbar, 'width', beat.timelapse + '%');
-          // if (this.lyricArr) {
-          //   const lyric = this.lyricArr.filter(str => +str.match(/\d+/)[0] === Math.round(beat.timelapse))[0];
-          //   if (typeof lyric !== 'undefined') {
-          //     this.render.setProperty(lyricDiv, 'innerHTML', lyric.replace(/{[^}]*}/g,'').replace(/<\/?[^>]+(>|$)/g, ''));
-          //   }
-          // }
+          
+          if (lyrics) {
+            const lyric = lyrics.filter(str => +str.match(/\d+/)[0] === Math.round(beat.timelapse))[0];
+            if (typeof lyric !== 'undefined') {
+              this.render.setProperty(lyricDiv, 'innerHTML', lyric.replace(/{[^}]*}/g,'').replace(/<\/?[^>]+(>|$)/g, ''));
+            }
+          }
           const barWidth = WIDTH / beat.frequencyBinCount;
           let x = 0;
           const rowbar = HEIGHT / 15;
@@ -95,23 +111,24 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     }, err => {});
     this.metadataSubscription = this.beatService.metadata$.subscribe(m => {
       this.metadata = m;
-      if (m.title) {
-        this.jukeService.getLyrics(m.artist, m.title).subscribe(res => {
+      // if (m.title) {
+      //   this.jukeService.getLyrics(m.artist, m.title).subscribe(res => {
 
-          if (res['text']) { 
-            this.lyricArr = res['text'].split('<br>').filter(str => str !== '').map((str, i) => `{${3*i}}${str}`);
-            console.log(this.lyricArr);
-          } else {
-            this.lyric = '  Lyric Not available';
-          }
-        });
-      }
+      //     if (res['text']) { 
+      //       this.lyricArr = res['text'].split('<br>').filter(str => str !== '').map((str, i) => `{${3*i}}${str}`);
+      //       console.log(this.lyricArr);
+      //     } else {
+      //       this.lyric = '  Lyric Not available';
+      //     }
+      //   });
+      // }
     });
-    this.playingSubscription = this.beatService.isPlaying$.subscribe(p => { console.log(this.isPlaying)
+    this.playingSubscription = this.beatService.isPlaying$.subscribe(p => { // console.log(this.isPlaying)
       this.isPlaying = p;
     });
   }
   ngOnDestroy() { console.log('destroy')
+    this.infoSubscription.unsubscribe();
     this.jukebox.pause();
     this.loadSubscription.unsubscribe();
     this.beatSubsription.unsubscribe();

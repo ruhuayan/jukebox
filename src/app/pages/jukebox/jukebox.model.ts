@@ -59,7 +59,7 @@ export class Jukebox {
   private musics: string[];
   private buffer: any;
   private source: any;
-  private mIndex: number;
+  public mIndex: number;
   private metadata: Metadata =  {title: null, artist: null, album: null};
 
   constructor (context: AudioContext, musics: string[], private beatService: BeatService) {
