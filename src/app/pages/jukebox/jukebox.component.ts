@@ -25,6 +25,9 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   private infos: any;
   metadata: Metadata;
   isPlaying = false;
+
+  file: File = null;
+  public progressPercentage: number = 0;
   constructor(private titleService: Title,
               private beatService: BeatService,
               private el: ElementRef,
@@ -58,7 +61,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
           this.render.setProperty(lyricDiv, 'innerHTML', '  Lyric Not Available');
           this.render.setProperty(albumDiv, 'innerHTML', ' Album Cover Not Found' );
         }
-        this.beatSubsription = this.beatService.getBeat().subscribe( beat => {    console.log(beat.timelapse);
+        this.beatSubsription = this.beatService.getBeat().subscribe( beat => {    // console.log(beat.timelapse);
           // const WIDTH = canvas.offsetWidth; console.log(WIDTH);
           this.render.setStyle(progressbar, 'width', beat.timelapse + '%');
           
@@ -143,5 +146,23 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     if (this.isPlaying) {
       this.jukebox.pause();
     } else this.jukebox.start();
+  }
+
+  onFileSelected(event: MouseEvent){ console.log(event);
+    if (event['file']) {
+      this.file = event['file'];
+      if (this.file['error']) {
+        setTimeout(() => {
+          delete this.file['error'];
+        }, 2000);
+      } else {
+        this.upload(this.file);
+        this.file['isUploading'] = true;
+      }
+      
+    }
+  }
+  private upload(file:File) {
+    
   }
 }

@@ -7,10 +7,12 @@
   // width: calc(100% - 1px);
   // margin: 0 auto;
   height: 250px;
-  // background-color: #000;
-  // border: 1px solid #000; 
 }
-
+.conSubTitle {
+  // padding-bottom: 5px;
+  // padding-top: 5px;
+  color: var(--main-blue-dark);
+}
 #myProgress {
   width: 100%;
   background-color: #ddd; }
@@ -26,6 +28,19 @@ div#controls {
   a img{
     width: 16px;
     height: 16px;
+  }
+  div.volume {
+    overflow: hidden;
+    transition: width .3s ease-in;
+    &.hidden {
+      width: 0;
+    }
+  }
+  span.upload-msg {
+    color: red;
+    line-height: 25px;
+    padding-left: 8px;
+    font-weight: 500;
   }
 }
   div#controls div#control a, div#controls div.volume a, div#controls div#theme a {

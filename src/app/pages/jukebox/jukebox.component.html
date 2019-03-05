@@ -29,7 +29,7 @@
                   <img src="assets/jukebox/icons/flow.svg" alt="change theme" />
               </a>
           </div>
-          <div class="volume" title="volume">
+          <div class="volume" title="volume" [ngClass]="{'hidden': file && file['error']}">
               <a id="toggleVolume" title="toggle volume">
                   <!-- <i class="fa fa-volume-up" aria-hidden="true"></i> -->
                   <img src="assets/jukebox/icons/volume.svg" alt="volume" />
@@ -40,9 +40,10 @@
           <!-- <div id="theme" title="next theme">
           </div> -->
           <div id="upload">
-              <input type="file" class="upload" accept="audio/*" />
+              <input type="file" appFileUploadInput class="upload" accept="audio/*" (onFileSelected)="onFileSelected($event)" />
               <a>Upload Music</a>
           </div>
+          <span class="upload-msg" *ngIf="file && file['error']">{{file['error']}}</span>
       </div>
       <div id="musicInfo">
           <div id="album">Loading album cover ...</div>
@@ -51,6 +52,14 @@
                 <span id='mArtist'>{{metadata['artist']}}</span><br />
                 <span id='mAlbum'>{{metadata['album']}}</span>
           </div>
+      </div>
+      <div class="upload-modal" *ngIf="file && file['isUploading']">
+            <span class="file-info">{{file.name}}</span>
+            <div class="progressbar-wrap">
+                <div class="progressbar" [style.width]="progressPercentage"></div>
+                <span class="file-info">{{progressPercentage}}% of {{file.size | bytes}}</span>
+            </div>
+            <a class="action" (click)="remove()">cancel</a>
       </div>
   </div>
   <div class="conRight" id="conRight">

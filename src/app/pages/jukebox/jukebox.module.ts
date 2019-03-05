@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { PanelRightModule } from '../panel-right.module';
 import { BeatService } from './beat.service';
 import { JukeService } from './jukebox.service';
+import { AppFileUploadInput } from './file-upload-input.directive';
+import { BytesPipe } from './bytesPipe';
 
 @NgModule({
 imports: [
@@ -17,6 +19,6 @@ imports: [
   ])
 ],
 providers: [BeatService, JukeService],
-declarations: [JukeboxComponent]
+declarations: [JukeboxComponent, AppFileUploadInput, BytesPipe]
 })
 export class JukeboxModule {}
