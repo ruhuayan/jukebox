@@ -54,12 +54,14 @@
           </div>
       </div>
       <div class="upload-modal" *ngIf="file && file['isUploading']">
-            <span class="file-info">{{file.name}}</span>
-            <div class="progressbar-wrap">
-                <div class="progressbar" [style.width]="progressPercentage"></div>
-                <span class="file-info">{{progressPercentage}}% of {{file.size | bytes}}</span>
-            </div>
-            <a class="action" (click)="remove()">cancel</a>
+            <div class="upload-content">
+                    <div class="file-name">{{file.name}}</div>
+                    <div class="progressbar-wrap">
+                        <div class="progressbar" [style.width]="progressPercentage"></div>
+                        <span class="file-info">{{progressPercentage}}% of {{file.size | bytes}}</span>
+                    </div>
+                    <div class="actions"><a class="action" href="javascript:;" (click)="remove()"><img src="assets/imgs/close.svg" alt="chat close" /></a></div>
+            </div> 
       </div>
   </div>
   <div class="conRight" id="conRight">

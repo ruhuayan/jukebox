@@ -9,7 +9,8 @@
   height: 250px;
 }
 .conSubTitle {
-  // padding-bottom: 5px;
+  padding-bottom: 0;
+  font-size: 20px;
   // padding-top: 5px;
   color: var(--main-blue-dark);
 }
@@ -181,6 +182,49 @@ input[type=range]:focus::-ms-fill-upper {
     color: #003333;
     padding-left: 10px; }
 
+.upload-modal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  .upload-content {
+    background: #fff;
+    width: 350px;
+    display: flex;
+    height: 40px;
+    align-items: center;
+    padding: 10px;
+    border: 2px solid #000;
+    div.file-name{
+      font-size: 14px;
+      width: 30%;
+      overflow: hidden;
+      font-weight: 500;
+      color: var(--main-gray-extra-dark);
+    }
+    div.progressbar-wrap {
+      width: 60%;
+      background: var(--main-gray);
+      padding: 2px;
+      border-radius: 5px;
+      padding-left: 15px;
+    }
+    div.actions {
+      width: 10%;
+      text-align: center;
+      a.action img {
+        width: 30px;
+        opacity: .6;
+      }
+    }
+  }
+}
 @media (max-width: 640px) {
   #musicInfo {
     display: flex;

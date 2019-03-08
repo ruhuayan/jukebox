@@ -39,12 +39,11 @@ export class AppFileUploadInput {
   }
 
   private pushFileToQueue(files: File[], event: Event): void{
-    files[0]['error'] = new Array<string>();
+    
     if (files[0].type !== 'audio/mp3' && files[0].type !== 'audio/wav') {
-      files[0]['error'].push('Accept only audio file format - .mp3 & .wav!'); 
-    }
-    if (files[0].size > 3 * 1024 * 1024) {
-      files[0]['error'].push('File max 3 MB!');
+      files[0]['error'] = 'Accept only audio file format - .mp3 & .wav!'; 
+    } else if (files[0].size > 3 * 1024 * 1024) {
+      files[0]['error'] = 'File max 3 MB!';
     }
     event['file'] = files[0];
     this.onFileSelected.emit(event);

@@ -4,6 +4,7 @@ import { Jukebox, Metadata } from './jukebox.model';
 import { BeatService } from './beat.service';
 import { JukeService } from './jukebox.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from '@angular/common/http';
 declare let window: any;
 import './string.extensions';
 @Component({
@@ -22,6 +23,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   private metadataSubscription: Subscription;
   private playingSubscription: Subscription;
   private infoSubscription: Subscription;
+  private fileUploadSubscription: Subscription;
   private infos: any;
   metadata: Metadata;
   isPlaying = false;
@@ -32,7 +34,8 @@ export class JukeboxComponent implements OnInit, OnDestroy {
               private beatService: BeatService,
               private el: ElementRef,
               private render: Renderer2,
-              private jukeService: JukeService) {
+              private jukeService: JukeService,
+              private http: HttpClient) {
     this.titleService.setTitle('Jukebox - music player');
     this.context = new (window.AudioContext || window.webkitAudioContext)();
   }
@@ -137,6 +140,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.beatSubsription.unsubscribe();
     this.playingSubscription.unsubscribe();
     this.metadataSubscription.unsubscribe();
+    this.fileUploadSubscription.unsubscribe();
   }
 
   previous(): void {
@@ -148,7 +152,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     } else this.jukebox.start();
   }
 
-  onFileSelected(event: MouseEvent){ console.log(event);
+  onFileSelected(event: MouseEvent){
     if (event['file']) {
       this.file = event['file'];
       if (this.file['error']) {
@@ -163,6 +167,35 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     }
   }
   private upload(file:File) {
-    
+    const formData = new FormData();
+    formData.set('files', this.file, this.file.name);
+
+    const httpUrl = "https://www.richyan.com/pdf/upload.php";
+    this.fileUploadSubscription = this.http.post(httpUrl, formData, {
+      headers: new HttpHeaders().set("Content-Type", "multipart/form-data"),
+      observe: "events",
+      // params: this.httpParams,
+      reportProgress: true,
+      responseType: "json"
+    }).subscribe((event: any) => {
+      if (event.type === HttpEventType.UploadProgress) {
+        this.progressPercentage = Math.floor( event.loaded * 100 / event.total );
+      } else {
+        if (event['status'] === 200 && event['body']) {
+          console.log(event['body']);
+        }
+      } 
+    }, (error: any) => {    
+      console.log(error);
+      if (this.fileUploadSubscription) {
+        this.fileUploadSubscription.unsubscribe();
+      }
+    });
+  }
+  remove() {
+    if (this.fileUploadSubscription) {
+      this.fileUploadSubscription.unsubscribe();
+    }
+    this.file = null;
   }
 }
