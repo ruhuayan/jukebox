@@ -4,9 +4,12 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'jukebox', pathMatch: 'full'},
- {
+  {
     path: 'jukebox',
     loadChildren: './pages/jukebox/jukebox.module#JukeboxModule'
+  }, {
+    path: 'igame',
+    loadChildren: './pages/imagegame/imagegame.module#ImagegameModule'
   }, {
 		path: '**',
 		redirectTo: '404',

@@ -17,7 +17,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   private musics =  ['assets/jukebox/musics/iLoveRocknRoll.mp3', 'assets/jukebox/musics/bailando.mp3',
                       'assets/jukebox/musics/SeuOlharMeChama.mp3'];
   private jukebox: Jukebox;
-  private theme = 1; 
+  private theme = 1;
   private beatSubsription: Subscription;
   private loadSubscription: Subscription;
   private metadataSubscription: Subscription;
@@ -29,7 +29,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   isPlaying = false;
 
   file: File = null;
-  public progressPercentage: number = 0;
+  public progressPercentage = 0;
   constructor(private titleService: Title,
               private beatService: BeatService,
               private el: ElementRef,
@@ -55,11 +55,11 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     const HEIGHT = 250, WIDTH = 570;
     this.loadSubscription = this.jukebox.load().subscribe((res) => {
       if (res) {
-        let lyrics = []; 
+        let lyrics = [];
         const info = this.infos[this.jukebox.mIndex];
         if (info) {
           lyrics = info.lyrics;
-          this.render.setProperty(albumDiv, 'innerHTML', `<img src=${info.album_url} width="200px" height="200px" />` );
+          this.render.setProperty(albumDiv, 'innerHTML', `<img src=${info.album_url} width='200px' height='200px' />` );
         } else {
           this.render.setProperty(lyricDiv, 'innerHTML', '  Lyric Not Available');
           this.render.setProperty(albumDiv, 'innerHTML', ' Album Cover Not Found' );
@@ -67,7 +67,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
         this.beatSubsription = this.beatService.getBeat().subscribe( beat => {    // console.log(beat.timelapse);
           // const WIDTH = canvas.offsetWidth; console.log(WIDTH);
           this.render.setStyle(progressbar, 'width', beat.timelapse + '%');
-          
+
           if (lyrics) {
             const lyric = lyrics.filter(str => +str.match(/\d+/)[0] === Math.round(beat.timelapse))[0];
             if (typeof lyric !== 'undefined') {
@@ -83,7 +83,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
           for (let i = 0; i < beat.frequencyBinCount; i++) {
             const value = beat.freqs[i];
-            
+
             drawContext.fillStyle = 'rgb(0, 0, 0)';
             drawContext.fillRect(x, HEIGHT - value, bar, value);
             if (this.theme === 1) {
@@ -92,25 +92,26 @@ export class JukeboxComponent implements OnInit, OnDestroy {
                   drawContext.fillStyle = 'rgb(255,255,255)';
                   drawContext.fillRect(0, HEIGHT - rowbar * j, WIDTH, 2);
               }
-              
+
             } else {
               const ROWS = 10, COLS = 10, PADDING = 2;
-              const w = WIDTH / COLS; 
+              const w = WIDTH / COLS;
               const h = HEIGHT / ROWS;
-              
-              drawContext.fillStyle = "rgb(255,255,255)";
+
+              drawContext.fillStyle = 'rgb(255,255,255)';
               for(let j = 1; j < ROWS; j++) {
-                  drawContext.fillRect(0, h*j, WIDTH, PADDING);
-                  drawContext.fillRect(w*j, 0, PADDING, HEIGHT);
-              }           
+                  drawContext.fillRect(0, h * j, WIDTH, PADDING);
+                  drawContext.fillRect(w * j, 0, PADDING, HEIGHT);
+              }
               const percent = value / 256;
               const height = HEIGHT * percent;
               const offset = HEIGHT - height;
-              const j = Math.round(offset / (h - PADDING)) * ROWS + Math.round(i * barWidth / (w  -PADDING)) ;
-              if(j < ROWS * COLS) 
-                  drawContext.fillRect((j%COLS)*w, Math.round(j / ROWS)*h, w-2, h-2);     
+              const j = Math.round(offset / (h - PADDING)) * ROWS + Math.round(i * barWidth / (w  - PADDING)) ;
+              if(j < ROWS * COLS) {
+                drawContext.fillRect((j % COLS) * w, Math.round(j / ROWS) * h, w - 2, h - 2);
+              }
             }
-            
+
           }
         });
       }
@@ -120,7 +121,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       // if (m.title) {
       //   this.jukeService.getLyrics(m.artist, m.title).subscribe(res => {
 
-      //     if (res['text']) { 
+      //     if (res['text']) {
       //       this.lyricArr = res['text'].split('<br>').filter(str => str !== '').map((str, i) => `{${3*i}}${str}`);
       //       console.log(this.lyricArr);
       //     } else {
@@ -140,7 +141,9 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.beatSubsription.unsubscribe();
     this.playingSubscription.unsubscribe();
     this.metadataSubscription.unsubscribe();
-    this.fileUploadSubscription.unsubscribe();
+    if (this.fileUploadSubscription) {
+      this.fileUploadSubscription.unsubscribe();
+    }
   }
 
   previous(): void {
@@ -149,7 +152,9 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   toggle(): void {
     if (this.isPlaying) {
       this.jukebox.pause();
-    } else this.jukebox.start();
+    } else {
+      this.jukebox.start();
+    }
   }
 
   onFileSelected(event: MouseEvent){
@@ -163,20 +168,19 @@ export class JukeboxComponent implements OnInit, OnDestroy {
         this.upload(this.file);
         this.file['isUploading'] = true;
       }
-      
     }
   }
-  private upload(file:File) {
+  private upload(file: File) {
     const formData = new FormData();
     formData.set('files', this.file, this.file.name);
 
-    const httpUrl = "https://www.richyan.com/pdf/upload.php";
+    const httpUrl = 'https://www.richyan.com/pdf/upload.php';
     this.fileUploadSubscription = this.http.post(httpUrl, formData, {
-      headers: new HttpHeaders().set("Content-Type", "multipart/form-data"),
-      observe: "events",
+      headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
+      observe: 'events',
       // params: this.httpParams,
       reportProgress: true,
-      responseType: "json"
+      responseType: 'json'
     }).subscribe((event: any) => {
       if (event.type === HttpEventType.UploadProgress) {
         this.progressPercentage = Math.floor( event.loaded * 100 / event.total );
@@ -184,8 +188,8 @@ export class JukeboxComponent implements OnInit, OnDestroy {
         if (event['status'] === 200 && event['body']) {
           console.log(event['body']);
         }
-      } 
-    }, (error: any) => {    
+      }
+    }, (error: any) => {
       console.log(error);
       if (this.fileUploadSubscription) {
         this.fileUploadSubscription.unsubscribe();

@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
             <a routerLink="/jukebox">JukeBox</a>
         </div>
         <div class="category">
-            <a routerLink="/imagegame">Image Game</a>
+            <a routerLink="/igame">Image Game</a>
         </div>
        `
 })

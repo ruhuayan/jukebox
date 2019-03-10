@@ -1,3 +1,50 @@
-<p>
-  imagegame works!
-</p>
+<div class="conTitle" id="conTitle" >Image Game </div>
+<div class="conSubTitle" id="conSubTitle">
+    <div class="form-group">
+      <select id="images">
+        <option *ngFor="let img of imgs; let i = index" [value]="i" [selected]="i==0">Picture-{{i+1}}</option>
+      </select>
+      <i class="bar"></i>
+    </div>
+    <div class="form-group">
+        <!-- <label for="input" class="control-label">Format *</label> -->
+      <select id="formats">
+        <option value="3">3 X 3</option>
+        <option value="4">4 X 4</option>
+      </select>
+      <i class="bar"></i>
+    </div>
+
+    <a class="button" (click)="showNumber()">
+      <span class="text">Show numbers</span>
+      <span class="bg"></span>
+    </a>
+    <a class="button" (click)="showImage()">
+      <span class="text">Show Image</span>
+      <span class="bg"></span>
+    </a>
+    <a class="button" (click)="shuffle()">
+      <span class="text">shuffle Images</span>
+      <span class="bg"></span>
+    </a>
+    <a class="button" id='download' (click)="download()">
+      <span class="text">download</span>
+      <span class="bg"></span>
+    </a>
+</div>
+<div class="conText row">
+  <div class="conLeft" id="conLeft">
+    <div class="canvas-wrap" *ngFor="let i of numOfCan; let i = index"
+        [attr.data-num]="i" [attr.data-ori]="i"
+        (click)="shift($event, i)">
+      <canvas class="canvas"></canvas>
+      <div class="canvas-num" *ngIf="numberShow">{{i+1}}</div>
+    </div>
+    <div class="empty-wrap" >
+      Move thumb here
+    </div>
+  </div>
+  <div class="conRight" id="conRight">
+    <app-panel-right></app-panel-right>
+  </div>
+</div>
