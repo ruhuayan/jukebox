@@ -345,6 +345,8 @@ body *::before {
   position: absolute;
   cursor: pointer;
   padding: 0;
+  z-index: 99;
+  transition: margin .3s ease-in-out;
   .canvas{
     border: 1px solid var(--main-blue-dark);
     z-index: 100;
@@ -364,5 +366,11 @@ body *::before {
   color: #fff;
   line-height: 2rem;
   font-weight: 500;
+  z-index: 0;
+  transition: margin .3s ease-in-out;
+}
+.image-wrap {
+  transition: margin .3s ease-in-out;
+  z-index: 50;
 }
 

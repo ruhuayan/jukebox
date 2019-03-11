@@ -16,7 +16,7 @@
     </div>
 
     <a class="button" (click)="showNumber()">
-      <span class="text">Show numbers</span>
+      <span class="text">Toggle numbers</span>
       <span class="bg"></span>
     </a>
     <a class="button" (click)="showImage()">
@@ -24,7 +24,7 @@
       <span class="bg"></span>
     </a>
     <a class="button" (click)="shuffle()">
-      <span class="text">shuffle Images</span>
+      <span class="text">shuffle</span>
       <span class="bg"></span>
     </a>
     <a class="button" id='download' (click)="download()">
@@ -42,6 +42,9 @@
     </div>
     <div class="empty-wrap" >
       Move thumb here
+    </div>
+    <div class="image-wrap" *ngIf="imageShow">
+      <img [src]="img.src" alt="origin image" />
     </div>
   </div>
   <div class="conRight" id="conRight">

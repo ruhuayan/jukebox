@@ -8,13 +8,15 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class ImagegameComponent implements OnInit {
 
-  private img: HTMLImageElement;
+  img: HTMLImageElement;
   private thumbs: any[];
   private emptyThumb: any;
+  private imageWrap: any; 
   private tHeight = 0;
   private tWidth = 0;
   private row = 3;
   numberShow = false;
+  imageShow = false;
   numOfCan = Array.from(new Array(this.row * this.row).keys());
   imgs = ['assets/igame/picture_1.jpg', 'assets/igame/picture_2.jpg', 'assets/igame/picture_3.jpg'];
   constructor(private el: ElementRef,
@@ -70,6 +72,16 @@ export class ImagegameComponent implements OnInit {
     this.numberShow = !this.numberShow;
   }
   showImage(): void {
+    this.imageShow = !this.imageShow;
+    if (this.imageShow) {
+      setTimeout(() => {
+        this.imageWrap = this.el.nativeElement.querySelector('.image-wrap'); console.log(this.imageWrap)
+        this.renderer.setStyle(this.imageWrap, 'margin-left', (this.tWidth + 1) * this.row + 'px');
+        setTimeout(() => this.imageShow = false, 2000);
+      }, 200);
+      
+      
+    }
   }
   shuffle(): void {
     // if (this.thumbs.length === 0 && this.thumbs.length !== this.row ** 2) {
@@ -88,12 +100,17 @@ export class ImagegameComponent implements OnInit {
       }
     }
   }
-  shift(event: MouseEvent, index: number) {
-    const num_empty = this.emptyThumb.getAttribute('data-num'); console.log(num_empty);
-    if (Math.abs(num_empty - index) === this.row) {
-      this.swap(this.emptyThumb, this.thumbs[index]);
-    } else if (Math.abs(num_empty - index) === 1) {
-      this.swap(this.emptyThumb, this.thumbs[index]);
+  shift(event: MouseEvent, i: number) {
+    const num_empty = +this.emptyThumb.getAttribute('data-num'); 
+    const index = +this.thumbs[i].getAttribute('data-num');
+
+    if ((num_empty === this.row ** 2 && num_empty - index === 1) 
+      || (index === this.row ** 2 && num_empty - index === -1)
+      || (num_empty - index === 1 && (index + 1) % this.row !== 0 )
+      || (num_empty - index === -1 && index % this.row !== 0)
+      || (Math.abs(num_empty - index) === this.row && num_empty !== this.row ** 2)) {
+
+      this.swap(this.emptyThumb, this.thumbs[i]);
     }
   }
   private swap(iThumb: any, jThumb: any): void {
