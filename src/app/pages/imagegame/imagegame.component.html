@@ -1,7 +1,7 @@
 <div class="conTitle" id="conTitle" >Image Game </div>
 <div class="conSubTitle" id="conSubTitle">
     <div class="form-group">
-      <select id="images">
+      <select id="images" (change)="changeImage($event.target.value)">
         <option *ngFor="let img of imgs; let i = index" [value]="i" [selected]="i==0">Picture-{{i+1}}</option>
       </select>
       <i class="bar"></i>

@@ -362,12 +362,11 @@ body *::before {
 .empty-wrap{
   position: absolute;
   border: 1px solid var(--main-blue-dark);
-  background: #000;
-  color: #fff;
+  color: #000;
   line-height: 2rem;
   font-weight: 500;
   z-index: 0;
-  transition: margin .3s ease-in-out;
+  // transition: margin .3s ease-in-out;
 }
 .image-wrap {
   transition: margin .3s ease-in-out;

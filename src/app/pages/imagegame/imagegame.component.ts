@@ -11,7 +11,7 @@ export class ImagegameComponent implements OnInit {
   img: HTMLImageElement;
   private thumbs: any[];
   private emptyThumb: any;
-  private imageWrap: any; 
+  private imageWrap: any;
   private tHeight = 0;
   private tWidth = 0;
   private row = 3;
@@ -23,13 +23,17 @@ export class ImagegameComponent implements OnInit {
               private renderer: Renderer2) { }
 
   ngOnInit() {
+    this.loadImage(this.imgs[0]);
+  }
+
+  private loadImage(image: string): void {
     this.img = new Image();
     this.img.src = this.imgs[0];
     const self = this;
     new Observable((observer) => {
       this.img.onload = function() {
         const height = self.img.height, width = self.img.width;
-        const sh = Math.round(height / self.row), sw = Math.round(width / self.row);
+        const sh = Math.floor(height / self.row), sw = Math.floor(width / self.row);
         observer.next([sw, sh]);
       };
     }).subscribe(res => {
@@ -66,7 +70,10 @@ export class ImagegameComponent implements OnInit {
         this.shuffle();
       }
     });
+  }
 
+  changImage(index: number): void {
+    this.loadImage(this.imgs[index]);
   }
   showNumber(): void {
     this.numberShow = !this.numberShow;
@@ -79,8 +86,6 @@ export class ImagegameComponent implements OnInit {
         this.renderer.setStyle(this.imageWrap, 'margin-left', (this.tWidth + 1) * this.row + 'px');
         setTimeout(() => this.imageShow = false, 2000);
       }, 200);
-      
-      
     }
   }
   shuffle(): void {
@@ -101,10 +106,10 @@ export class ImagegameComponent implements OnInit {
     }
   }
   shift(event: MouseEvent, i: number) {
-    const num_empty = +this.emptyThumb.getAttribute('data-num'); 
+    const num_empty = +this.emptyThumb.getAttribute('data-num');
     const index = +this.thumbs[i].getAttribute('data-num');
 
-    if ((num_empty === this.row ** 2 && num_empty - index === 1) 
+    if ((num_empty === this.row ** 2 && num_empty - index === 1)
       || (index === this.row ** 2 && num_empty - index === -1)
       || (num_empty - index === 1 && (index + 1) % this.row !== 0 )
       || (num_empty - index === -1 && index % this.row !== 0)
