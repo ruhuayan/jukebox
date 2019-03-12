@@ -12,8 +12,8 @@ export class ImagegameComponent implements OnInit {
   private thumbs: any[];
   private emptyThumb: any;
   private imageWrap: any;
-  private tHeight = 0;
-  private tWidth = 0;
+  private height = 0;
+  private width = 0;
   private row = 3;
   numberShow = false;
   imageShow = false;
@@ -26,54 +26,70 @@ export class ImagegameComponent implements OnInit {
     this.loadImage(this.imgs[0]);
   }
 
-  private loadImage(image: string): void {
+  private loadImage(imageSrc: string): void {
     this.img = new Image();
-    this.img.src = this.imgs[0];
+    this.img.src = imageSrc;
     const self = this;
     new Observable((observer) => {
       this.img.onload = function() {
         const height = self.img.height, width = self.img.width;
-        const sh = Math.floor(height / self.row), sw = Math.floor(width / self.row);
-        observer.next([sw, sh]);
+        observer.next([width, height]);
       };
     }).subscribe(res => {
       if (res) { console.log(res);
-        this.tWidth = res[0];
-        this.tHeight = res[1];
-
-        this.thumbs = this.el.nativeElement.querySelectorAll('.canvas-wrap');
-        this.emptyThumb = this.el.nativeElement.querySelector('.empty-wrap');
-        for (let i = 0; i < this.thumbs.length; i++) {
-          const marginLeft = (res[0] + 1) * (i % this.row);
-          const marginTop = (res[1] + 1) * Math.floor(i / this.row);
-          this.renderer.setStyle(this.thumbs[i], 'margin-left', marginLeft + 'px');
-          this.renderer.setStyle(this.thumbs[i], 'margin-top', marginTop + 'px');
-          this.renderer.setAttribute(this.thumbs[i], 'data-margin-left', marginLeft + '');
-          this.renderer.setAttribute(this.thumbs[i], 'data-margin-top', marginTop + '');
-
-          const eMarginLeft =  (res[0] + 1) * this.row;
-          const eMarginTop = (res[1] + 1) * (this.row - 1);
-          this.renderer.setStyle(this.emptyThumb, 'margin-top', eMarginTop + 'px');
-          this.renderer.setStyle(this.emptyThumb, 'margin-left', eMarginLeft + 'px');
-          this.renderer.setStyle(this.emptyThumb, 'width', res[0] + 'px');
-          this.renderer.setStyle(this.emptyThumb, 'height', res[1] + 'px');
-          this.renderer.setAttribute(this.emptyThumb, 'data-margin-left', eMarginLeft + '');
-          this.renderer.setAttribute(this.emptyThumb, 'data-margin-top', eMarginTop + '');
-          this.renderer.setAttribute(this.emptyThumb, 'data-num', this.row ** 2 + '');
-          const canvas = this.thumbs[i].querySelector('canvas');
-          canvas.width = this.tWidth;
-          canvas.height = this.tHeight;
-          const context = canvas.getContext('2d');
-          context.drawImage(this.img, res[0] * (i % this.row), res[1] * Math.floor(i / this.row),
-                                    res[0], res[1], 0, 0, res[0], res[1]);
-        }
+        this.width = res[0];
+        this.height = res[1];
+        this.setCanvas(this.width, this.height, this.row);
         this.shuffle();
       }
     });
   }
 
-  changImage(index: number): void {
-    this.loadImage(this.imgs[index]);
+  private setCanvas(imageW: number, imageH: number, row: number):void {
+    const th = Math.floor(imageH / row), tw = Math.floor(imageW / row);
+
+    this.thumbs = this.el.nativeElement.querySelectorAll('.canvas-wrap');
+    this.emptyThumb = this.el.nativeElement.querySelector('.empty-wrap');
+    for (let i = 0; i < this.thumbs.length; i++) {
+      const marginLeft = (tw + 1) * (i % row);
+      const marginTop = (th + 1) * Math.floor(i / row);
+      this.renderer.setStyle(this.thumbs[i], 'margin-left', marginLeft + 'px');
+      this.renderer.setStyle(this.thumbs[i], 'margin-top', marginTop + 'px');
+      this.renderer.setAttribute(this.thumbs[i], 'data-margin-left', marginLeft + '');
+      this.renderer.setAttribute(this.thumbs[i], 'data-margin-top', marginTop + '');
+
+      const eMarginLeft =  (tw + 1) * row;
+      const eMarginTop = (th + 1) * (row - 1);
+      this.renderer.setStyle(this.emptyThumb, 'margin-top', eMarginTop + 'px');
+      this.renderer.setStyle(this.emptyThumb, 'margin-left', eMarginLeft + 'px');
+      this.renderer.setStyle(this.emptyThumb, 'width', tw + 'px');
+      this.renderer.setStyle(this.emptyThumb, 'height', th + 'px');
+      this.renderer.setAttribute(this.emptyThumb, 'data-margin-left', eMarginLeft + '');
+      this.renderer.setAttribute(this.emptyThumb, 'data-margin-top', eMarginTop + '');
+      this.renderer.setAttribute(this.emptyThumb, 'data-num', row ** 2 + '');
+      const canvas = this.thumbs[i].querySelector('canvas');
+      canvas.width = tw;
+      canvas.height = th;
+      const context = canvas.getContext('2d');
+      context.drawImage(this.img, tw * (i % this.row), th * Math.floor(i / this.row),
+                                tw, th, 0, 0, tw, th);
+    }
+  }
+  changeImage(index: number): void {
+    this.loadImage(this.imgs[+index]);
+  }
+
+  changeFormat(num: number): void {
+    this.numOfCan = [];
+    setTimeout(() => {
+      this.row = +num;
+      this.numOfCan = Array.from(new Array(this.row * this.row).keys())
+      setTimeout(() => {
+        this.setCanvas(this.width, this.height, this.row);
+        this.shuffle();
+      } , 100);
+    }, 0);
+    
   }
   showNumber(): void {
     this.numberShow = !this.numberShow;
@@ -82,8 +98,8 @@ export class ImagegameComponent implements OnInit {
     this.imageShow = !this.imageShow;
     if (this.imageShow) {
       setTimeout(() => {
-        this.imageWrap = this.el.nativeElement.querySelector('.image-wrap'); console.log(this.imageWrap)
-        this.renderer.setStyle(this.imageWrap, 'margin-left', (this.tWidth + 1) * this.row + 'px');
+        this.imageWrap = this.el.nativeElement.querySelector('.image-wrap');
+        this.renderer.setStyle(this.imageWrap, 'margin-left', (this.width + this.row)  + 'px');
         setTimeout(() => this.imageShow = false, 2000);
       }, 200);
     }
@@ -117,6 +133,8 @@ export class ImagegameComponent implements OnInit {
 
       this.swap(this.emptyThumb, this.thumbs[i]);
     }
+
+    if (this.checkGame()) alert('you won !!!');
   }
   private swap(iThumb: any, jThumb: any): void {
     const jNum = jThumb.getAttribute('data-num');
@@ -137,6 +155,19 @@ export class ImagegameComponent implements OnInit {
     this.renderer.setAttribute(jThumb, 'data-margin-left', iMarginLeft);
     this.renderer.setAttribute(jThumb, 'data-margin-top', iMarginTop);
     this.renderer.setAttribute(jThumb, 'data-num', iNum);
+  }
+
+  private checkGame(): boolean {
+    const num_empty = +this.emptyThumb.getAttribute('data-num');
+    if (num_empty !== this.row ** 2) {
+      return false;
+    }
+    for (let i = 0; i < this.row ** 2; i++) { 
+      if (+this.thumbs[i].getAttribute('data-ori') !== i) {
+        return false;
+      }
+    }
+    return true;
   }
   download(): void {
 
