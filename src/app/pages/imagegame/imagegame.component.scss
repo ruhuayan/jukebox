@@ -367,6 +367,10 @@ body *::before {
   font-weight: 500;
   z-index: 0;
   // transition: margin .3s ease-in-out;
+  img.arrow {
+    width: 25px;
+    height: 25px;
+  }
 }
 .image-wrap {
   transition: margin .3s ease-in-out;

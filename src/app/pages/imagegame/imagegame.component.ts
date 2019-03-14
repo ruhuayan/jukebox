@@ -57,7 +57,8 @@ export class ImagegameComponent implements OnInit {
       this.renderer.setStyle(this.thumbs[i], 'margin-top', marginTop + 'px');
       this.renderer.setAttribute(this.thumbs[i], 'data-margin-left', marginLeft + '');
       this.renderer.setAttribute(this.thumbs[i], 'data-margin-top', marginTop + '');
-
+      this.renderer.setAttribute(this.thumbs[i], 'data-num', i + '');
+      this.renderer.setAttribute(this.thumbs[i], 'data-ori', i + '');
       const eMarginLeft =  (tw + 1) * row;
       const eMarginTop = (th + 1) * (row - 1);
       this.renderer.setStyle(this.emptyThumb, 'margin-top', eMarginTop + 'px');
@@ -75,7 +76,9 @@ export class ImagegameComponent implements OnInit {
                                 tw, th, 0, 0, tw, th);
     }
   }
+
   changeImage(index: number): void {
+    this.thumbs = [];
     this.loadImage(this.imgs[+index]);
   }
 
@@ -121,7 +124,7 @@ export class ImagegameComponent implements OnInit {
       }
     }
   }
-  shift(event: MouseEvent, i: number) {
+  shift(event: MouseEvent, i: number) { 
     const num_empty = +this.emptyThumb.getAttribute('data-num');
     const index = +this.thumbs[i].getAttribute('data-num');
 
@@ -134,7 +137,9 @@ export class ImagegameComponent implements OnInit {
       this.swap(this.emptyThumb, this.thumbs[i]);
     }
 
-    if (this.checkGame()) alert('you won !!!');
+    if (this.checkGame()) {
+      setTimeout(() => alert('you won !!!'), 300);;
+    }
   }
   private swap(iThumb: any, jThumb: any): void {
     const jNum = jThumb.getAttribute('data-num');
@@ -163,7 +168,7 @@ export class ImagegameComponent implements OnInit {
       return false;
     }
     for (let i = 0; i < this.row ** 2; i++) { 
-      if (+this.thumbs[i].getAttribute('data-ori') !== i) {
+      if (this.thumbs[i].getAttribute('data-ori') !== this.thumbs[i].getAttribute('data-num')) {
         return false;
       }
     }
