@@ -355,7 +355,7 @@ body *::before {
     position: absolute;
     margin-top: -20px;
     margin-left: 5px;
-    color: var(--main-blue-dark);
+    color: var(--main-green);
     font-weight: 500;
   }
 }
@@ -370,6 +370,27 @@ body *::before {
   img.arrow {
     width: 25px;
     height: 25px;
+    position: absolute;
+    opacity: 0;
+    transition: opacity .3s ease-in;
+    &.arrow-top {
+      transform: translateX(-50%);
+      margin-left: 50%;
+    }
+    &.arrow-bottom {
+      bottom: 0px;
+      transform: translateX(-50%) rotate(180deg);
+      margin-left: 50%;
+    }
+    &.arrow-left {
+      transform: translateY(-50%) rotate(-90deg);
+      top: 50%;
+    }
+    &.arrow-right {
+      transform: translateY(-50%) rotate(90deg);
+      right: 0px;
+      top: 50%;
+    }
   }
 }
 .image-wrap {

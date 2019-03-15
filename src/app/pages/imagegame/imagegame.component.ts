@@ -1,15 +1,18 @@
-import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, Renderer2 } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-imagegame',
   templateUrl: './imagegame.component.html',
   styleUrls: ['./imagegame.component.scss']
 })
-export class ImagegameComponent implements OnInit {
+export class ImagegameComponent implements OnInit, OnDestroy {
 
   img: HTMLImageElement;
+  private imgSubscription: Subscription;
   private thumbs: any[];
+  private arrows: any[];
   private emptyThumb: any;
   private imageWrap: any;
   private height = 0;
@@ -23,6 +26,7 @@ export class ImagegameComponent implements OnInit {
               private renderer: Renderer2) { }
 
   ngOnInit() {
+    this.arrows = this.el.nativeElement.querySelectorAll('.arrow');
     this.loadImage(this.imgs[0]);
   }
 
@@ -30,13 +34,13 @@ export class ImagegameComponent implements OnInit {
     this.img = new Image();
     this.img.src = imageSrc;
     const self = this;
-    new Observable((observer) => {
+    this.imgSubscription = new Observable((observer) => {
       this.img.onload = function() {
         const height = self.img.height, width = self.img.width;
         observer.next([width, height]);
       };
     }).subscribe(res => {
-      if (res) { console.log(res);
+      if (res) {
         this.width = res[0];
         this.height = res[1];
         this.setCanvas(this.width, this.height, this.row);
@@ -68,6 +72,10 @@ export class ImagegameComponent implements OnInit {
       this.renderer.setAttribute(this.emptyThumb, 'data-margin-left', eMarginLeft + '');
       this.renderer.setAttribute(this.emptyThumb, 'data-margin-top', eMarginTop + '');
       this.renderer.setAttribute(this.emptyThumb, 'data-num', row ** 2 + '');
+      this.renderer.setStyle(this.arrows[0], 'opacity', '1');
+      this.renderer.setStyle(this.arrows[1], 'opacity', '0');
+      this.renderer.setStyle(this.arrows[2], 'opacity', '0');
+      this.renderer.setStyle(this.arrows[3], 'opacity', '0');
       const canvas = this.thumbs[i].querySelector('canvas');
       canvas.width = tw;
       canvas.height = th;
@@ -92,7 +100,6 @@ export class ImagegameComponent implements OnInit {
         this.shuffle();
       } , 100);
     }, 0);
-    
   }
   showNumber(): void {
     this.numberShow = !this.numberShow;
@@ -120,11 +127,11 @@ export class ImagegameComponent implements OnInit {
       const iNum = this.thumbs[i].getAttribute('data-num');
 
       if (iNum !== jNum && j !== this.row ** 2 - 1) {
-        this.swap(this.thumbs[i], this.thumbs[j])
+        this.swap(this.thumbs[i], this.thumbs[j]);
       }
     }
   }
-  shift(event: MouseEvent, i: number) { 
+  shift(event: MouseEvent, i: number) {
     const num_empty = +this.emptyThumb.getAttribute('data-num');
     const index = +this.thumbs[i].getAttribute('data-num');
 
@@ -135,13 +142,12 @@ export class ImagegameComponent implements OnInit {
       || (Math.abs(num_empty - index) === this.row && num_empty !== this.row ** 2)) {
 
       this.swap(this.emptyThumb, this.thumbs[i]);
-    }
-
-    if (this.checkGame()) {
-      setTimeout(() => alert('you won !!!'), 300);;
+      if (this.checkGame()) {
+        setTimeout(() => alert('you won !!!'), 300);
+      }
     }
   }
-  private swap(iThumb: any, jThumb: any): void {
+  private swap(iThumb: any, jThumb: any, delay: number = 0): void {
     const jNum = jThumb.getAttribute('data-num');
     const iNum = iThumb.getAttribute('data-num');
     const iMarginLeft = iThumb.getAttribute('data-margin-left');
@@ -149,25 +155,44 @@ export class ImagegameComponent implements OnInit {
     const jMarginLeft = jThumb.getAttribute('data-margin-left');
     const jMarginTop = jThumb.getAttribute('data-margin-top');
 
-    this.renderer.setStyle(iThumb, 'margin-left', jMarginLeft + 'px');
-    this.renderer.setStyle(iThumb, 'margin-top', jMarginTop + 'px');
-    this.renderer.setAttribute(iThumb, 'data-margin-left', jMarginLeft);
-    this.renderer.setAttribute(iThumb, 'data-margin-top', jMarginTop);
-    this.renderer.setAttribute(iThumb, 'data-num', jNum);
+
 
     this.renderer.setStyle(jThumb, 'margin-left', iMarginLeft + 'px');
     this.renderer.setStyle(jThumb, 'margin-top', iMarginTop + 'px');
     this.renderer.setAttribute(jThumb, 'data-margin-left', iMarginLeft);
     this.renderer.setAttribute(jThumb, 'data-margin-top', iMarginTop);
     this.renderer.setAttribute(jThumb, 'data-num', iNum);
+    if (delay === 0) {
+      this.renderer.setStyle(iThumb, 'margin-left', jMarginLeft + 'px');
+      this.renderer.setStyle(iThumb, 'margin-top', jMarginTop + 'px');
+      this.renderer.setAttribute(iThumb, 'data-margin-left', jMarginLeft);
+      this.renderer.setAttribute(iThumb, 'data-margin-top', jMarginTop);
+      this.renderer.setAttribute(iThumb, 'data-num', jNum);
+    } else {
+      setTimeout(() => {
+        this.renderer.setStyle(iThumb, 'margin-left', jMarginLeft + 'px');
+        this.renderer.setStyle(iThumb, 'margin-top', jMarginTop + 'px');
+        this.renderer.setAttribute(iThumb, 'data-margin-left', jMarginLeft);
+        this.renderer.setAttribute(iThumb, 'data-margin-top', jMarginTop);
+        this.renderer.setAttribute(iThumb, 'data-num', jNum);
+      }, delay);
+    }
+
   }
 
   private checkGame(): boolean {
     const num_empty = +this.emptyThumb.getAttribute('data-num');
+
+    // show arrows
+    this.renderer.setStyle(this.arrows[0], 'opacity', num_empty !== this.row ** 2 && num_empty % this.row === 0 ? '0' : '1');
+    this.renderer.setStyle(this.arrows[1], 'opacity', num_empty === this.row ** 2 || num_empty < this.row ? '0' : '1');
+    this.renderer.setStyle(this.arrows[2], 'opacity', num_empty === this.row ** 2 || num_empty % this.row === this.row - 1 ? '0' : '1');
+    this.renderer.setStyle(this.arrows[3], 'opacity', num_empty === this.row ** 2 || Math.floor(num_empty / this.row) === this.row - 1 ? '0' : '1');
+
     if (num_empty !== this.row ** 2) {
       return false;
     }
-    for (let i = 0; i < this.row ** 2; i++) { 
+    for (let i = 0; i < this.row ** 2; i++) {
       if (this.thumbs[i].getAttribute('data-ori') !== this.thumbs[i].getAttribute('data-num')) {
         return false;
       }
@@ -176,5 +201,8 @@ export class ImagegameComponent implements OnInit {
   }
   download(): void {
 
+  }
+  ngOnDestroy() { console.log('image game destroy');
+    this.imgSubscription.unsubscribe();
   }
 }
