@@ -13,6 +13,5 @@ describe('BufferLoader', () => {
 
     it(`should load music`, () => {
         const music = 'assets/jukebox/musics/iLoveRocknRoll.mp3';
-        
     });
 });

@@ -22,7 +22,7 @@ describe('ChatbotCompenont', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [FormsModule, HttpClientModule],
-            declarations: [ ChatbotComponent ], 
+            declarations: [ ChatbotComponent ],
             providers: [DialogflowService]
         }).compileComponents();
     }));
@@ -42,8 +42,8 @@ describe('ChatbotCompenont', () => {
     });
 
     it('should toggle chatbot icon', fakeAsync( () => {
-        
-        spyOn(component, 'toggleChat'); 
+
+        spyOn(component, 'toggleChat');
         const icon = fixture.debugElement.query(By.css('.chatbot-icon'));
         icon.triggerEventHandler('click', null);
         fixture.detectChanges();

@@ -7,10 +7,10 @@ import { DialogflowService } from './dialogflow.service';
 @NgModule({
     imports: [CommonModule,  HttpClientModule, FormsModule],
     declarations: [
-        ChatbotComponent, 
+        ChatbotComponent,
     ],
     exports: [
-        ChatbotComponent, 
+        ChatbotComponent,
     ],
     providers: [DialogflowService]
 })
