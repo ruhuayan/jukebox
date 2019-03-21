@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ImagegameComponent } from './imagegame.component';
 import { RouterModule } from '@angular/router';
 import { PanelRightModule } from '../panel-right.module';
-// import { AppFileUploadInput } from '../jukebox/file-upload-input.directive';
+import { UploaderModule } from 'src/app/uploader/uploader.module';
 
 @NgModule({
 imports: [
-  CommonModule, PanelRightModule,
+  CommonModule, PanelRightModule, UploaderModule,
   RouterModule.forChild([
     {
       path: '',

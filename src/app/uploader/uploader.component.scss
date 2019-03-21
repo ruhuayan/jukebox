@@ -1,0 +1,112 @@
+
+div.appUpload{
+    position: relative;
+    background: currentColor;
+    border: 1px solid currentColor;
+    color: #4f93ce;
+    margin-left: 5px;
+    padding: 0.3rem 1rem;
+    cursor: pointer;
+    -webkit-transition: background-color 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
+    transition: background-color 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
+    overflow: hidden;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    
+
+    span.bg {
+        display: block;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        position: absolute;
+        overflow: hidden;
+        border-radius: inherit;
+        pointer-events: none;
+        background: rgba(0, 0, 0, .1);
+        transition: all .3s ease-in-out;
+        -webkit-transform: translate(-50%, -50%) scale(0);
+            transform: translate(-50%, -50%) scale(0);
+    }
+    &:hover {
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+        span.bg {
+        // width: 100%;
+        // height: 100%;
+        -webkit-transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+    &:active {
+        color: #337ab7;
+    }
+    &:focus {
+        outline: none;
+    }
+    &:disabled {
+        color: #999;
+        cursor: default;
+    }
+    input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0); 
+    }
+    a {
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        color: #fff; 
+    }
+}
+  
+.upload-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    .upload-content {
+      background: #fff;
+      width: 350px;
+      display: flex;
+      height: 40px;
+      align-items: center;
+      padding: 10px;
+      border: 2px solid #000;
+      div.file-name{
+        font-size: 14px;
+        width: 30%;
+        overflow: hidden;
+        font-weight: 500;
+        color: var(--main-gray-extra-dark);
+      }
+      div.progressbar-wrap {
+        width: 60%;
+        background: var(--main-gray);
+        padding: 2px;
+        border-radius: 5px;
+        padding-left: 15px;
+      }
+      div.actions {
+        width: 10%;
+        text-align: center;
+        a.action img {
+          width: 30px;
+          opacity: .6;
+        }
+      }
+    }
+  }

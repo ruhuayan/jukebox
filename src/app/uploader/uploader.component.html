@@ -1,10 +1,11 @@
-<div id="upload">
-  <input type="file" appFileUploadInput class="upload" accept="audio/*" (onFileSelected)="onFileSelected($event)" />
-  <a>Upload Music</a>
+<div class="appUpload">
+  <input type="file" class="upload"  (change)="onChange($event)" />
+  <a>Upload</a>
+  <span class="bg"></span>
 </div>
-<span class="upload-msg" *ngIf="file && file['error']">{{file['error']}}</span>
+<span class="upload-msg" *ngIf="error">{{error}}</span>
 
-<div class="upload-modal" *ngIf="file && file['isUploading']">
+<div class="upload-modal" *ngIf="isUploading">
   <div class="upload-content">
           <div class="file-name">{{file.name}}</div>
           <div class="progressbar-wrap">
