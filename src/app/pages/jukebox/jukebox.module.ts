@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { PanelRightModule } from '../panel-right.module';
 import { BeatService } from './beat.service';
 import { JukeService } from './jukebox.service';
+import { UploaderModule } from 'src/app/uploader/uploader.module';
 
 
 @NgModule({
 imports: [
-  CommonModule, PanelRightModule,
+  CommonModule, PanelRightModule, UploaderModule,
   RouterModule.forChild([
     {
       path: '',

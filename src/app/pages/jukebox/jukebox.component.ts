@@ -40,6 +40,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.context = new (window.AudioContext || window.webkitAudioContext)();
   }
   ngOnInit() {
+    this.titleService.setTitle('Jukebox 1.3');
     this.infoSubscription = this.jukeService.getMusicInfo().subscribe(res => {
       if (res && res.length) {
         this.infos = res;

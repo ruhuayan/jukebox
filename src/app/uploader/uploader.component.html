@@ -1,5 +1,5 @@
 <div class="appUpload">
-  <input type="file" class="upload"  (change)="onChange($event)" />
+  <input type="file" class="upload"  (change)="onChange($event)" [accept]="acceptType" />
   <a>Upload</a>
   <span class="bg"></span>
 </div>
@@ -12,6 +12,6 @@
               <div class="progressbar" [style.width]="progressPercentage"></div>
               <span class="file-info">{{progressPercentage}}% of {{file.size | bytes}}</span>
           </div>
-          <div class="actions"><a class="action" href="javascript:;" (click)="remove()"><img src="assets/imgs/close.svg" alt="chat close" /></a></div>
+          <div class="actions"><a class="action" href="javascript:;" (click)="stopUpload()"><img src="assets/imgs/close.svg" alt="chat close" /></a></div>
   </div>
 </div>

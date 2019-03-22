@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, Renderer2 } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-imagegame',
@@ -22,10 +23,12 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   imageShow = false;
   numOfCan = Array.from(new Array(this.row * this.row).keys());
   imgs = ['assets/igame/picture_1.jpg', 'assets/igame/picture_2.jpg', 'assets/igame/picture_3.jpg'];
-  constructor(private el: ElementRef,
+  constructor(private titleService: Title,
+              private el: ElementRef,
               private renderer: Renderer2) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Image Game');
     this.arrows = this.el.nativeElement.querySelectorAll('.arrow');
     this.loadImage(this.imgs[0]);
   }
@@ -201,6 +204,9 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   }
   download(): void {
 
+  }
+  onFileUploaded(path: string): void {
+    console.log(path);
   }
   ngOnDestroy() { console.log('image game destroy');
     this.imgSubscription.unsubscribe();
