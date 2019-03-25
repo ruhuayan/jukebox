@@ -1,13 +1,13 @@
 <div class="conTitle" id="conTitle" >JukeBox 1.3 </div>
-<div class="conSubTitle" id="conSubTitle">Music Loading, please wait....</div>
+<div class="conSubTitle" id="conSubTitle" #lyricDiv>Music Loading, please wait....</div>
 <div class="conText row">
   <div class="conLeft" id="conLeft">
 
       <div class="canvas">
-          <canvas id="canvas" height="250" style="width: 100%;"></canvas>
+          <canvas id="canvas" #canvas height="250" style="width: 100%;"></canvas>
       </div>
       <div id="myProgress">
-          <div id="myBar" ></div>
+          <div id="myBar" #progressbar></div>
       </div>
       <div id="controls">
           <div id="control">
@@ -46,7 +46,7 @@
           </app-uploader>
       </div>
       <div id="musicInfo">
-          <div id="album">Loading album cover ...</div>
+          <div id="album" #albumDiv>Loading album cover ...</div>
           <div id="musicMeta">
                 <span id='mTitle' style='font-weight: bold; font-size: 20px;'>{{metadata['title']}}</span><br />
                 <span id='mArtist'>{{metadata['artist']}}</span><br />

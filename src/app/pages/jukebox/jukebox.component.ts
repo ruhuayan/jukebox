@@ -1,11 +1,10 @@
-import { Component, OnInit, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2, OnDestroy, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Jukebox, Metadata, Beat } from './jukebox.model';
 import { BeatService } from './beat.service';
 import { JukeService } from './jukebox.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 declare let window: any;
-//import './string.extensions';
 
 @Component({
   selector: 'app-jukebox',
@@ -27,11 +26,12 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   metadata: Metadata;
   private isPlaying = false;
 
-  private canvas: any;
-  private drawContext: any;
-  private progressbar: any;
-  private lyricDiv: any;
-  private albumDiv: any;
+  @ViewChild('canvas') canvasRef: ElementRef;
+  @ViewChild('progressbar') progressbarRef: ElementRef;
+  @ViewChild('lyricDiv') lyricRef: ElementRef;
+  @ViewChild('albumDiv') albumRef: ElementRef;
+  private drawContext: CanvasRenderingContext2D;
+
   constructor(private titleService: Title,
               private beatService: BeatService,
               private el: ElementRef,
@@ -48,11 +48,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     });
 
     this.jukebox = new Jukebox(this.context, this.musics, this.beatService);
-    this.canvas = this.el.nativeElement.querySelector('#canvas');
-    this.drawContext = this.canvas.getContext('2d');
-    this.progressbar = this.el.nativeElement.querySelector('#myBar');
-    this.lyricDiv = this.el.nativeElement.querySelector('#conSubTitle');
-    this.albumDiv = this.el.nativeElement.querySelector('#album');
+    this.drawContext = this.canvasRef.nativeElement.getContext('2d');
 
     this.loadSubscription = this.jukebox.load().subscribe((res: boolean) => {
       this.playMusic(res);
@@ -84,20 +80,20 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       const info = this.infos[this.jukebox.mIndex];
       if (info) {
         lyrics = info.lyrics;
-        this.render.setProperty(this.albumDiv, 'innerHTML', `<img src=${info.album_url} width='200px' height='200px' />` );
+        this.render.setProperty(this.albumRef.nativeElement, 'innerHTML', `<img src=${info.album_url} width='200px' height='200px' />` );
       } else {
-        this.render.setProperty(this.lyricDiv, 'innerHTML', '  Lyric Not Available');
-        this.render.setProperty(this.albumDiv, 'innerHTML', ' Album Cover Not Found' );
+        this.render.setProperty(this.lyricRef.nativeElement, 'innerHTML', '  Lyric Not Available');
+        this.render.setProperty(this.albumRef.nativeElement, 'innerHTML', ' Album Cover Not Found' );
       }
-      this.beatSubsription = this.beatService.getBeat().subscribe( beat => { //console.log(beat);
+      this.beatSubsription = this.beatService.getBeat().subscribe( beat => {
         const WIDTH = this.el.nativeElement.querySelector('#conLeft').offsetWidth;
-        this.canvas.width = WIDTH;
-        this.render.setStyle(this.progressbar, 'width', beat.timelapse + '%');
+        this.canvasRef.nativeElement.width = WIDTH;
+        this.render.setStyle(this.progressbarRef.nativeElement, 'width', beat.timelapse + '%');
 
         if (lyrics) {
           const lyric = lyrics.filter(str => +str.match(/\d+/)[0] === Math.round(beat.timelapse))[0];
           if (typeof lyric !== 'undefined') {
-            this.render.setProperty(this.lyricDiv, 'innerHTML', lyric.replace(/{[^}]*}/g, '').replace(/<\/?[^>]+(>|$)/g, ''));
+            this.render.setProperty(this.lyricRef.nativeElement, 'innerHTML', lyric.replace(/{[^}]*}/g, '').replace(/<\/?[^>]+(>|$)/g, ''));
           }
         }
         const barWidth = WIDTH / beat.frequencyBinCount;

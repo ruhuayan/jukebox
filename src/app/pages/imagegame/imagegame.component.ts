@@ -199,7 +199,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     });
     zip.generateAsync({type: 'blob'})
             .then(function(content) { console.log(content)
-                FileSaver.saveAs(content, "download_from_richyan_com.zip");
+                FileSaver.saveAs(content, 'download_from_richyan_com.zip');
             });
   }
 
