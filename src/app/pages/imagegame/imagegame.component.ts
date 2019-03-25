@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, ElementRef, Renderer2 } from '@angular/co
 import { Observable } from 'rxjs/internal/Observable';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Title } from '@angular/platform-browser';
+import * as JSZip from 'jszip';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-imagegame',
@@ -15,12 +17,11 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   private thumbs: any[];
   private arrows: any[];
   private emptyThumb: any;
-  private imageWrap: any;
   private height = 0;
   private width = 0;
   private row = 3;
+  private paused = false;
   numberShow = false;
-  imageShow = false;
   numOfCan = Array.from(new Array(this.row * this.row).keys());
   imgs = ['assets/igame/picture_1.jpg', 'assets/igame/picture_2.jpg', 'assets/igame/picture_3.jpg'];
   constructor(private titleService: Title,
@@ -52,33 +53,14 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setCanvas(imageW: number, imageH: number, row: number):void {
+  private setCanvas(imageW: number, imageH: number, row: number): void {
     const th = Math.floor(imageH / row), tw = Math.floor(imageW / row);
 
     this.thumbs = this.el.nativeElement.querySelectorAll('.canvas-wrap');
     this.emptyThumb = this.el.nativeElement.querySelector('.empty-wrap');
     for (let i = 0; i < this.thumbs.length; i++) {
-      const marginLeft = (tw + 1) * (i % row);
-      const marginTop = (th + 1) * Math.floor(i / row);
-      this.renderer.setStyle(this.thumbs[i], 'margin-left', marginLeft + 'px');
-      this.renderer.setStyle(this.thumbs[i], 'margin-top', marginTop + 'px');
-      this.renderer.setAttribute(this.thumbs[i], 'data-margin-left', marginLeft + '');
-      this.renderer.setAttribute(this.thumbs[i], 'data-margin-top', marginTop + '');
-      this.renderer.setAttribute(this.thumbs[i], 'data-num', i + '');
-      this.renderer.setAttribute(this.thumbs[i], 'data-ori', i + '');
-      const eMarginLeft =  (tw + 1) * row;
-      const eMarginTop = (th + 1) * (row - 1);
-      this.renderer.setStyle(this.emptyThumb, 'margin-top', eMarginTop + 'px');
-      this.renderer.setStyle(this.emptyThumb, 'margin-left', eMarginLeft + 'px');
-      this.renderer.setStyle(this.emptyThumb, 'width', tw + 'px');
-      this.renderer.setStyle(this.emptyThumb, 'height', th + 'px');
-      this.renderer.setAttribute(this.emptyThumb, 'data-margin-left', eMarginLeft + '');
-      this.renderer.setAttribute(this.emptyThumb, 'data-margin-top', eMarginTop + '');
-      this.renderer.setAttribute(this.emptyThumb, 'data-num', row ** 2 + '');
-      this.renderer.setStyle(this.arrows[0], 'opacity', '1');
-      this.renderer.setStyle(this.arrows[1], 'opacity', '0');
-      this.renderer.setStyle(this.arrows[2], 'opacity', '0');
-      this.renderer.setStyle(this.arrows[3], 'opacity', '0');
+      this.setThumbStyle(this.thumbs[i], i);
+      this.setThumbNumber(this.thumbs[i], i, i);
       const canvas = this.thumbs[i].querySelector('canvas');
       canvas.width = tw;
       canvas.height = th;
@@ -86,6 +68,33 @@ export class ImagegameComponent implements OnInit, OnDestroy {
       context.drawImage(this.img, tw * (i % this.row), th * Math.floor(i / this.row),
                                 tw, th, 0, 0, tw, th);
     }
+    this.setThumbStyle(this.emptyThumb, this.row ** 2);
+    this.setThumbNumber(this.emptyThumb, this.row ** 2);
+    this.renderer.setStyle(this.emptyThumb, 'width', tw + 'px');
+    this.renderer.setStyle(this.emptyThumb, 'height', th + 'px');
+    this.setArrowStyle(this.row ** 2);
+  }
+
+  private setThumbStyle(thumb: any, i: number): void {
+    const th = Math.floor(this.height / this.row), tw = Math.floor(this.width / this.row);
+    const marginLeft = i < this.row ** 2 ? (tw + 1) * (i % this.row) : (tw + 1) * this.row;
+    const marginTop = i < this.row ** 2 ? (th + 1) * Math.floor(i / this.row) : (th + 1) * (this.row - 1);
+    this.renderer.setStyle(thumb, 'margin-left', marginLeft + 'px');
+    this.renderer.setStyle(thumb, 'margin-top', marginTop + 'px');
+  }
+
+  private setThumbNumber(thumb: any, dataNum: number, dataOri: number = 0): void {
+    this.renderer.setAttribute(thumb, 'data-num', dataNum + '');
+    if (dataOri) {
+      this.renderer.setAttribute(thumb, 'data-ori', dataOri + '');
+    }
+  }
+
+  private setArrowStyle(num_empty: number): void {
+    this.renderer.setStyle(this.arrows[0], 'opacity', num_empty !== this.row ** 2 && num_empty % this.row === 0 ? '0' : '1');
+    this.renderer.setStyle(this.arrows[1], 'opacity', num_empty === this.row ** 2 || num_empty < this.row ? '0' : '1');
+    this.renderer.setStyle(this.arrows[2], 'opacity', num_empty === this.row ** 2 || num_empty % this.row === this.row - 1 ? '0' : '1');
+    this.renderer.setStyle(this.arrows[3], 'opacity', num_empty === this.row ** 2 || Math.floor(num_empty / this.row) === this.row - 1 ? '0' : '1');
   }
 
   changeImage(index: number): void {
@@ -97,7 +106,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     this.numOfCan = [];
     setTimeout(() => {
       this.row = +num;
-      this.numOfCan = Array.from(new Array(this.row * this.row).keys())
+      this.numOfCan = Array.from(new Array(this.row * this.row).keys());
       setTimeout(() => {
         this.setCanvas(this.width, this.height, this.row);
         this.shuffle();
@@ -108,19 +117,21 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     this.numberShow = !this.numberShow;
   }
   showImage(): void {
-    this.imageShow = !this.imageShow;
-    if (this.imageShow) {
-      setTimeout(() => {
-        this.imageWrap = this.el.nativeElement.querySelector('.image-wrap');
-        this.renderer.setStyle(this.imageWrap, 'margin-left', (this.width + this.row)  + 'px');
-        setTimeout(() => this.imageShow = false, 2000);
-      }, 200);
-    }
+    if (this.paused) { return; }
+    this.thumbs.forEach(thumb => {
+      this.setThumbStyle(thumb, +thumb.getAttribute('data-ori'));
+    });
+    this.paused = true;
+    setTimeout(() => {
+      this.thumbs.forEach(thumb => {
+        this.setThumbStyle(thumb, +thumb.getAttribute('data-num'));
+      });
+      this.paused = false;
+    }, 1300);
   }
+
   shuffle(): void {
-    // if (this.thumbs.length === 0 && this.thumbs.length !== this.row ** 2) {
-    //   return;
-    // }
+    if (this.paused) { return; }
     for (let i = 0; i < this.row ** 2; i++) {
       if (i === this.row ** 2 - 1) {
         break;
@@ -135,6 +146,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     }
   }
   shift(event: MouseEvent, i: number) {
+    if (this.paused) { return; }
     const num_empty = +this.emptyThumb.getAttribute('data-num');
     const index = +this.thumbs[i].getAttribute('data-num');
 
@@ -150,48 +162,21 @@ export class ImagegameComponent implements OnInit, OnDestroy {
       }
     }
   }
-  private swap(iThumb: any, jThumb: any, delay: number = 0): void {
+  private swap(iThumb: any, jThumb: any): void {
     const jNum = jThumb.getAttribute('data-num');
     const iNum = iThumb.getAttribute('data-num');
-    const iMarginLeft = iThumb.getAttribute('data-margin-left');
-    const iMarginTop = iThumb.getAttribute('data-margin-top');
-    const jMarginLeft = jThumb.getAttribute('data-margin-left');
-    const jMarginTop = jThumb.getAttribute('data-margin-top');
 
-
-
-    this.renderer.setStyle(jThumb, 'margin-left', iMarginLeft + 'px');
-    this.renderer.setStyle(jThumb, 'margin-top', iMarginTop + 'px');
-    this.renderer.setAttribute(jThumb, 'data-margin-left', iMarginLeft);
-    this.renderer.setAttribute(jThumb, 'data-margin-top', iMarginTop);
-    this.renderer.setAttribute(jThumb, 'data-num', iNum);
-    if (delay === 0) {
-      this.renderer.setStyle(iThumb, 'margin-left', jMarginLeft + 'px');
-      this.renderer.setStyle(iThumb, 'margin-top', jMarginTop + 'px');
-      this.renderer.setAttribute(iThumb, 'data-margin-left', jMarginLeft);
-      this.renderer.setAttribute(iThumb, 'data-margin-top', jMarginTop);
-      this.renderer.setAttribute(iThumb, 'data-num', jNum);
-    } else {
-      setTimeout(() => {
-        this.renderer.setStyle(iThumb, 'margin-left', jMarginLeft + 'px');
-        this.renderer.setStyle(iThumb, 'margin-top', jMarginTop + 'px');
-        this.renderer.setAttribute(iThumb, 'data-margin-left', jMarginLeft);
-        this.renderer.setAttribute(iThumb, 'data-margin-top', jMarginTop);
-        this.renderer.setAttribute(iThumb, 'data-num', jNum);
-      }, delay);
-    }
-
+    this.setThumbStyle(iThumb, jNum);
+    this.setThumbNumber(iThumb, jNum);
+    this.setThumbStyle(jThumb, iNum);
+    this.setThumbNumber(jThumb, iNum);
   }
 
   private checkGame(): boolean {
     const num_empty = +this.emptyThumb.getAttribute('data-num');
 
     // show arrows
-    this.renderer.setStyle(this.arrows[0], 'opacity', num_empty !== this.row ** 2 && num_empty % this.row === 0 ? '0' : '1');
-    this.renderer.setStyle(this.arrows[1], 'opacity', num_empty === this.row ** 2 || num_empty < this.row ? '0' : '1');
-    this.renderer.setStyle(this.arrows[2], 'opacity', num_empty === this.row ** 2 || num_empty % this.row === this.row - 1 ? '0' : '1');
-    this.renderer.setStyle(this.arrows[3], 'opacity', num_empty === this.row ** 2 || Math.floor(num_empty / this.row) === this.row - 1 ? '0' : '1');
-
+    this.setArrowStyle(num_empty);
     if (num_empty !== this.row ** 2) {
       return false;
     }
@@ -202,13 +187,39 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     }
     return true;
   }
-  download(): void {
 
+  download(): void {
+    const zip = new JSZip();
+    zip.file('README.txt', 'Image Game from www.richyan.com \n');
+    const img = zip.folder('images');
+    this.thumbs.forEach((thumb, i) => {
+      const image = thumb.querySelector('canvas').toDataURL('image/png');
+      const base64_img = image.split(',')[1];
+      img.file(`thumb_${i + 1}.png`, base64_img, {base64: true});
+    });
+    zip.generateAsync({type: 'blob'})
+            .then(function(content) { console.log(content)
+                FileSaver.saveAs(content, "download_from_richyan_com.zip");
+            });
   }
+
   onFileUploaded(path: string): void {
     console.log(path);
   }
+
   ngOnDestroy() { console.log('image game destroy');
     this.imgSubscription.unsubscribe();
+  }
+
+  test(): void {
+    const arr = {info: {pc: {js:[1, 2, 3], css: [4, 5, 6]}, tablet: {js: [7,8,9], css: [1,2,3]}}, index:{pc: {js: [0,0,0],css:[1,1,1]}}};
+
+    const count = Object.keys(arr).reduce((acc, cur) =>
+        [...acc, ...Object.keys(arr[cur]).reduce((acc1, cur1) =>
+            [...acc1, ...Object.keys(arr[cur][cur1]).reduce((acc2, cur2) =>
+              [...acc2, ...arr[cur][cur1][cur2].map(file => new Object({file: file, action: cur, platform: cur1, type: cur2}))], [])]
+            , [])]
+      , []).map(v => { console.log(v.file, v.action, v.platform, v.type); }).length;
+    console.log(`${count} files`);
   }
 }

@@ -31,8 +31,8 @@
       <span class="text">download</span>
       <span class="bg"></span>
     </a>
-    <app-uploader [appAcceptType]="'image/*'" 
-                  [appFileTypes]="['image/gif', 'image/jpeg', 'image/png']" 
+    <app-uploader [appAcceptType]="'image/*'"
+                  [appFileTypes]="['image/gif', 'image/jpeg', 'image/png']"
                   [appFileSizeInMB]="3"
                   (onUploaded)="onFileUploaded($event)">
     </app-uploader>
@@ -51,9 +51,7 @@
       <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-right">
       <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-bottom">
     </div>
-    <div class="image-wrap" *ngIf="imageShow">
-      <img [src]="img.src" alt="origin image" />
-    </div>
+
   </div>
   <div class="conRight" id="conRight">
     <app-panel-right></app-panel-right>

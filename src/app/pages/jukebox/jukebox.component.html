@@ -4,7 +4,7 @@
   <div class="conLeft" id="conLeft">
 
       <div class="canvas">
-          <canvas id="canvas" height="250" width="570"></canvas>
+          <canvas id="canvas" height="250" style="width: 100%;"></canvas>
       </div>
       <div id="myProgress">
           <div id="myBar" ></div>
@@ -17,29 +17,33 @@
               </a>
               <a id="toggle" title="toggle play/pause" (click)="toggle()">
                   <!-- <i class="fa fa-pause" aria-hidden="true"></i> -->
-                  <img src="assets/jukebox/icons/pause.svg" alt="toggle play/pause" id="pause" *ngIf="isPlaying" />
-                  <img src="assets/jukebox/icons/play.svg" alt="toggle play/pause" id="play" *ngIf="!isPlaying" />
+                  <img src="assets/jukebox/icons/pause.svg" alt="toggle play/pause" class="pause" />
+                  <img src="assets/jukebox/icons/play.svg" alt="toggle play/pause" class="play" />
               </a>
-              <a id="forward" title="next">
+              <a id="forward" title="next" (click)="next()">
                   <!-- <i class="fa fa-step-forward" aria-hidden="true"></i> -->
                   <img src="assets/jukebox/icons/next.svg" alt="next" />
               </a>
-              <a id="changeTheme">
+              <a id="changeTheme" (click)="changeTheme()">
                   <!-- <i class="fa fa-random" aria-hidden="true"></i> -->
                   <img src="assets/jukebox/icons/flow.svg" alt="change theme" />
               </a>
           </div>
-          <div class="volume" title="volume" [ngClass]="{'hidden': file && file['error']}">
+          <div class="volume" title="volume">
               <a id="toggleVolume" title="toggle volume">
                   <!-- <i class="fa fa-volume-up" aria-hidden="true"></i> -->
                   <img src="assets/jukebox/icons/volume.svg" alt="volume" />
               </a>
-              <input id="volume" type="range" min="0" max="1" step="0.1">
+              <input id="volume" type="range" min="0" max="1" step="0.1" value="1" (change)="onChangeVolume($event.target.value)">
 
           </div>
           <!-- <div id="theme" title="next theme">
           </div> -->
-          <app-uploader [appAcceptType]="'audio/*'" [appFileTypes]="['audio/mp3', 'audio/wav']" [appFileSizeInMB]="3"></app-uploader>
+          <app-uploader [appAcceptType]="'audio/*'"
+                        [appFileTypes]="['audio/mp3', 'audio/wav']"
+                        [appFileSizeInMB]="3"
+                        (onUploaded)="onFileUploaded($event)">
+          </app-uploader>
       </div>
       <div id="musicInfo">
           <div id="album">Loading album cover ...</div>

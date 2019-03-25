@@ -13,16 +13,16 @@ export class UploaderComponent implements OnInit, OnDestroy {
   isUploading = false;
   progressPercentage = 0;
   private fileUploadSubscription: Subscription;
-  @Input('appFileTypes') fileTypes: string[]; 
+  @Input('appFileTypes') fileTypes: string[];
   @Input('appAcceptType') acceptType: string;
   @Input('appFileSizeInMB') fileSize: number;
-  @Output() public onUploaded: EventEmitter<string> =  new EventEmitter<string>(); 
+  @Output() public onUploaded: EventEmitter<string> =  new EventEmitter<string>();
   constructor(private http: HttpClient) { }
   ngOnInit() {}
 
   onChange(event: MouseEvent) {
-    this.file = event.target['files'][0]; 
-    if (!this.file) return;              
+    this.file = event.target['files'][0];
+    if (!this.file) return;
 
     if (this.validateFile(this.file)) {
       this.upload(this.file);
@@ -51,7 +51,7 @@ export class UploaderComponent implements OnInit, OnDestroy {
         this.setError('File format not accept !');
         return false;;
       }
-    } 
+    }
     if (this.fileSize && file.size > this.fileSize * 1024 * 1024) {
       this.setError(`File max ${this.fileSize}MB`);
       return false;
@@ -60,7 +60,7 @@ export class UploaderComponent implements OnInit, OnDestroy {
   }
 
   private setError(err: string): void {
-    this.error =  err; 
+    this.error =  err;
     setTimeout(() => this.error = null, 2000);
   }
 
@@ -83,9 +83,9 @@ export class UploaderComponent implements OnInit, OnDestroy {
         if (event['status'] === 200 && event['body']) {
           console.log(event['body']);
           this.isUploading = false;
-          this.onUploaded.emit('uploaded');
-          if (event['body'] && event['body']['success']) {
 
+          if (event['body'] && event['body']['success']) {
+            this.onUploaded.emit(event['body']['path']);
           } else {
             this.setError(event['body']['msg']);
           }

@@ -1,4 +1,4 @@
-/* 
+/*
     Created on : Oct 28, 2017, 3:28:53 PM
     Author     : ruhua
 */
@@ -25,17 +25,30 @@
 
 div#controls {
   margin-top: 5px;
-  display: flex; 
+  display: flex;
   a img{
     width: 16px;
     height: 16px;
   }
+  a#toggle {
+    img.pause {
+      display: none;
+    }
+    img.play {
+      display: inline;
+    }
+    &.playing {
+      img.pause {
+        display: inline;
+      }
+      img.play {
+        display: none;
+      }
+    }
+  }
   div.volume {
     overflow: hidden;
     transition: width .3s ease-in;
-    &.hidden {
-      width: 0;
-    }
   }
 }
   div#controls div#control a, div#controls div.volume a, div#controls div#theme a {
@@ -141,7 +154,7 @@ input[type=range]:focus::-ms-fill-upper {
     height: 200px;
     border: 1px solid #000;
     color: #fff;
-    background: #000; 
+    background: #000;
     text-align: center;
     line-height: 200px;
   }

@@ -11,7 +11,7 @@ div.appUpload{
     transition: background-color 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
     overflow: hidden;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    
+
     span.bg {
         display: block;
         top: 50%;
@@ -56,21 +56,25 @@ div.appUpload{
         font-size: 20px;
         cursor: pointer;
         opacity: 0;
-        filter: alpha(opacity=0); 
+        filter: alpha(opacity=0);
     }
     a {
         cursor: pointer;
         // font-size: 12px;
         font-weight: bold;
-        color: #fff; 
+        color: #fff;
     }
 }
 .upload-msg {
   color: var(--utility-red-dark);
   position: absolute;
   margin-top: 5px;
-  background: var(--main-gray-light);
-}  
+  background: #fff;
+  @media (min-width: 812px) {
+    margin-top: -1.2em;
+    margin-left: 85px;
+  }
+}
 .upload-modal {
     position: absolute;
     left: 0;

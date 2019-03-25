@@ -23,7 +23,7 @@
     "audio-metadata": "^0.3.0",
     "core-js": "^2.5.4",
     "file-saver": "^2.0.1",
-    "jszip": "^3.2.0",
+    "jszip": "^3.2.1",
     "rxjs": "~6.3.3",
     "zone.js": "~0.8.26"
   },
@@ -32,6 +32,7 @@
     "@angular/cli": "~7.0.6",
     "@angular/compiler-cli": "^7.2.6",
     "@angular/language-service": "~7.0.0",
+    "@types/file-saver": "^2.0.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",

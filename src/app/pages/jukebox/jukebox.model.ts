@@ -82,7 +82,7 @@ export class Jukebox {
   //   this.musics = musics;
   // }
   load(): Observable<boolean> {
-    const url = this.musics[this.mIndex];
+    const url = this.musics[this.mIndex]; console.log(url)
     const bufferLoader = new BufferLoader(this.context);
 
     return new Observable(observer => {
@@ -107,7 +107,7 @@ export class Jukebox {
     });
 
   }
-  start() {
+  start() { console.log('start');
     this.startTime = this.context.currentTime - this.loadTime;
     this.timePaused = this.context.currentTime - this.startOffset;
     this.source = this.context.createBufferSource();
@@ -120,7 +120,7 @@ export class Jukebox {
     const self = this;
     this.source.onended = function() {
       self.isPlaying = false;
-      console.log('music ends at context time: ', self.context.currentTime - self.timePaused, self.buffer.duration);
+      // console.log('music ends at context time: ', self.context.currentTime - self.timePaused, self.buffer.duration);
       self.beatService.isPlaying$.next(false);
       if (self.context.currentTime - self.timePaused >= self.buffer.duration) {
         self.startOffset = 0;
@@ -151,7 +151,7 @@ export class Jukebox {
   }
   next(): Observable<boolean> {
     this.pause();
-    this.mIndex = this.mIndex++ % this.musics.length;
+    this.mIndex = ++this.mIndex % this.musics.length;
     return this.load();
   }
   previous(): Observable<boolean> {
