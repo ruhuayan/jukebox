@@ -30,6 +30,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   @ViewChild('progressbar') progressbarRef: ElementRef;
   @ViewChild('lyricDiv') lyricRef: ElementRef;
   @ViewChild('albumDiv') albumRef: ElementRef;
+  @ViewChild('playpause') toggleRef: ElementRef;
   private drawContext: CanvasRenderingContext2D;
 
   constructor(private titleService: Title,
@@ -66,10 +67,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       //   });
       // }
     });
-    const toggle = this.el.nativeElement.querySelector('#toggle');
+
     this.playingSubscription = this.beatService.isPlaying$.subscribe(p => {
       this.isPlaying = p;
-      this.render[this.isPlaying ? 'addClass' : 'removeClass'](toggle, 'playing');
+      this.render[this.isPlaying ? 'addClass' : 'removeClass'](this.toggleRef.nativeElement, 'playing');
     });
   }
 
@@ -100,15 +101,19 @@ export class JukeboxComponent implements OnInit, OnDestroy {
         let x = 0;
         const rowbar = HEIGHT / 15;
         const bar = (WIDTH - 36) / 10;
-        this.drawContext.fillStyle = 'rgb(255, 255, 255)';
+        this.drawContext.fillStyle = this.theme === 1 ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)';
         this.drawContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         for (let i = 0; i < beat.frequencyBinCount; i++) {
           const value = beat.freqs[i];
 
-          this.drawContext.fillStyle = 'rgb(0, 0, 0)';
-          this.drawContext.fillRect(x, HEIGHT - value, bar, value);
           if (this.theme === 1) {
+            this.drawContext.fillStyle = 'rgb(0, 0, 0)';
+            if (beat.timelapse >= 100) { console.log(beat.timelapse)
+              this.drawContext.fillRect(x, 0 , bar, HEIGHT);
+            } else {
+              this.drawContext.fillRect(x, HEIGHT - value, bar, value);
+            }
             x += bar + 4;
             for (let j = 0; j < 15; j++) {
                 this.drawContext.fillStyle = 'rgb(255,255,255)';
@@ -121,16 +126,17 @@ export class JukeboxComponent implements OnInit, OnDestroy {
             const h = HEIGHT / ROWS;
 
             this.drawContext.fillStyle = 'rgb(255,255,255)';
-            for(let j = 1; j < ROWS; j++) {
+            for (let j = 1; j < ROWS; j++) {
                 this.drawContext.fillRect(0, h * j, WIDTH, PADDING);
                 this.drawContext.fillRect(w * j, 0, PADDING, HEIGHT);
             }
             const percent = value / 256;
             const height = HEIGHT * percent;
             const offset = HEIGHT - height;
-            const j = Math.round(offset / (h - PADDING)) * ROWS + Math.round(i * barWidth / (w  - PADDING)) ;
-            if(j < ROWS * COLS) {
-              this.drawContext.fillRect((j % COLS) * w, Math.round(j / ROWS) * h, w - 2, h - 2);
+            if (beat.timelapse >= 100) { this.drawContext.fillStyle = 'rgb(0,0,0)'; }
+            const n = Math.round(offset / (h - PADDING)) * ROWS + Math.round(i * barWidth / (w  - PADDING)) ;
+            if (n < ROWS * COLS) {
+              this.drawContext.fillRect((n % COLS) * w, Math.round(n / ROWS) * h, w - 2, h - 2);
             }
           }
 
@@ -148,15 +154,15 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   previous(): void {
-    this.jukebox.previous().subscribe(res => { this.playMusic(res); }, err => console.log(err));
+    // this.jukebox.previous().subscribe(res => { this.playMusic(res); }, err => console.log(err));
   }
 
   next(): void {
-    this.jukebox.next().subscribe(res => { this.playMusic(res); }, err => console.log(err));
+    // this.jukebox.next().subscribe(res => { this.playMusic(res); }, err => console.log(err));
   }
 
   changeTheme(): void {
-
+    this.theme = this.theme === 1 ? 2 : 1;
   }
 
   toggle(): void {

@@ -82,7 +82,7 @@ export class Jukebox {
   //   this.musics = musics;
   // }
   load(): Observable<boolean> {
-    const url = this.musics[this.mIndex]; console.log(url)
+    const url = this.musics[this.mIndex];
     const bufferLoader = new BufferLoader(this.context);
 
     return new Observable(observer => {
@@ -107,7 +107,7 @@ export class Jukebox {
     });
 
   }
-  start() { console.log('start');
+  start() {
     this.startTime = this.context.currentTime - this.loadTime;
     this.timePaused = this.context.currentTime - this.startOffset;
     this.source = this.context.createBufferSource();
@@ -151,11 +151,13 @@ export class Jukebox {
   }
   next(): Observable<boolean> {
     this.pause();
+    this.reset();
     this.mIndex = ++this.mIndex % this.musics.length;
     return this.load();
   }
   previous(): Observable<boolean> {
     this.pause();
+    this.reset();
     this.mIndex = this.mIndex === 0 ? this.musics.length - 1 : this.mIndex--;
     return this.load();
   }
@@ -178,6 +180,13 @@ export class Jukebox {
         this.metadata[key] = this.metadata[key].leftStrip().removeCodeZero();
       });
     }
+  }
+  private reset(): void {
+    this.timePaused = 0;
+    this.loadTime = 0;
+    this.isPlaying = false;
+    this.startTime = 0;
+    this.startOffset = 0;
   }
 
 }

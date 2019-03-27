@@ -11,16 +11,16 @@
       </div>
       <div id="controls">
           <div id="control">
-              <a id="backward" title="previous song" (click)="previous()">
+              <a id="backward" title="previous song" class="disabled" (click)="previous()">
                   <!-- <i class="fa fa-step-backward" aria-hidden="true"></i> -->
                   <img src="assets/jukebox/icons/prev.svg" alt="previous track" />
               </a>
-              <a id="toggle" title="toggle play/pause" (click)="toggle()">
+              <a id="toggle" #playpause title="toggle play/pause" (click)="toggle()">
                   <!-- <i class="fa fa-pause" aria-hidden="true"></i> -->
                   <img src="assets/jukebox/icons/pause.svg" alt="toggle play/pause" class="pause" />
                   <img src="assets/jukebox/icons/play.svg" alt="toggle play/pause" class="play" />
               </a>
-              <a id="forward" title="next" (click)="next()">
+              <a id="forward" class="disabled" title="next song" (click)="next()">
                   <!-- <i class="fa fa-step-forward" aria-hidden="true"></i> -->
                   <img src="assets/jukebox/icons/next.svg" alt="next" />
               </a>
