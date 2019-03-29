@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'jukebox', pathMatch: 'full'},
+  {path: '', redirectTo: 'igame', pathMatch: 'full'},
   {
     path: 'jukebox',
     loadChildren: './pages/jukebox/jukebox.module#JukeboxModule'
