@@ -206,6 +206,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   onFileUploaded(path: string): void {
     if (path) {
       this.loadImage(path);
+      this.imgs.push(path);
     }
   }
 
