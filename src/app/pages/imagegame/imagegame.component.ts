@@ -204,22 +204,12 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   }
 
   onFileUploaded(path: string): void {
-    console.log(path);
+    if (path) {
+      this.loadImage(path);
+    }
   }
 
   ngOnDestroy() { console.log('image game destroy');
     this.imgSubscription.unsubscribe();
-  }
-
-  test(): void {
-    const arr = {info: {pc: {js:[1, 2, 3], css: [4, 5, 6]}, tablet: {js: [7,8,9], css: [1,2,3]}}, index:{pc: {js: [0,0,0],css:[1,1,1]}}};
-
-    const count = Object.keys(arr).reduce((acc, cur) =>
-        [...acc, ...Object.keys(arr[cur]).reduce((acc1, cur1) =>
-            [...acc1, ...Object.keys(arr[cur][cur1]).reduce((acc2, cur2) =>
-              [...acc2, ...arr[cur][cur1][cur2].map(file => new Object({file: file, action: cur, platform: cur1, type: cur2}))], [])]
-            , [])]
-      , []).map(v => { console.log(v.file, v.action, v.platform, v.type); }).length;
-    console.log(`${count} files`);
   }
 }

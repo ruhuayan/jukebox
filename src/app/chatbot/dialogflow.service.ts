@@ -11,7 +11,7 @@ export class DialogflowService {
   constructor(private http: HttpClient){}
 
   public getResponse(query: string){
-    let data = {
+    const data = {
       query : query,
       lang: 'en',
       sessionId: Math.round(Math.random() * 100000)
@@ -23,6 +23,6 @@ export class DialogflowService {
           'Authorization': `Bearer ${this.token}`
         })
     };
-    return this.http.post(`${this.baseURL}`, data, httpOptions);
+    return this.http.post<any>(`${this.baseURL}`, data, httpOptions);
   }
 }
