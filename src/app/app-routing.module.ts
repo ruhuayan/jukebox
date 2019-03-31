@@ -11,6 +11,15 @@ const routes: Routes = [
     path: 'igame',
     loadChildren: './pages/imagegame/imagegame.module#ImagegameModule'
   }, {
+		path: 'points',
+    loadChildren: './pages/points/points.module#PointsModule'
+  }, {
+		path: 'blackjack',
+    loadChildren: './pages/blackjack/blackjack.module#BlackjackModule'
+  }, {
+    path: 'solitaire',
+    loadChildren: './pages/solitaire/solitaire.module#SolitaireModule'
+  },{
 		path: '**',
 		redirectTo: '404',
 		pathMatch: 'full'

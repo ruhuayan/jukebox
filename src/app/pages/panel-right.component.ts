@@ -12,6 +12,15 @@ import { Component, OnInit } from '@angular/core';
         <div class="category">
             <a routerLink="/igame">Image Game</a>
         </div>
+        <div class="category">
+            <a routerLink="/blackjack">Blackjack</a>
+        </div>
+        <div class="category">
+            <a routerLink="/solitaire">Solitaire</a>
+        </div>
+        <div class="category">
+          <a routerLink="/points" >24 Points</a>
+        </div>
        `
 })
 export class PanelRightComponent implements OnInit {
