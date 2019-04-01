@@ -122,6 +122,7 @@ body{
     transition: right, .3s ease-in-out;
     &.show {
       right: 0;
+      z-index: 1000;
       .chatbot-icon {
         opacity: 0;
         z-index: -1;
@@ -151,6 +152,9 @@ body{
       }
       .chat-close {
         height: 30px;
+        &:hover {
+          opacity: .6;
+        }
         img {
           width: 30px;
           opacity: .6;

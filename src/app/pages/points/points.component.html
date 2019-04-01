@@ -9,8 +9,14 @@
         <div class="deck__right">
           <div class="deck__title">Card(s) Left: <span class="deck__title--emphasize">{{deck.getCards().length}}</span></div>
           <div class="deck__btns">
-            <button class="btn btn--shuffle" (click)="refresh()" [disabled]="ondealing || deck.getCards().length===0 ">Refresh</button>
-            <button class="btn btn--deal" (click)="findSolutions()" [disabled]="ondealing">Solution</button>
+            <button class="btn btn--shuffle button" (click)="refresh()" [disabled]="ondealing || deck.getCards().length===0 ">
+              <span class="text">Refresh</span>
+              <span class="bg"></span>
+            </button>
+            <button class="btn btn--deal button" (click)="findSolutions()" [disabled]="ondealing">
+              <span class="text">Solution</span>
+              <span class="bg"></span>
+            </button>
           </div>
         </div>
       </div>

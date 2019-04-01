@@ -14,8 +14,7 @@ export class Message {
 
 @Component({
   selector: 'app-chatbot',
-  templateUrl: 'chatbox.component.html',
-  styleUrls: ['./chatbot.component.scss']
+  templateUrl: 'chatbox.component.html'
 })
 export class ChatbotComponent implements OnInit, OnDestroy {
   private dialogSubscription: Subscription;

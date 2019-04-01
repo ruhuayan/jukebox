@@ -6,35 +6,8 @@
     padding-right: 10px;
     .btn{
       width: 150px;
-      display: inline-block;
-      border: none;
       padding: var(--sm-padding) var(--md-padding);
-      margin: 0;
-      margin-left: 5px;
       text-decoration: none;
-      outline:none;
-      // background: #0069ed;
-      // color: #ffffff;
-      color: #999;
-      font-family: sans-serif;
-      cursor: pointer;
-      text-align: center;
-      transition: background 250ms ease-in-out,
-                  transform 150ms ease;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      box-shadow: 2px 2px 5px #ddd;
-
-
-      &:active {
-          transform: scale(0.98);
-      }
-
-      img{
-        width: 16px;
-        height: 16px;
-        margin-right: 5px;
-      }
     }
   }
 }

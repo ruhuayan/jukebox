@@ -24,35 +24,11 @@
           align-items: flex-end;
           .btn{
               width: 130px;
-              display: inline-block;
-              border: none;
               padding: var(--sm-padding) var(--md-padding);
-              margin: 0;
               margin-right: 5px;
               text-decoration: none;
-              background: #0069ed;
-              color: #ffffff;
-              font-family: sans-serif;
               font-size: 1rem;
-              cursor: pointer;
-              text-align: center;
-              transition: background 250ms ease-in-out,
-                          transform 150ms ease;
-              -webkit-appearance: none;
-              -moz-appearance: none;
-              box-shadow: 2px 2px 5px #ddd;
-
-              &:enabled{
-                  &:hover,
-                  &:focus {
-                      background: #0053ba;
-                  }
-
-                  &:active {
-                      transform: scale(0.98);
-                  }
-              }
-
+  
               &:disabled{
                   background: #999;
                   cursor: default;

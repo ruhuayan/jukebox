@@ -18,8 +18,14 @@
           </li>
         </ul>
         <div class="deck__btns">
-          <button class="btn btn--deal" (click)="stand(0)" [disabled]="status !== 2">Stand</button>
-          <button class="btn btn--deal" (click)="hit()" [disabled]="status !== 2">Hit</button>
+          <button class="btn btn--deal button" (click)="stand(0)" [disabled]="status !== 2">
+            <span class="text">Stand</span>
+            <span class="bg"></span>
+          </button>
+          <button class="btn btn--deal button" (click)="hit()" [disabled]="status !== 2">
+              <span class="text">Hit</span>
+              <span class="bg"></span>
+          </button>
         </div>
         <ul class="cards cards--player">
           <div class="toaster" *ngIf="player.status" [ngClass] = "{'three': player.cards.length===3, 'four': player.cards.length===4, 'five': player.cards.length>=5, 'busted': status===3, 'blackjack': player.status==='Blackjack'}">{{player.status}}</div>
