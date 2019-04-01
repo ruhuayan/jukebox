@@ -145,12 +145,12 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     }
   }
   ngOnDestroy() {
-    this.infoSubscription.unsubscribe();
+    if (this.infoSubscription) this.infoSubscription.unsubscribe();
     if (this.jukebox) this.jukebox.pause();
-    this.loadSubscription.unsubscribe();
-    this.beatSubsription.unsubscribe();
-    this.playingSubscription.unsubscribe();
-    this.metadataSubscription.unsubscribe();
+    if (this.loadSubscription) this.loadSubscription.unsubscribe();
+    if (this.beatSubsription) this.beatSubsription.unsubscribe();
+    if (this.playingSubscription) this.playingSubscription.unsubscribe();
+    if (this.metadataSubscription) this.metadataSubscription.unsubscribe();
   }
 
   previous(): void {
