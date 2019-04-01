@@ -1,0 +1,83 @@
+ <div class="conTitle" id="conTitle">
+    <div class="description"> Solitaire </div>
+   <div class="subtitle__btns">
+      <button class="btn btn--shuffle" (click)="newGame()"><img src="./assets/imgs/autorenew-24px.svg" alt="New Game" />New Game</button>
+      <button class="btn btn--deal" (click)="undo()"><img src="./assets/imgs/undo-24px.svg" alt="Undo" />Undo ({{actions.length}})</button>
+    </div>
+  </div>
+
+  <div class="conText row">
+    <div class="conLeft" id="conLeft" style="width: 100%" >
+      <div class="deck">
+        <div class="deck__left deck__td" id="deckLeft">
+          <div class="deck__cards--left" (click)="open()">
+              <img [src]="deck.cardBackImg" alt="card back" with="75" height="115" *ngIf="leftCards.length > 0">
+          </div>
+        </div>
+        <div class="deck__cards deck__td">
+          <ul class="cards cards--dealer">
+            <li *ngFor="let card of cols[11]; let j = index" cardAnimate = "#deckLeft"
+                [ngClass] = "{'card__show': card['show']}"
+                appDraggable
+                [appDraggingCard]="card"
+                (dropped)="onDropped($event, 11, j)" >
+              <div class="card">
+                <div class="card__back card__face">
+                  <img [src]="deck.cardBackImg" alt="cardback" width="75" height="115">
+                </div>
+                <div class="card__front card__face">
+                  <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="75" height="115" />
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="deck__td"></div>
+        <ul class="deck__card--empty">
+            <li *ngFor="let i of [7,8,9,10]; ">
+              <ul class="cards empty" appDropzone [appCardList]="cols[i]" [appCardHomogeneous]="true" [attr.data-index]="i" [ngClass]="{'empty': cols[i]['length']===0}">
+                  <li class="hover" *ngFor="let card of cols[i]; let j = index"
+                        [attr.data-index] = "i + '|' +j"
+                        [ngClass]="{'hover': card['show'] }"
+                        appDraggable
+                        [appDraggingCard]="card"
+                        (dragStart)="onDragStart($event, i, j)"
+                        (dragMove)="onDragMove($event, i, j)"
+                        (dropped)="onDropped($event, i, j)">
+                      <div class="card">
+                        <div class="card__back card__face">
+                          <img [src]="deck.cardBackImg" alt="cardback" width="75" height="115">
+                        </div>
+                        <div class="card__front card__face">
+                          <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="75" height="115" />
+                        </div>
+                      </div>
+                  </li>
+              </ul>
+            </li>
+        </ul>
+      </div>
+      <div class="card--table">
+        <div class="cards--wrapper" *ngFor="let cards of cols.slice(0, 7); let i = index">
+          <ul class="cards" appDropzone [appCardList]="cards" [attr.data-index]="i" [ngClass]="{'empty': cards['length']===0}">
+            <li *ngFor="let card of cards; let j = index" [attr.data-index] = "i + '|' +j"
+                [ngClass]="{'hover': card['show'], 'grouped': card['grouped']}"
+                 appDraggable
+                 [appDraggingCard]="card"
+                 (dragStart)="onDragStart($event, i, j)"
+                 (dragMove)="onDragMove($event, i, j)"
+                 (dropped)="onDropped($event, i, j)">
+              <div class="card">
+                <div class="card__back card__face">
+                  <img [src]="deck.cardBackImg" alt="cardback" width="75" height="115">
+                </div>
+                <div class="card__front card__face">
+                  <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="75" height="115" />
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>

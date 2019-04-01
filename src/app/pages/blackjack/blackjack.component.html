@@ -1,0 +1,60 @@
+ <div class="conTitle" id="conTitle">  Blackjack</div>
+  <div class="conSubTitle">  Blackjack online game</div>
+  <div class="conText row">
+    <div class="conLeft" id="conLeft" >
+      <div class="card--table">
+        <ul class="cards cards--dealer" [ngClass]="{'cards--stand': status === 1}">
+          <div class="toaster" *ngIf="dealer.status"  [ngClass] = "{'three': dealer.cards.length===3, 'four': dealer.cards.length>=4, 'busted': status===4, 'blackjack': status===6}">
+            {{dealer.status}}</div>
+          <li *ngFor="let card of dealer.cards" cardAnimate = "#deckLeft" >
+            <div class="card">
+              <div class="card__back card__face">
+                <img [src]="deck.cardBackImg" alt="cardback" width="85" height="120">
+              </div>
+              <div class="card__front card__face">
+                <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="85" height="120" />
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="deck__btns">
+          <button class="btn btn--deal" (click)="stand(0)" [disabled]="status !== 2">Stand</button>
+          <button class="btn btn--deal" (click)="hit()" [disabled]="status !== 2">Hit</button>
+        </div>
+        <ul class="cards cards--player">
+          <div class="toaster" *ngIf="player.status" [ngClass] = "{'three': player.cards.length===3, 'four': player.cards.length===4, 'five': player.cards.length>=5, 'busted': status===3, 'blackjack': player.status==='Blackjack'}">{{player.status}}</div>
+          <li *ngFor="let card of player.cards" cardAnimate = "#deckLeft">
+            <div class="card">
+              <div class="card__back card__face">
+                <img [src]="deck.cardBackImg" alt="cardback" width="85" height="120">
+              </div>
+              <div class="card__front card__face">
+                <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="85" height="120" />
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="hints" [ngClass] = "{'show': showHint}">
+            <a class="btn--hint" (click)="hint()"  *ngIf="status===2">{{ showHint? 'X' : 'Hint'}}</a>
+            <div class="probabilities" *ngIf="showHint">
+              Probabilities: <br />
+              Player goes busted: {{ probabilities['player_busted'] + '%'}}<br />
+              Dealer has higher hand: {{ probabilities['player_win'] + '%'}} <br />
+              Dealer will go busted: {{'not yet implemented'}}
+            </div>
+        </div>
+      </div>
+
+      <div class="deck">
+        <div class="deck__title">Cards: {{deck.getCards().length}}</div>
+        <div class="deck__left" id="deckLeft">
+          <img [src]="deck.cardBackImg" alt="card back" with="85" height="120">
+        </div>
+        <div class="deck__title">Scores: {{scores}}</div>
+      </div>
+    </div>
+
+    <div class="conRight" id="conRight">
+      <app-panel-right></app-panel-right>
+    </div>
+  </div>

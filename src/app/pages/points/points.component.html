@@ -1,0 +1,39 @@
+ <div class="conTitle" id="conTitle">24 Points</div>
+  <div class="conSubTitle">Use allowed operations ('+', '-', '*', '/', '()') to calculate 4 cards to achieve number 24</div>
+  <div class="conText row">
+    <div class="conLeft" id="conLeft" >
+      <div class="deck">
+        <div class="deck__left" id="deckLeft">
+          <img class="svg-card" [src]="deck.cardBackImg" alt="card back">
+        </div>
+        <div class="deck__right">
+          <div class="deck__title">Card(s) Left: <span class="deck__title--emphasize">{{deck.getCards().length}}</span></div>
+          <div class="deck__btns">
+            <button class="btn btn--shuffle" (click)="refresh()" [disabled]="ondealing || deck.getCards().length===0 ">Refresh</button>
+            <button class="btn btn--deal" (click)="findSolutions()" [disabled]="ondealing">Solution</button>
+          </div>
+        </div>
+      </div>
+      <ul class="cards">
+        <li *ngFor="let card of dealedCards" cardAnimate = "#deckLeft" (click)="clickEvent(card)">
+          <div class="card">
+            <div class="card__back card__face">
+              <img class="svg-card" [src]="deck.cardBackImg" alt="cardback">
+            </div>
+            <div class="card__front card__face">
+              <img class="svg-card" [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit"/>
+            </div>
+
+          </div>
+        </li>
+      </ul>
+      <div class="solution" *ngIf = "solution">
+        <div class="solutiion-title">Solution: </div>
+        <div class="solution-text">{{solution}}</div>
+      </div>
+    </div>
+
+    <div class="conRight" id="conRight">
+      <app-panel-right></app-panel-right>
+    </div>
+  </div>
