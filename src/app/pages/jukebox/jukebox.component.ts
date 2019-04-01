@@ -146,7 +146,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.infoSubscription.unsubscribe();
-    this.jukebox.pause();
+    // this.jukebox.pause();
     this.loadSubscription.unsubscribe();
     this.beatSubsription.unsubscribe();
     this.playingSubscription.unsubscribe();
