@@ -144,6 +144,7 @@ export class Jukebox {
     }
   }
   pause() {
+    if (!this.source) return;
     this.source[this.source.stop ? 'stop' : 'noteOff'](0);
     this.startOffset += (this.context.currentTime - this.startTime);   console.log('paused at', this.startOffset);
     this.isPlaying = false;
