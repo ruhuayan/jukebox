@@ -42,6 +42,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.titleService.setTitle('Jukebox 1.3');
+    document.body.classList.add('loading');
     this.infoSubscription = this.jukeService.getMusicInfo().subscribe(res => {
       if (res && res.length) {
         this.infos = res;
@@ -52,6 +53,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.drawContext = this.canvasRef.nativeElement.getContext('2d');
 
     this.loadSubscription = this.jukebox.load().subscribe((res: boolean) => {
+      document.body.classList.remove('loading');
       this.playMusic(res);
     }, err => { console.log(err); });
     this.metadataSubscription = this.beatService.metadata$.subscribe(m => {

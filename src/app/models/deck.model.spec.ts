@@ -20,8 +20,8 @@ describe('Deck', () => {
 
     it('should contain valued cards', ()=>{
         for(let card of deck.getCards()){
-            expect(card.getValue()).toBeGreaterThan(0);
-            expect(card.getValue()).toBeLessThan(14);
+            expect(card.value).toBeGreaterThan(0);
+            expect(card.value).toBeLessThan(14);
         }
     });
 
