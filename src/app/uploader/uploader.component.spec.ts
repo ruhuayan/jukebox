@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UploaderComponent } from './uploader.component';
+import { BytesPipe } from './bytesPipe';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('UploaderComponent', () => {
   let component: UploaderComponent;
@@ -8,7 +10,8 @@ describe('UploaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UploaderComponent ]
+      imports: [HttpClientModule],
+      declarations: [ UploaderComponent, BytesPipe ]
     })
     .compileComponents();
   }));
@@ -22,4 +25,9 @@ describe('UploaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have upload button', () => {
+    const button = fixture.debugElement.nativeElement.querySelector('.appUpload');
+    expect(button).toBeTruthy();
+  }); 
 });

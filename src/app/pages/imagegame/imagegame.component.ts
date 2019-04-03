@@ -39,7 +39,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     this.img.src = imageSrc;
     const self = this;
     this.imgSubscription = new Observable((observer) => {
-      this.img.onload = function() {
+      this.img.onload = () => {
         const height = self.img.height, width = self.img.width;
         observer.next([width, height]);
       };
@@ -211,6 +211,6 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() { console.log('image game destroy');
-    this.imgSubscription.unsubscribe();
+    if (this.imgSubscription) this.imgSubscription.unsubscribe();
   }
 }
