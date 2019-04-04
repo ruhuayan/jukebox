@@ -11,7 +11,9 @@ describe('ImagegameComponent', () => {
   let component: ImagegameComponent;
   let fixture: ComponentFixture<ImagegameComponent>;
   let titleService : Title;
-
+  let img = new Image(); 
+  let thumbs = [];
+  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [UploaderModule, PanelRightModule, HttpClientModule, RouterTestingModule],
@@ -25,6 +27,7 @@ describe('ImagegameComponent', () => {
     fixture = TestBed.createComponent(ImagegameComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    img.src = component.imgs[0];
   });
 
   it('should create', () => {
@@ -37,18 +40,15 @@ describe('ImagegameComponent', () => {
   });
 
   it('should load an image which width > 300', () => {
-    const img = new Image();
-    img.src = component.imgs[0];
+    
     img.onload = () => {
       expect(img.width).toBeGreaterThan(300);
     }
   });
 
   it('should have 9 thumbs and shuffle at init', () => {
-    const img = new Image();
-    img.src = component.imgs[0];
     img.onload = () => {
-      const thumbs = fixture.nativeElement.querySelectorAll('.canvas-wrap');
+      thumbs = fixture.nativeElement.querySelectorAll('.canvas-wrap');
       let shuffled = false;
       for (let i = 0; i < thumbs.length; i++) {
         if (thumbs[i].getAttribute('data-ori') !== thumbs[i].getAttribute('data-num')) {
@@ -61,8 +61,32 @@ describe('ImagegameComponent', () => {
     }
   });
 
-  it('should undescribe on Destroy', () => {
-
+  it('should be able to show number', () => {
+  
+    img.onload = () => {
+      component.showNumber();
+      //const thumbs = fixture.nativeElement.querySelectorAll('.canvas-wrap');
+      let numberShowed = true;
+      for (let i = 0; i < thumbs.length; i++) {
+        if (thumbs[i].querySelector('.canvas-num')) {
+          numberShowed = false;
+        }
+      }
+      expect(numberShowed).toBe(true);
+    }
   });
+
+  // it('should compose an image', () => {
+  //   img.onload = () => {
+  //     component.showImage();
+  //     thumbs.forEach(thumb => {
+  //       console.log(getComputedStyle(thumb))
+  //     })
+  //   }
+  // });
+
+  // it('should undescribe on Destroy', () => {
+  //   //component.ngOnDestroy();
+  // });
 
 });
