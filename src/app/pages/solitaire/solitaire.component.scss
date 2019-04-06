@@ -27,6 +27,20 @@
       height: 108px;
       border-radius: 5px;
       border: 2px solid #999;
+      background: url(/assets/imgs/autorenew-24px.svg) center center no-repeat;
+      z-index: -1;
+      user-select: none; /* supported by Chrome and Opera */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+    }
+    img {
+      user-select: none; /* supported by Chrome and Opera */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
     }
   }
   .deck__cards {

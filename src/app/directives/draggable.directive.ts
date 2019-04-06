@@ -77,7 +77,7 @@ export class DraggableDirective {
       const index = this.droppableDropzone.getAttribute('data-index');
       event['dropzoneId'] = +index;
       this.dropped.emit(event);
-      // this.appDragReset = false;
+
     }
 
     this.position = {x: 0, y: 0};

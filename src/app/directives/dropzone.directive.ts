@@ -10,10 +10,6 @@ export class DropzoneDirective implements OnInit {
   @HostBinding('class.dropzone-activated') activated = false;
   @Input('appCardList') cardList: Card[];
   @Input('appCardHomogeneous') homogeneous: false;
-  // @Output() getDropped = new EventEmitter<MouseEvent>();
-  // @Output() remove = new EventEmitter<MouseEvent>();
-
-
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
   ngOnInit(): void {}
@@ -28,7 +24,7 @@ export class DropzoneDirective implements OnInit {
 
     const cardValue = this.el.nativeElement.getAttribute('card-value').split('|');
     // let oppositeSuit = false;
-    
+
     if (this.homogeneous) {
         if (this.cardList.length > 0) {
           const lastCard = this.cardList[this.cardList.length - 1];
@@ -55,20 +51,9 @@ export class DropzoneDirective implements OnInit {
             this.renderer.addClass(this.el.nativeElement, 'dropzone-droppable');
           }
         }
-        
+
     }
-    
-    
+
+
   }
-
-  // @HostListener('document:mouseUp', ['$event'])
-  // onMouseUp(event: MouseEvent) {
-  //   event.preventDefault();
-  //   const dropped = this.el.nativeElement.classList.contains('dropzone-dropped');
-  //   if (dropped) {
-  //     this.getDropped.emit(event);
-  //     this.renderer.removeClass(this.el.nativeElement, 'dropzone-dropped');
-  //   }
-  // }
-
 }

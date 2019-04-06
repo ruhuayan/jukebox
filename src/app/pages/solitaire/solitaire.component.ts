@@ -13,12 +13,12 @@ export class SolitaireComponent implements OnInit {
   deck: Deck = new Deck(1);
   leftCards: Card[] = this.deck.getCards();
   // 0 - 6: 7 rows in main screen;; 7 - 10: 4 rows on top right corner; 11 - top left (openedCards)
-  cols = new Array(12);  
+  cols = new Array(12);
   private groupedCards: Card[] = [];
   actions: Action[] = [];
   constructor(private titleService: Title) {
     this.titleService.setTitle('Solitaire - Poker Game');
-    for (let i = 0; i<this.cols.length; i++) {
+    for (let i = 0; i < this.cols.length; i++) {
       this.cols[i] = new Array<Card>();
     }
     document.body.classList.add('loading');
@@ -53,7 +53,7 @@ export class SolitaireComponent implements OnInit {
     }
   }
   private refresh(): void {
-  
+
     for (let i = 0; i < 7; i++) {
         this.cols[i] = this.cols[i] ? new Array(i + 1) : [];
         for (let j = 0; j < i + 1; j++) {
@@ -103,6 +103,13 @@ export class SolitaireComponent implements OnInit {
 
   onDropped($event: MouseEvent, fromZoneId: number, cardIndex: number) {
     const toDropzoneId = $event['dropzoneId'];
+    // can not drop multiple card on cols 7 - 10
+    // if (toDropzoneId >= 7 && toDropzoneId <= 10 && this.groupedCards.length) {
+    //     for (let i = 0; i < this.groupedCards.length; i++) {
+    //       this.groupedCards[i]['grouped'] = false;
+    //       this.groupedCards[i]['position'] = {x: 0, y: 0}; // cant remove
+    //     }
+    // }
     let numOfCard = 1;
     const card = this.cols[fromZoneId][cardIndex];
     let action: Action;
@@ -126,9 +133,20 @@ export class SolitaireComponent implements OnInit {
     }
     this.actions.push(action);
     this.groupedCards = [];
-
+    if (this.gameFinished()) {
+      setTimeout(() => window.alert('You Won !'), 300);
+    }
   }
 
+  private gameFinished(): boolean {
+    const cards = this.cols.concat(this.leftCards).reduce((acc, curr) => acc.concat(curr), []);
+    for (const card of cards) {
+      if (!card.show) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 interface Action {
