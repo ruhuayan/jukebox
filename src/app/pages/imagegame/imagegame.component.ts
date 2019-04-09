@@ -210,7 +210,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() { console.log('image game destroy');
+  ngOnDestroy() {
     if (this.imgSubscription) this.imgSubscription.unsubscribe();
   }
 }

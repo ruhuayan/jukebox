@@ -6,6 +6,8 @@ import { UploaderModule } from 'src/app/uploader/uploader.module';
 import { PanelRightModule } from '../panel-right.module';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { Observable } from 'rxjs/internal/Observable';
 
 describe('ImagegameComponent', () => {
   let component: ImagegameComponent;
@@ -13,6 +15,8 @@ describe('ImagegameComponent', () => {
   let titleService : Title;
   let img = new Image(); 
   let thumbs = [];
+  let imgSubscription: Subscription;
+  let imgObservable: Observable<[]>;
   
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,6 +25,14 @@ describe('ImagegameComponent', () => {
       providers: [Title]
     })
     .compileComponents();
+    const imageMock = [500, 500];
+    imgSubscription = new Subscription();
+    imgObservable = new Observable<[]>();
+    spyOn(imgSubscription, 'unsubscribe').and.callThrough();
+    spyOn(imgObservable, 'subscribe').and.callFake((fn: Function): Subscription => {
+      fn(imageMock);
+      return imgSubscription;
+    });
   }));
 
   beforeEach(() => {
@@ -85,8 +97,10 @@ describe('ImagegameComponent', () => {
   //   }
   // });
 
-  // it('should undescribe on Destroy', () => {
-  //   //component.ngOnDestroy();
-  // });
+  it('should undescribe on Destroy', () => {
+    fixture.detectChanges();
+    component.ngOnDestroy();
+    //expect(imgSubscription.unsubscribe()).toHaveBeenCalled();
+  });
 
 });

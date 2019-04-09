@@ -14,6 +14,8 @@ export class PointsComponent implements OnInit {
   ondealing = false;
   solution: string;
   constructor(private titleService: Title ) {
+  }
+  ngOnInit() {
     this.titleService.setTitle('24 Point - Poker Game');
     document.body.classList.add('loading');
     this.deck.loadCardImages().then(() => {
@@ -21,9 +23,7 @@ export class PointsComponent implements OnInit {
       this.deck.shuffle();
       this.refresh();
     });
-    
   }
-  ngOnInit() {}
   refresh(): void {
     this.solution = null;
     this.ondealing = true;
@@ -58,7 +58,7 @@ export class PointsComponent implements OnInit {
       this.dealedCards.push(card);
     }
   }
-  private calculateExp(): string {
+  calculateExp(): string {
     const operations = ['+', '-', '*', '/'];
     const numbers = this.dealedCards.map((card) => card.value); // console.log(numbers);
 
