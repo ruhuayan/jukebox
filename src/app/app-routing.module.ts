@@ -20,6 +20,9 @@ const routes: Routes = [
     path: 'solitaire',
     loadChildren: './pages/solitaire/solitaire.module#SolitaireModule'
   },{
+    path: 'ball',
+    loadChildren: './pages/ball/ball.module#BallModule'
+  },{
 		path: '**',
 		redirectTo: '404',
 		pathMatch: 'full'

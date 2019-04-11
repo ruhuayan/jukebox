@@ -20,15 +20,17 @@
     "@angular/platform-browser": "~7.0.0",
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
+    "@ngrx/store": "^7.4.0",
     "audio-metadata": "^0.3.0",
     "core-js": "^2.5.4",
     "file-saver": "^2.0.1",
     "jszip": "^3.2.1",
     "rxjs": "~6.3.3",
+    "stream": "0.0.2",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.13.2",
+    "@angular-devkit/build-angular": "^0.13.8",
     "@angular/cli": "~7.0.6",
     "@angular/compiler-cli": "^7.2.6",
     "@angular/language-service": "~7.0.0",
