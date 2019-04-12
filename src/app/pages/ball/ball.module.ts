@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PanelRightModule } from '../panel-right.module';
 import { BallComponent } from './ball.component';
+import { StoreModule } from '@ngrx/store';
+import { ballReducer } from './ball.reducer';
 
 @NgModule({
   imports: [
@@ -12,7 +14,8 @@ import { BallComponent } from './ball.component';
         path: '',
         component: BallComponent
       }
-    ])
+    ]), 
+    StoreModule.forRoot({ count: ballReducer })
   ],
   providers: [],
   declarations: [BallComponent]
