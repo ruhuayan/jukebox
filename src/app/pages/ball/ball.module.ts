@@ -15,7 +15,7 @@ import { ballReducer } from './ball.reducer';
         component: BallComponent
       }
     ]), 
-    StoreModule.forRoot({ count: ballReducer })
+    StoreModule.forRoot({ balls: ballReducer })
   ],
   providers: [],
   declarations: [BallComponent]

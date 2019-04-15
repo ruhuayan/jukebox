@@ -1,10 +1,14 @@
 import { ActionTypes, ActionUnion } from './ball.actions';
+import { Ball } from './ball.model';
  
-export const initState = {
+export interface IBallState{
+    balls: Ball[];
+}
+export const initState: IBallState = {
     balls: []
 }
  
-export function ballReducer(state = initState, action: ActionUnion) {
+export function ballReducer(state:IBallState = initState, action: ActionUnion) {
   switch (action.type) {
     case ActionTypes.Move:
         return {
@@ -16,7 +20,7 @@ export function ballReducer(state = initState, action: ActionUnion) {
         };
     case ActionTypes.Add:
         return {
-            balls: state.balls.push(action.payload)
+            balls: [...state.balls, action.payload]
         };
  
     case ActionTypes.Remove:

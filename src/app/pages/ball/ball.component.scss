@@ -1,0 +1,21 @@
+.conLeft{
+    .balls{
+        width: 100%;
+        height: 356.25px;
+        display: grid; 
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+
+        .ball{
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 70px;
+            box-shadow: inset -5px -5px 50px, inset 0px 0px 50px;
+            // a{
+            //     position: absolute;
+            // }
+        }
+    }
+}
