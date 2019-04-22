@@ -4,6 +4,7 @@ import { Ball } from './ball.model';
 export enum ActionTypes {
     Move    = '[Ball Component] Move',
     Add     = '[Ball Component] Add',
+    Update  = '[Ball Component] Update',
     Remove  = '[Ball Component] Remove',
     Reset   = '[Ball Component] Reset'
 }
@@ -11,6 +12,10 @@ export enum ActionTypes {
 export class Move implements Action {
     readonly type = ActionTypes.Move;
     constructor(public payload: Ball) {}
+}
+export class Update implements Action {
+  readonly type = ActionTypes.Update;
+  constructor(public payload: Ball[]) {}
 }
 export class Add implements Action {
     readonly type = ActionTypes.Add;
@@ -25,4 +30,4 @@ export class Reset implements Action {
     constructor() {}
 }
 
-export type ActionUnion = Move | Add | Remove | Reset;
+export type ActionUnion = Move | Add | Remove | Reset | Update;

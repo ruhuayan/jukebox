@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 export class Ball {
     id: number;
     xPos: number;
@@ -5,7 +6,7 @@ export class Ball {
     color: string;
 
     constructor(color: string) {
-        this.id = Math.random();
+        this.id = uuid.v4();
         this.color = color;
     }
 }

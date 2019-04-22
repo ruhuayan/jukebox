@@ -5,6 +5,8 @@ import { PanelRightModule } from '../panel-right.module';
 import { BallComponent } from './ball.component';
 import { StoreModule } from '@ngrx/store';
 import { ballReducer } from './ball.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { LocalStorageEffects } from './localStorage.effect';
 
 @NgModule({
   imports: [
@@ -14,8 +16,9 @@ import { ballReducer } from './ball.reducer';
         path: '',
         component: BallComponent
       }
-    ]), 
-    StoreModule.forRoot({ balls: ballReducer })
+    ]),
+    StoreModule.forRoot({ balls: ballReducer }),
+    EffectsModule.forRoot([LocalStorageEffects]),
   ],
   providers: [],
   declarations: [BallComponent]

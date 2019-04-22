@@ -20,7 +20,7 @@ const routes: Routes = [
     path: 'solitaire',
     loadChildren: './pages/solitaire/solitaire.module#SolitaireModule'
   },{
-    path: 'ball',
+    path: 'balls',
     loadChildren: './pages/ball/ball.module#BallModule'
   },{
 		path: '**',
