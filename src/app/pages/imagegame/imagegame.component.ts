@@ -13,13 +13,13 @@ import * as FileSaver from 'file-saver';
 export class ImagegameComponent implements OnInit, OnDestroy {
 
   img: HTMLImageElement;
-  private imgSubscription: Subscription;
+  public imgSubscription: Subscription;
   private thumbs: any[];
   private arrows: any[];
   private emptyThumb: any;
   private height = 0;
   private width = 0;
-  private row = 5;
+  public row = 5;
   private paused = false;
   numberShow = false;
   numOfCan = Array.from(new Array(this.row * this.row).keys());

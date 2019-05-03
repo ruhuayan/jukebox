@@ -9,46 +9,48 @@ export const initState: IBallState = {
     balls: []
 };
 
-const returnState = (_state: IBallState) => {
+const saveState = (_state: IBallState) => {
   localStorage.setItem('__balls', JSON.stringify(_state));
   return _state;
 }
 export function ballReducer(state: IBallState = initState, action: ActionUnion) {
-  switch (action.type) {
-    case ActionTypes.Move:
-        return {
-            balls: state.balls.forEach(ball => {
-                if (ball.id === action.payload.id) {
-                    ball = action.payload;
-                }
-            })
-        };
+    let newState: IBallState;
+    switch (action.type) {
+        case ActionTypes.Move:
+            newState = { balls: []
+                // balls: state.balls.forEach(ball => {
+                //     if (ball.id === action.payload.id) {
+                //         ball = action.payload;
+                //     }
+                // })
+            };
+            return newState;
 
-    case ActionTypes.Update:
-        console.log(action.payload);
-        return {...action.payload};
+        case ActionTypes.Update:
+            console.log(action.payload);
+            return {...action.payload};
 
-    case ActionTypes.Add:
+        case ActionTypes.Add:
 
-        const newState =  {
-            balls: [...state.balls, action.payload]
-        };
-        window.localStorage.setItem('__balls', JSON.stringify(newState));
-        return newState;
+            return saveState({
+                balls: [...state.balls, action.payload]
+            });
 
-    case ActionTypes.Remove:
-        return {
-            balls: state.balls.filter(ball => ball.id !== action.payload.id)
-        };
+        case ActionTypes.Remove:
+            newState =  {
+                balls: state.balls.filter(ball => ball.id !== action.payload.id)
+            };
+            saveState(newState);
+            return newState;
 
-    case ActionTypes.Reset:
-        return {
-            balls: []
-        };
+        case ActionTypes.Reset:
+            return {
+                balls: []
+            };
 
-    default:
-        return state;
-  }
+        default:
+            return state;
+    }
 }
 
 export function persistStateReducer(_reducer: ActionReducer<IBallState>) {

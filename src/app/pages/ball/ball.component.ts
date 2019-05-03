@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { interval, fromEvent, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { timer, interval, fromEvent, Observable } from 'rxjs';
+import { map, take, switchMap } from 'rxjs/operators';
 import { Store, select, createSelector } from '@ngrx/store';
 // import { Effect } from '@ngrx/effects';
 import { Ball } from './ball.model';
