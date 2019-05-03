@@ -19,7 +19,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   private emptyThumb: any;
   private height = 0;
   private width = 0;
-  private row = 3;
+  private row = 5;
   private paused = false;
   numberShow = false;
   numOfCan = Array.from(new Array(this.row * this.row).keys());

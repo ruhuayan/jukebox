@@ -12,16 +12,16 @@ import { Observable } from 'rxjs/internal/Observable';
 describe('ImagegameComponent', () => {
   let component: ImagegameComponent;
   let fixture: ComponentFixture<ImagegameComponent>;
-  let titleService : Title;
-  let img = new Image(); 
+  let titleService: Title;
+  const img = new Image();
   let thumbs = [];
   let imgSubscription: Subscription;
   let imgObservable: Observable<[]>;
-  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [UploaderModule, PanelRightModule, HttpClientModule, RouterTestingModule],
-      declarations: [ ImagegameComponent ], 
+      declarations: [ ImagegameComponent ],
       providers: [Title]
     })
     .compileComponents();
@@ -52,7 +52,7 @@ describe('ImagegameComponent', () => {
   });
 
   it('should load an image which width > 300', () => {
-    
+
     img.onload = () => {
       expect(img.width).toBeGreaterThan(300);
     }
@@ -74,7 +74,7 @@ describe('ImagegameComponent', () => {
   });
 
   it('should be able to show number', () => {
-  
+
     img.onload = () => {
       component.showNumber();
       //const thumbs = fixture.nativeElement.querySelectorAll('.canvas-wrap');

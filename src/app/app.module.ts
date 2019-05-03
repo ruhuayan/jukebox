@@ -11,7 +11,7 @@ import { ChatbotModule } from './chatbot/chatbox.module';
 
 @NgModule({
   declarations: [
-    AppComponent, HeaderComponent, FooterComponent, NotFoundComponent, 
+    AppComponent, HeaderComponent, FooterComponent, NotFoundComponent,
   ],
   imports: [
     BrowserModule,

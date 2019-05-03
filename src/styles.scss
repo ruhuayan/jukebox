@@ -99,8 +99,8 @@ body{
     opacity: .3;
     animation: infinite-fadeInOut 3s infinite;
     }
-  &.loading {
-    opacity: .5;
+  &.loading::before {
+    z-index: 10000;
   }
   .content{
     min-height: 600px;

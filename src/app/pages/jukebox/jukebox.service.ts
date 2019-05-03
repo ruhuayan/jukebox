@@ -13,13 +13,13 @@ export class JukeService {
     getMusicInfo(): Observable<any> {
         return this.http.get(this.localURL);
     }
-    
+
     getLyrics(artist: string, title: string): Observable<any> {
         const url = `${this.baseURL}/${artist}/${title}`;
         return this.http.get(url);
     }
     getCover(artist: string): Observable<any> {
         // return this.http.get();
-        return null
+        return null;
     }
 }
