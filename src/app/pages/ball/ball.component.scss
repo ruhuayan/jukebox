@@ -13,7 +13,7 @@ $tw: calc(100% / #{$n});
             padding-top: $tw;
             border-radius: 50%;
             text-align: center;
-            box-shadow: inset -5px -5px 30px, inset 0px 0px 30px;
+            box-shadow: inset -5px -5px 35px, inset 0px 0px 35px;
             transition: opacity .3s ease-out;
             div.number{
                 position: absolute;
@@ -30,6 +30,10 @@ $tw: calc(100% / #{$n});
               &:nth-child(1n + #{$i * $n + 1}) {
                 margin-top: calc(100% / #{$n} * #{$i});
               }
+            }
+            &.toLaunch {
+              margin-top: calc(540px - 100% / 16);
+              left: calc(100% / 2 - 100% / 16);
             }
         }
 

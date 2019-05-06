@@ -6,7 +6,9 @@ export enum ActionTypes {
     Add     = '[Ball Component] Add',
     Update  = '[Ball Component] Update',
     Remove  = '[Ball Component] Remove',
-    Reset   = '[Ball Component] Reset'
+    Reset   = '[Ball Component] Reset',
+    Angle   = '[Ball Component] Change_Angle',
+    ToggleNumber = '[Ball Component] Toggle_Number'
 }
 
 export class Move implements Action {
@@ -29,5 +31,13 @@ export class Reset implements Action {
     readonly type = ActionTypes.Reset;
     constructor() {}
 }
+export class Angle implements Action {
+    readonly type = ActionTypes.Angle;
+    constructor(public payload: number) {}
+}
 
-export type ActionUnion = Move | Add | Remove | Reset | Update;
+export class ToggleNumber implements Action {
+    readonly type = ActionTypes.ToggleNumber;
+}
+
+export type ActionUnion = Move | Add | Remove | Reset | Update | Angle | ToggleNumber;

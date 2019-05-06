@@ -2,14 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, take, switchMap } from 'rxjs/operators';
 import { Store, select, createSelector } from '@ngrx/store';
-import { Ball, Dot, KEY } from './ball.model';
+import { Ball, Dot, KEY, RA, ANG } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
 import { fromEvent } from 'rxjs';
 
-const RA = Math.PI / 2;
-const ANG = Math.PI / 120;
-const HEIGHT = 540;
 @Component({
   selector: 'app-ball',
   templateUrl: './ball.component.html',
@@ -17,13 +14,15 @@ const HEIGHT = 540;
 })
 export class BallComponent implements OnInit {
   balls$: Observable<Ball>;
-  numberShow = false;
-  dots: Dot[];
-  private angle = Math.PI / 2;
+  dots$: Observable<Dot>;
+  numberShow$: Observable<boolean>;
+  private angle = RA;
 
   constructor(private store: Store<IBallState>) {
-    this.balls$ = store.pipe(select('balls')).pipe(map(state => state.balls));
-    this.dots = Array.from(new Array(10).keys()).map(i => new Dot(null, HEIGHT - 12 * (i + 1)));
+  
+    this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
+    this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
+    this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
   }
 
   ngOnInit() {
@@ -31,14 +30,19 @@ export class BallComponent implements OnInit {
     keydown.pipe(map(ev => ev['which'])).subscribe(keycode => {
       switch (keycode) {
         case KEY.LEFT:
-          // if (this.angle > this.ang)
-          this.setAngle(ANG);
+          if (this.angle > ANG) {
+            this.angle -= ANG;
+            this.store.dispatch(new ballActions.Angle(RA-this.angle));
+          }
           break;
         case KEY.RIGHT:
-          // if(this.angle < Math.PI - this.ang)
-          this.setAngle(-ANG);
+          if(this.angle < Math.PI - ANG) {
+            this.angle += ANG;
+            this.store.dispatch(new ballActions.Angle(RA-this.angle));
+          }
           break;
         case KEY.UP:
+          this.launch();
           break;
 
         default:
@@ -65,14 +69,10 @@ export class BallComponent implements OnInit {
   }
 
   showNumber(): void {
-    this.numberShow = ! this.numberShow;
+    this.store.dispatch(new ballActions.ToggleNumber());
   }
 
-  private setAngle(ang) {
-    this.angle = this.angle - ang;
-    this.dots.map((dot, i) => {
-      dot.y = HEIGHT - 12 + Math.cos(RA - this.angle) * (-12 * i);
-      dot.x = Math.sin(RA - this.angle) * (-12 * i);
-    });
+  private launch(): void {
+
   }
 }

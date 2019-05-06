@@ -1,13 +1,17 @@
 import { ActionTypes, ActionUnion } from './ball.actions';
-import { Ball } from './ball.model';
-import { ActionReducer, Action } from '@ngrx/store';
+import { Ball, Dot, RA, HEIGHT, ANG, STATUS } from './ball.model';
+// import { ActionReducer, Action } from '@ngrx/store';
 
 export interface IBallState {
-    balls: Ball[];
+    balls: Ball[],
+    dots: Dot[],
+    numberShow: boolean
 }
 
 export const initState: IBallState = {
-    balls: Array.from(new Array(40).keys()).map(i => new Ball())
+    balls: Array.from(new Array(41).keys()).map(i => i === 40 ? new Ball('toLaunch'): new Ball()),
+    dots: Array.from(new Array(10).keys()).map(i => new Dot(0, HEIGHT - 12 * (i + 1))),
+    numberShow: false
 };
 
 const saveState = (_state: IBallState) => {
@@ -20,8 +24,9 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
     switch (action.type) {
         case ActionTypes.Move:
               newState =  {
+                ...state,
                 balls: state.balls.map(ball =>
-                  ball.id === action.payload.id ? action.payload : ball
+                ball.id === action.payload.id ? action.payload : ball
                 )
             };
             saveState(newState);
@@ -33,36 +38,38 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
 
         case ActionTypes.Add:
             return saveState({
-                balls: [...state.balls, action.payload]
+              ...state,
+              balls: [...state.balls, action.payload]
             });
 
         case ActionTypes.Remove:
             action.payload.show = false;
             newState =  {
+              ...state,
                 // balls: state.balls.filter(ball => ball.id !== action.payload.id)
-                balls: state.balls.map(ball =>
+              balls: state.balls.map(ball =>
                   ball.id === action.payload.id ? action.payload : ball
                 )
             };
             return saveState(newState);
 
         case ActionTypes.Reset:
-            return saveState({ balls: []});
+            return saveState({...state, balls: []});
+
+        case ActionTypes.Angle: 
+            return saveState({
+              ...state,
+              dots: state.dots.map((dot, i) => 
+                new Dot(Math.sin(action.payload) * (-12 * i), HEIGHT - 12 + Math.cos(action.payload) * (-12 * i)))
+            });
+
+        case ActionTypes.ToggleNumber:
+            return saveState({
+              ...state,
+              numberShow: !state.numberShow
+            });
         default:
             return state;
     }
 }
 
-export function persistStateReducer(_reducer: ActionReducer<IBallState>) {
-  const localStorageKey = '__balls';
-  return (state: IBallState | undefined, action: Action) => {
-    if (state === undefined) {
-      const persisted = localStorage.getItem(localStorageKey);
-      return persisted ? JSON.parse(persisted) : _reducer(state, action);
-    }
-
-    const nextState = _reducer(state, action);
-    localStorage.setItem(localStorageKey, JSON.stringify(nextState));
-    return nextState;
-  };
-}

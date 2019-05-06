@@ -8,11 +8,13 @@ export class Ball {
     colorId: number;
     color: string;
     show = true;
+    status: string;
 
-    constructor() {
+    constructor(status = null) {
         this.id = uuid.v4();
         this.colorId = Math.floor(Math.random() * COLORS.length);
         this.color = COLORS[this.colorId];
+        this.status = status;
         Ball.count ++;
     }
     static reset() {
@@ -35,3 +37,12 @@ export enum KEY {
   RIGHT = 39,
   DOWN = 40
 }
+
+export enum STATUS {
+  SHOW = 'show',
+  TOLAUNCH = 'toLaunch'
+}
+
+export const RA = Math.PI / 2;
+export const ANG = Math.PI / 120;
+export const HEIGHT = 540;
