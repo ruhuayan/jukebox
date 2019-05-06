@@ -89,15 +89,15 @@ body{
     top: 0;
     left: 0;
     z-index: -1;
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-    background-image: url(./assets/imgs/error-bg1.jpg);
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    opacity: .3;
-    animation: infinite-fadeInOut 3s infinite;
+    // -webkit-transform: rotate(180deg);
+    // transform: rotate(180deg);
+    // background-image: url(./assets/imgs/error-bg1.jpg);
+    // -webkit-background-size: cover;
+    // -moz-background-size: cover;
+    // -o-background-size: cover;
+    // background-size: cover;
+    // opacity: .3;
+    // animation: infinite-fadeInOut 3s infinite;
     }
   &.loading::before {
     z-index: 10000;

@@ -2,28 +2,29 @@ import { ActionTypes, ActionUnion } from './ball.actions';
 import { Ball } from './ball.model';
 import { ActionReducer, Action } from '@ngrx/store';
 
-export interface IBallState{
+export interface IBallState {
     balls: Ball[];
 }
+
 export const initState: IBallState = {
-    balls: []
+    balls: Array.from(new Array(40).keys()).map(i => new Ball())
 };
 
 const saveState = (_state: IBallState) => {
   localStorage.setItem('__balls', JSON.stringify(_state));
   return _state;
-}
+};
+saveState(initState);
 export function ballReducer(state: IBallState = initState, action: ActionUnion) {
     let newState: IBallState;
     switch (action.type) {
         case ActionTypes.Move:
-            newState = { balls: []
-                // balls: state.balls.forEach(ball => {
-                //     if (ball.id === action.payload.id) {
-                //         ball = action.payload;
-                //     }
-                // })
+              newState =  {
+                balls: state.balls.map(ball =>
+                  ball.id === action.payload.id ? action.payload : ball
+                )
             };
+            saveState(newState);
             return newState;
 
         case ActionTypes.Update:
@@ -31,23 +32,22 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
             return {...action.payload};
 
         case ActionTypes.Add:
-
             return saveState({
                 balls: [...state.balls, action.payload]
             });
 
         case ActionTypes.Remove:
+            action.payload.show = false;
             newState =  {
-                balls: state.balls.filter(ball => ball.id !== action.payload.id)
+                // balls: state.balls.filter(ball => ball.id !== action.payload.id)
+                balls: state.balls.map(ball =>
+                  ball.id === action.payload.id ? action.payload : ball
+                )
             };
-            saveState(newState);
-            return newState;
+            return saveState(newState);
 
         case ActionTypes.Reset:
-            return {
-                balls: []
-            };
-
+            return saveState({ balls: []});
         default:
             return state;
     }

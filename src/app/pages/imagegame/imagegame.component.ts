@@ -5,6 +5,15 @@ import { Title } from '@angular/platform-browser';
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
 
+class Dimension {
+  width: number;
+  height: number;
+  constructor(w: number, h: number) {
+    this.width = w;
+    this.height = h;
+  }
+}
+
 @Component({
   selector: 'app-imagegame',
   templateUrl: './imagegame.component.html',
@@ -41,12 +50,12 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     this.imgSubscription = new Observable((observer) => {
       this.img.onload = () => {
         const height = self.img.height, width = self.img.width;
-        observer.next([width, height]);
+        observer.next(new Dimension(width, height));
       };
-    }).subscribe(res => {
+    }).subscribe((res: Dimension) => {
       if (res) {
-        this.width = res[0];
-        this.height = res[1];
+        this.width = res.width;
+        this.height = res.height;
         this.setCanvas(this.width, this.height, this.row);
         this.shuffle();
       }

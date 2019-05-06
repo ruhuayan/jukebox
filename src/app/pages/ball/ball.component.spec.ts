@@ -18,7 +18,7 @@ describe('BallComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [PanelRightModule, RouterTestingModule, 
+      imports: [PanelRightModule, RouterTestingModule,
         StoreModule.forRoot({ballReducer})
       ],
       declarations: [ BallComponent ],
@@ -27,7 +27,7 @@ describe('BallComponent', () => {
 
     store = TestBed.get(Store);
     // spyOn(store, 'dispatch').and.callThrough();
-    
+
   }));
 
   beforeEach(() => {
