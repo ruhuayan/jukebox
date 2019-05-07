@@ -3,7 +3,7 @@ export const COLORS = ['#663399', '#FF00FF', '#FFA500', '#6B8E23' ];
 
 export interface Margin {
   left: number;
-  top: string;
+  top: number;
 }
 export class Ball {
     static count = 0;
@@ -13,6 +13,8 @@ export class Ball {
     color: string;
     show = true;
     status: string;
+    marginTop: string;
+    marginLeft: number = 0;
 
     constructor(status = null) {
         this.id = uuid.v4();

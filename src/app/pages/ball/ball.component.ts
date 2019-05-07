@@ -13,21 +13,30 @@ import { fromEvent } from 'rxjs';
   styleUrls: ['./ball.component.scss']
 })
 export class BallComponent implements OnInit {
-  balls$: Observable<Ball>;
-  dots$: Observable<Dot>;
-  numberShow$: Observable<boolean>;
+  balls: Ball[];
+  dots: Dot[];
+  numberShow = false;
+  // balls$: Observable<Ball>;
+  // dots$: Observable<Dot>;
+  // numberShow$: Observable<boolean>;
+  launching = false;
   private angle = RA;
-
+  private speed = 10;
   constructor(private store: Store<IBallState>) {
-
-    this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
-    this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
-    this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
+    store.pipe(select('iStates')).subscribe(state => {
+      this.balls = state.balls;
+      this.dots = state.dots;
+      this.numberShow = state.numberShow;
+    });
+    // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
+    // this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
+    // this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
   }
 
   ngOnInit() {
     const keydown = fromEvent(document, 'keydown');
     keydown.pipe(map(ev => ev['which'])).subscribe(keycode => {
+      if (this.launching) return;
       switch (keycode) {
         case KEY.LEFT:
           if (this.angle > ANG) {
@@ -73,6 +82,31 @@ export class BallComponent implements OnInit {
   }
 
   private launch(): void {
-    this.store.dispatch(new ballActions.Move({left: 0, top: `calc(${HEIGHT - 35}px - 100% / 16)`}));
+    // this.launching = true;
+    const margin = {left: 0, top: 0};
+
+    if (this.angle === RA) {
+      margin.left = 0;
+      margin.top = this.speed;
+    } else if (this.angle < RA) {
+      margin.left = Math.cos(this.angle) * this.speed;
+      margin.top = Math.sin(this.angle) * this.speed; 
+    } else if (this.angle > RA) {
+      margin.left = -Math.cos(Math.PI - this.angle) * this.speed;
+      margin.top = Math.sin(Math.PI - this.angle) * this.speed;         
+    }
+    // this.checkCollusion();
+    this.store.dispatch(new ballActions.Move(margin));
+  }
+
+  private checkCollusion(): void {
+    
+    // const targetBalls = this.balls.filter((ball, i) =>
+    //   i < 40 ||
+    //   ball.status !== 'toLaunch' || 
+    //   (this.angle === RA && (i % 8 !==3 || i % 8 !==4)) ||
+    //   (this.angle < RA && (i % 8 > 4)) ||
+    //   (this.angle > RA && (i % 8 < 4))
+    // ); console.log(targetBalls);
   }
 }

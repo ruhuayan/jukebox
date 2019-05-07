@@ -27,7 +27,10 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
                 ...state,
                 balls: state.balls.map(ball => {
                   if (ball.status === 'toLaunch') {
-                    ball.margin = action.payload;
+                    const margin = ball.margin || {left: 0, top: HEIGHT};
+                    ball.margin = {left: margin.left - action.payload.left, top: margin.top - action.payload.top };
+                    ball.marginTop = `calc(${ball.margin.top}px - 100% / 16)`; 
+                    ball.marginLeft = margin.left - action.payload.left;
                   }
                   return ball;
                 })
