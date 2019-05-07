@@ -1,10 +1,14 @@
 import uuid from 'uuid';
-export const COLORS = ['#663399', '#FF00FF', '#FFA500', '#6B8E23' ]; // ['#009900', '#663399', '#6b8e23', '#ff00ff'];
+export const COLORS = ['#663399', '#FF00FF', '#FFA500', '#6B8E23' ];
+
+export interface Margin {
+  left: number;
+  top: string;
+}
 export class Ball {
     static count = 0;
     id: uuid;
-    x: number;
-    y: number;
+    margin: Margin;
     colorId: number;
     color: string;
     show = true;
@@ -38,9 +42,10 @@ export enum KEY {
   DOWN = 40
 }
 
-export enum STATUS {
+export enum Status {
   SHOW = 'show',
-  TOLAUNCH = 'toLaunch'
+  TOLAUNCH = 'toLaunch',
+  STOPPED = 'stopped'
 }
 
 export const RA = Math.PI / 2;

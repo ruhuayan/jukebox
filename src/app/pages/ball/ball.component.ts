@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, take, switchMap } from 'rxjs/operators';
 import { Store, select, createSelector } from '@ngrx/store';
-import { Ball, Dot, KEY, RA, ANG } from './ball.model';
+import { Ball, Dot, KEY, RA, ANG, HEIGHT } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
 import { fromEvent } from 'rxjs';
@@ -19,7 +19,7 @@ export class BallComponent implements OnInit {
   private angle = RA;
 
   constructor(private store: Store<IBallState>) {
-  
+
     this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
     this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
     this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
@@ -32,13 +32,13 @@ export class BallComponent implements OnInit {
         case KEY.LEFT:
           if (this.angle > ANG) {
             this.angle -= ANG;
-            this.store.dispatch(new ballActions.Angle(RA-this.angle));
+            this.store.dispatch(new ballActions.Angle(RA - this.angle));
           }
           break;
         case KEY.RIGHT:
-          if(this.angle < Math.PI - ANG) {
+          if (this.angle < Math.PI - ANG) {
             this.angle += ANG;
-            this.store.dispatch(new ballActions.Angle(RA-this.angle));
+            this.store.dispatch(new ballActions.Angle(RA - this.angle));
           }
           break;
         case KEY.UP:
@@ -59,8 +59,8 @@ export class BallComponent implements OnInit {
   }
 
   remove(ball: Ball, i: number): void {
-    ball.show = false;
-    this.store.dispatch(new ballActions.Remove(ball));
+    // ball.show = false;
+    // this.store.dispatch(new ballActions.Remove(ball));
   }
 
   reset() {
@@ -73,6 +73,6 @@ export class BallComponent implements OnInit {
   }
 
   private launch(): void {
-
+    this.store.dispatch(new ballActions.Move({left: 0, top: `calc(${HEIGHT - 35}px - 100% / 16)`}));
   }
 }

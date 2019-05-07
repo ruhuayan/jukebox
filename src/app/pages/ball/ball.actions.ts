@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Ball } from './ball.model';
+import { Ball, Margin } from './ball.model';
 
 export enum ActionTypes {
     Move    = '[Ball Component] Move',
@@ -13,7 +13,7 @@ export enum ActionTypes {
 
 export class Move implements Action {
     readonly type = ActionTypes.Move;
-    constructor(public payload: Ball) {}
+    constructor(public payload: Margin) {}
 }
 export class Update implements Action {
   readonly type = ActionTypes.Update;

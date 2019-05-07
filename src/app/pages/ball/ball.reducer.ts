@@ -1,15 +1,15 @@
 import { ActionTypes, ActionUnion } from './ball.actions';
-import { Ball, Dot, RA, HEIGHT, ANG, STATUS } from './ball.model';
+import { Ball, Dot, RA, HEIGHT, ANG, Status } from './ball.model';
 // import { ActionReducer, Action } from '@ngrx/store';
 
 export interface IBallState {
-    balls: Ball[],
-    dots: Dot[],
-    numberShow: boolean
+    balls: Ball[];
+    dots: Dot[];
+    numberShow: boolean;
 }
 
 export const initState: IBallState = {
-    balls: Array.from(new Array(41).keys()).map(i => i === 40 ? new Ball('toLaunch'): new Ball()),
+    balls: Array.from(new Array(41).keys()).map(i => i === 40 ? new Ball('toLaunch') : new Ball()),
     dots: Array.from(new Array(10).keys()).map(i => new Dot(0, HEIGHT - 12 * (i + 1))),
     numberShow: false
 };
@@ -25,9 +25,12 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
         case ActionTypes.Move:
               newState =  {
                 ...state,
-                balls: state.balls.map(ball =>
-                ball.id === action.payload.id ? action.payload : ball
-                )
+                balls: state.balls.map(ball => {
+                  if (ball.status === 'toLaunch') {
+                    ball.margin = action.payload;
+                  }
+                  return ball;
+                })
             };
             saveState(newState);
             return newState;
@@ -56,10 +59,10 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
         case ActionTypes.Reset:
             return saveState({...state, balls: []});
 
-        case ActionTypes.Angle: 
+        case ActionTypes.Angle:
             return saveState({
               ...state,
-              dots: state.dots.map((dot, i) => 
+              dots: state.dots.map((dot, i) =>
                 new Dot(Math.sin(action.payload) * (-12 * i), HEIGHT - 12 + Math.cos(action.payload) * (-12 * i)))
             });
 

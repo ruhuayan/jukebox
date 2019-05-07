@@ -19,7 +19,7 @@
   <div class="conLeft" id="conLeft">
     <div class="balls">
         <div class="ball" *ngFor="let ball of balls$ | async; let i = index;"
-            [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0}" 
+            [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0, 'margin-top': ball.margin && ball.margin.top ? ball.margin.top : ''}"
             [ngClass]="{'toLaunch': ball.status == 'toLaunch'}"
                           [id]="ball.id"
                           (click)="remove(ball, i)">
