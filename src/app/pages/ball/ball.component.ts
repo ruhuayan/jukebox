@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, take, switchMap } from 'rxjs/operators';
 import { Store, select, createSelector } from '@ngrx/store';
-import { Ball, Dot, KEY, RA, ANG, HEIGHT } from './ball.model';
+import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
 import { fromEvent } from 'rxjs';
@@ -95,18 +95,28 @@ export class BallComponent implements OnInit {
       margin.left = -Math.cos(Math.PI - this.angle) * this.speed;
       margin.top = Math.sin(Math.PI - this.angle) * this.speed;         
     }
-    // this.checkCollusion();
-    this.store.dispatch(new ballActions.Move(margin));
+
+    const targetBalls = this.getTargetBalls();
+    const launchBall = this.getLaunchBall();
+
+    this.checkCollusion(targetBalls, launchBall, margin);
+    
+  }
+  private getTargetBalls(): Ball[] {
+    return this.balls.filter((ball, i) => {
+      return ball.status !== 'toLaunch' &&
+          (i >= 40 || 
+          (this.angle === RA && (i % 8 ===3 || i % 8 ===4)) ||
+          (this.angle < RA && (i % 8 < 4)) ||
+          (this.angle > RA && (i % 8 >= 4)))
+    });
   }
 
-  private checkCollusion(): void {
-    
-    // const targetBalls = this.balls.filter((ball, i) =>
-    //   i < 40 ||
-    //   ball.status !== 'toLaunch' || 
-    //   (this.angle === RA && (i % 8 !==3 || i % 8 !==4)) ||
-    //   (this.angle < RA && (i % 8 > 4)) ||
-    //   (this.angle > RA && (i % 8 < 4))
-    // ); console.log(targetBalls);
+  private getLaunchBall(): Ball {
+    return this.balls.filter((ball) => ball.status === 'toLaunch')[0];
+  }
+
+  private checkCollusion(targetBalls: Ball[], launchBall: Ball, margin: Margin): void {
+    this.store.dispatch(new ballActions.Move(margin));
   }
 }
