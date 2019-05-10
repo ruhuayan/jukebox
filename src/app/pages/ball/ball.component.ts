@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, take, switchMap } from 'rxjs/operators';
 import { Store, select, createSelector } from '@ngrx/store';
 import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
-import { fromEvent } from 'rxjs';
+import { fromEvent, interval } from 'rxjs';
 
 @Component({
   selector: 'app-ball',
@@ -13,6 +13,7 @@ import { fromEvent } from 'rxjs';
   styleUrls: ['./ball.component.scss']
 })
 export class BallComponent implements OnInit {
+  @ViewChild('container') container: any;
   balls: Ball[];
   dots: Dot[];
   numberShow = false;
@@ -22,6 +23,8 @@ export class BallComponent implements OnInit {
   launching = false;
   private angle = RA;
   private speed = 10;
+  private cw: number;
+  private bw: number;
   constructor(private store: Store<IBallState>) {
     store.pipe(select('iStates')).subscribe(state => {
       this.balls = state.balls;
@@ -58,6 +61,8 @@ export class BallComponent implements OnInit {
           return;
       }
     });
+    this.cw = this.container.nativeElement.offsetWidth;
+    this.bw = this.cw / 8;
   }
 
   add() {
@@ -82,7 +87,7 @@ export class BallComponent implements OnInit {
   }
 
   private launch(): void {
-    // this.launching = true;
+    this.launching = true;
     const margin = {left: 0, top: 0};
 
     if (this.angle === RA) {
@@ -90,25 +95,25 @@ export class BallComponent implements OnInit {
       margin.top = this.speed;
     } else if (this.angle < RA) {
       margin.left = Math.cos(this.angle) * this.speed;
-      margin.top = Math.sin(this.angle) * this.speed; 
+      margin.top = Math.sin(this.angle) * this.speed;
     } else if (this.angle > RA) {
       margin.left = -Math.cos(Math.PI - this.angle) * this.speed;
-      margin.top = Math.sin(Math.PI - this.angle) * this.speed;         
+      margin.top = Math.sin(Math.PI - this.angle) * this.speed;
     }
 
     const targetBalls = this.getTargetBalls();
-    const launchBall = this.getLaunchBall();
-
-    this.checkCollusion(targetBalls, launchBall, margin);
-    
+    const launchedBall = this.getLaunchBall();
+    if (launchedBall) {
+      this.checkCollusion(targetBalls, launchedBall, margin);
+    }
   }
   private getTargetBalls(): Ball[] {
     return this.balls.filter((ball, i) => {
       return ball.status !== 'toLaunch' &&
-          (i >= 40 || 
-          (this.angle === RA && (i % 8 ===3 || i % 8 ===4)) ||
+          (i >= 40 ||
+          (this.angle === RA && (i % 8 === 3 || i % 8 === 4)) ||
           (this.angle < RA && (i % 8 < 4)) ||
-          (this.angle > RA && (i % 8 >= 4)))
+          (this.angle > RA && (i % 8 >= 4)));
     });
   }
 
@@ -116,7 +121,27 @@ export class BallComponent implements OnInit {
     return this.balls.filter((ball) => ball.status === 'toLaunch')[0];
   }
 
-  private checkCollusion(targetBalls: Ball[], launchBall: Ball, margin: Margin): void {
+  private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
+    const w = this.cw / 2 - this.bw / 2;
+    if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
+      const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
+      const lastMargin: Margin = {left: left, top: margin.top * left / margin.left};
+      this.store.dispatch(new ballActions.Move(lastMargin));
+      this.launching = false; console.log(margin, lastMargin);
+      launchedBall.status = 'stopped';
+      return;
+    } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
+      const top = launchedBall.margin.top - this.bw / 2;
+      const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
+      this.store.dispatch(new ballActions.Move(lastMargin));
+      this.launching = false; console.log(margin, lastMargin);
+      launchedBall.status = 'stopped';
+      return;
+    }
     this.store.dispatch(new ballActions.Move(margin));
+
+    setTimeout(() => {
+      this.checkCollusion(targetBalls, launchedBall, margin);
+    }, 100);
   }
 }

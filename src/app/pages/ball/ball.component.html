@@ -17,10 +17,10 @@
 </div>
 <div class="conText row">
   <div class="conLeft" id="conLeft">
-    <div class="balls">
+    <div class="balls" #container>
         <div class="ball" *ngFor="let ball of balls; let i = index;"
             [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0, 'margin-top': ball.marginTop, 'margin-left': ball.marginLeft+'px'}"
-            [ngClass]="{'toLaunch': ball.status == 'toLaunch'}"
+            [ngClass]="{'toLaunch': ball.status == 'toLaunch', 'stopped': ball.status == 'stopped'}"
                           [id]="ball.id"
                           (click)="remove(ball, i)">
             <div class="number" *ngIf="numberShow"> {{i+1}} </div>

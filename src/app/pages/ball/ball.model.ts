@@ -14,7 +14,7 @@ export class Ball {
     show = true;
     status: string;
     marginTop: string;
-    marginLeft: number = 0;
+    marginLeft = 0;
 
     constructor(status = null) {
         this.id = uuid.v4();

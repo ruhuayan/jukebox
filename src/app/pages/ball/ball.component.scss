@@ -35,6 +35,9 @@ $tw: calc(100% / #{$n});
               margin-top: calc(540px - 100% / 16);
               left: calc(100% / 2 - 100% / 16);
             }
+            &.stopped {
+              left: calc(100% / 2 - 100% / 16);
+            }
         }
 
         .dot {
