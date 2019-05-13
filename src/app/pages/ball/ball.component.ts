@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import { map, take, switchMap } from 'rxjs/operators';
-import { Store, select, createSelector } from '@ngrx/store';
-import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin } from './ball.model';
+import { map } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
+import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin, COL } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
-import { fromEvent, interval } from 'rxjs';
+import { fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-ball',
@@ -17,9 +16,6 @@ export class BallComponent implements OnInit {
   balls: Ball[];
   dots: Dot[];
   numberShow = false;
-  // balls$: Observable<Ball>;
-  // dots$: Observable<Dot>;
-  // numberShow$: Observable<boolean>;
   launching = false;
   private angle = RA;
   private speed = 10;
@@ -28,6 +24,16 @@ export class BallComponent implements OnInit {
   constructor(private store: Store<IBallState>) {
     store.pipe(select('iStates')).subscribe(state => {
       this.balls = state.balls;
+      this.balls.map((ball, i) => {
+        if (ball.status === 'toLaunch') return ball;
+        if (i % COL > 0 && this.balls[i - 1].colorId === ball.colorId) {
+          this.mergeBallUnion(this.balls[i - 1], ball);
+        }
+        if (Math.floor(i / COL) > 0 && this.balls[i - COL].colorId === ball.colorId) {
+          this.mergeBallUnion(this.balls[i - COL], ball);
+        }
+        return ball;
+      });
       this.dots = state.dots;
       this.numberShow = state.numberShow;
     });
@@ -62,7 +68,7 @@ export class BallComponent implements OnInit {
       }
     });
     this.cw = this.container.nativeElement.offsetWidth;
-    this.bw = this.cw / 8;
+    this.bw = this.cw / COL;
   }
 
   add() {
@@ -73,8 +79,8 @@ export class BallComponent implements OnInit {
   }
 
   remove(ball: Ball, i: number): void {
-    // ball.show = false;
-    // this.store.dispatch(new ballActions.Remove(ball));
+    ball.show = false;
+    this.store.dispatch(new ballActions.Remove(ball));
   }
 
   reset() {
@@ -88,33 +94,47 @@ export class BallComponent implements OnInit {
 
   private launch(): void {
     this.launching = true;
-    const margin = {left: 0, top: 0};
+    const margin = {left: Math.cos(this.angle) * this.speed, top: Math.sin(this.angle) * this.speed};
 
-    if (this.angle === RA) {
-      margin.left = 0;
-      margin.top = this.speed;
-    } else if (this.angle < RA) {
-      margin.left = Math.cos(this.angle) * this.speed;
-      margin.top = Math.sin(this.angle) * this.speed;
-    } else if (this.angle > RA) {
-      margin.left = -Math.cos(Math.PI - this.angle) * this.speed;
-      margin.top = Math.sin(Math.PI - this.angle) * this.speed;
-    }
-
-    const targetBalls = this.getTargetBalls();
+    const targetBalls = this.getTargetBalls(); console.log(targetBalls)
     const launchedBall = this.getLaunchBall();
     if (launchedBall) {
       this.checkCollusion(targetBalls, launchedBall, margin);
     }
   }
   private getTargetBalls(): Ball[] {
-    return this.balls.filter((ball, i) => {
-      return ball.status !== 'toLaunch' &&
+    const balls = this.balls.filter((ball, i) => {
+      return ball.status !== 'toLaunch' && ball.show &&
           (i >= 40 ||
-          (this.angle === RA && (i % 8 === 3 || i % 8 === 4)) ||
-          (this.angle < RA && (i % 8 < 4)) ||
-          (this.angle > RA && (i % 8 >= 4)));
-    });
+          (this.angle === RA && (i % COL === 3 || i % COL === 4)) ||
+          (this.angle < RA && (i % COL < 4)) ||
+          (this.angle > RA && (i % COL >= 4)));
+    }).sort((b1: Ball, b2: Ball) => b2.index - b1.index); console.log(balls)
+
+    const _isColValid = (...args) => { console.log(args)
+      const temp = args.map(n => balls[n].index);
+      for (let i = 1; i < temp.length; i++ ) {
+        if (temp[i - 1] !== temp[i] + 1) return false;
+      }
+      return true;
+
+    };
+    const arr = [];
+    for (let i = 0; i < balls.length; i ++) {
+      if (balls[i].index >= 40) arr.push(balls[i]);
+      if (this.angle === RA && balls[i].index % COL === 4 && balls.length >= i + 1 && _isColValid(i, i + 1)) {
+        arr.push(balls[i], balls[i + 1]);
+        return arr;
+      }
+      if ((this.angle < RA && balls[i].index % COL === 3 || this.angle > RA && balls[i].index % COL === 7)
+        && balls.length >= i + 3
+        && _isColValid(i, i + 1, i + 2, i + 3)
+      ) {
+        arr.push(balls[i], balls[i + 1], balls[i + 2], balls[i + 3]);
+        return arr;
+      }
+    }
+      return balls;
   }
 
   private getLaunchBall(): Ball {
@@ -123,25 +143,69 @@ export class BallComponent implements OnInit {
 
   private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
     const w = this.cw / 2 - this.bw / 2;
+    const move_x = w + launchedBall.marginLeft;
+    const move_y = launchedBall.margin && launchedBall.margin.top ? launchedBall.margin.top - this.bw / 2 : HEIGHT;
+    const stopBall = (lastMargin: Margin) => {
+      this.store.dispatch(new ballActions.Move(lastMargin));
+      this.launching = false;
+      launchedBall.status = 'stopped';
+      this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
+    };
+    const checkBallColor = (ball: Ball) => {
+      if (ball.colorId === launchedBall.colorId) {
+        const union = this.mergeBallUnion(ball, launchedBall);
+        if (union.length > 2) {
+          union.forEach(n => this.balls[n].show = false);
+        }
+      }
+    }
+
+    for (let ball of targetBalls) {
+      const ball_x = ball.index % COL * this.bw;
+      const ball_y = Math.floor(ball.index / COL) * this.bw;
+      const dist = Math.hypot(Math.abs(move_x - ball_x), Math.abs(move_y - ball_y));
+      if (dist - this.bw < this.speed) {
+        const speed = dist - this.bw;
+        const lastMargin: Margin = {left: margin.left * speed / this.speed, top: margin.top * speed / this.speed};
+        // console.log(move_x, move_y, ball_x, ball_y, lastMargin, this.bw, dist);
+        if (this.compareNumber(margin.left, move_x - ball_x - lastMargin.left)) {
+          stopBall(lastMargin);
+          return;
+        } else {
+
+        }
+      }
+    }
     if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
       const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
       const lastMargin: Margin = {left: left, top: margin.top * left / margin.left};
-      this.store.dispatch(new ballActions.Move(lastMargin));
-      this.launching = false; console.log(margin, lastMargin);
-      launchedBall.status = 'stopped';
+      stopBall(lastMargin);
       return;
     } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
       const top = launchedBall.margin.top - this.bw / 2;
       const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
-      this.store.dispatch(new ballActions.Move(lastMargin));
-      this.launching = false; console.log(margin, lastMargin);
-      launchedBall.status = 'stopped';
+      stopBall(lastMargin);
       return;
     }
-    this.store.dispatch(new ballActions.Move(margin));
+    this.store.dispatch(new ballActions.Move(margin)); // console.log(launchedBall.margin, margin);
 
     setTimeout(() => {
       this.checkCollusion(targetBalls, launchedBall, margin);
     }, 100);
+  }
+
+  private compareNumber(n1: number, n2: number): boolean {
+    return (n1 > 0 && n2 > 0) || (n1 < 0 && n2 < 0) || (n1 === 0 && n2 === 0);
+  }
+
+  private mergeBallUnion(ball1: Ball, ball2: Ball): number[] {
+    const arr = [...ball1.union];
+    for (let n of ball2.union) {
+      if (arr.indexOf(n) < 0) {
+        arr.push(n);
+      }
+    }
+    arr.forEach(n => this.balls[n].union = arr);
+    return arr;
   }
 }

@@ -29,7 +29,7 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
                   if (ball.status === 'toLaunch') {
                     const margin = ball.margin || {left: 0, top: HEIGHT};
                     ball.margin = {left: margin.left - action.payload.left, top: margin.top - action.payload.top };
-                    ball.marginTop = `calc(${ball.margin.top}px - 100% / 16)`; 
+                    ball.marginTop = `calc(${ball.margin.top}px - 100% / 16)`;
                     ball.marginLeft = margin.left - action.payload.left;
                   }
                   return ball;
@@ -54,7 +54,7 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
               ...state,
                 // balls: state.balls.filter(ball => ball.id !== action.payload.id)
               balls: state.balls.map(ball =>
-                  ball.id === action.payload.id ? action.payload : ball
+                  ball.index === action.payload.index ? action.payload : ball
                 )
             };
             return saveState(newState);

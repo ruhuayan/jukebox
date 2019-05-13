@@ -21,9 +21,8 @@
         <div class="ball" *ngFor="let ball of balls; let i = index;"
             [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0, 'margin-top': ball.marginTop, 'margin-left': ball.marginLeft+'px'}"
             [ngClass]="{'toLaunch': ball.status == 'toLaunch', 'stopped': ball.status == 'stopped'}"
-                          [id]="ball.id"
                           (click)="remove(ball, i)">
-            <div class="number" *ngIf="numberShow"> {{i+1}} </div>
+            <div class="number" *ngIf="numberShow"> {{ball.index}} </div>
           </div>
         <div class="dot" *ngFor="let dot of dots" [ngStyle]="{'margin-top': dot.y + 'px', 'margin-left': dot.x + 'px' }">.
         </div>
