@@ -125,16 +125,17 @@ export class BallComponent implements OnInit {
       if (this.angle === RA && balls[i].index % COL === 4 && balls.length >= i + 1 && _isColValid(i, i + 1)) {
         arr.push(balls[i], balls[i + 1]);
         return arr;
-      }
-      if ((this.angle < RA && balls[i].index % COL === 3 || this.angle > RA && balls[i].index % COL === 7)
+      } else if ((this.angle < RA && balls[i].index % COL === 3 || this.angle > RA && balls[i].index % COL === 7)
         && balls.length >= i + 3
         && _isColValid(i, i + 1, i + 2, i + 3)
       ) {
         arr.push(balls[i], balls[i + 1], balls[i + 2], balls[i + 3]);
         return arr;
+      } else {
+        arr.push(balls[i]);
       }
     }
-      return balls;
+      return arr;
   }
 
   private getLaunchBall(): Ball {
@@ -161,7 +162,7 @@ export class BallComponent implements OnInit {
     }
 
     for (let ball of targetBalls) {
-      const ball_x = ball.index % COL * this.bw;
+      const ball_x = ball.index < 40? ball.index % COL * this.bw : w + ball.marginLeft;
       const ball_y = Math.floor(ball.index / COL) * this.bw;
       const dist = Math.hypot(Math.abs(move_x - ball_x), Math.abs(move_y - ball_y));
       if (dist - this.bw < this.speed) {
@@ -170,6 +171,7 @@ export class BallComponent implements OnInit {
         // console.log(move_x, move_y, ball_x, ball_y, lastMargin, this.bw, dist);
         if (this.compareNumber(margin.left, move_x - ball_x - lastMargin.left)) {
           stopBall(lastMargin);
+          checkBallColor(ball);
           return;
         } else {
 

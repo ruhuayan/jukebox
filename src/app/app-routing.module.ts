@@ -6,22 +6,28 @@ const routes: Routes = [
   {path: '', redirectTo: 'igame', pathMatch: 'full'},
   {
     path: 'jukebox',
-    loadChildren: './pages/jukebox/jukebox.module#JukeboxModule'
+    // loadChildren: './pages/jukebox/jukebox.module#JukeboxModule'
+    loadChildren: () => import('./pages/jukebox/jukebox.module').then(m => m.JukeboxModule)
   }, {
     path: 'igame',
-    loadChildren: './pages/imagegame/imagegame.module#ImagegameModule'
+    // loadChildren: './pages/imagegame/imagegame.module#ImagegameModule'
+    loadChildren: () => import('./pages/imagegame/imagegame.module').then(m => m.ImagegameModule)
   }, {
 		path: 'points',
-    loadChildren: './pages/points/points.module#PointsModule'
+    // loadChildren: './pages/points/points.module#PointsModule'
+    loadChildren: () => import('./pages/points/points.module').then(m => m.PointsModule)
   }, {
 		path: 'blackjack',
-    loadChildren: './pages/blackjack/blackjack.module#BlackjackModule'
+    // loadChildren: './pages/blackjack/blackjack.module#BlackjackModule'
+    loadChildren: () => import('./pages/blackjack/blackjack.module').then(m => m.BlackjackModule)
   }, {
     path: 'solitaire',
-    loadChildren: './pages/solitaire/solitaire.module#SolitaireModule'
+    // loadChildren: './pages/solitaire/solitaire.module#SolitaireModule'
+    loadChildren: () => import('./pages/solitaire/solitaire.module').then(m => m.SolitaireModule)
   },{
     path: 'balls',
-    loadChildren: './pages/ball/ball.module#BallModule'
+    // loadChildren: './pages/ball/ball.module#BallModule'
+    loadChildren: () => import('./pages/ball/ball.module').then(m => m.BallModule)
   },{
 		path: '**',
 		redirectTo: '404',

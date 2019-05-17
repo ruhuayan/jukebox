@@ -10,7 +10,7 @@
           <div class="file-name">{{file.name}}</div>
           <div class="progressbar-wrap">
               <div class="progressbar" [style.width]="progressPercentage"></div>
-              <span class="file-info">{{progressPercentage}}% of {{file.size | bytes}}</span>
+              <span class="file-info">{{progressPercentage}}% of {{file.size }}</span>
           </div>
           <div class="actions"><a class="action" href="javascript:;" (click)="stopUpload()"><img src="assets/imgs/close.svg" alt="chat close" /></a></div>
   </div>
