@@ -134,7 +134,7 @@ export class BallComponent implements OnInit {
           const lastMargin: Margin = this.calculateMargin(ball.launchDist);
 
           this.stopLaunchedBall(launchedBall, lastMargin);
-          this.checkBallColor(launchedBall);
+          this.removeUnion(launchedBall);
           return;
         } else {
           ball.launchDist -= this.speed;
@@ -168,27 +168,51 @@ export class BallComponent implements OnInit {
     this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
   }
 
-  private checkBallColor(launchedBall: Ball): void {
-    if (launchedBall.union.length > 2) {
-      launchedBall.union.forEach(n => {
-        this.balls[n].show = false;
-      });
-      this.balls.filter(b => b.show && b.status !== 'toLaunch')
-                .forEach(b => {
-                  launchedBall.union.forEach(n => {
+  private removeUnion(ball: Ball): void {
+
+    if (ball.union.length > 2) {
+
+      const affects = this.balls.filter(b => b.show && b.status !== 'toLaunch')
+                .filter((b: Ball) => {
+
+                  let affected = false; 
+                  ball.union.forEach(n => {
+
+                    this.balls[n].show = false;
                     if (b.link.indexOf(n) >= 0) {
                       b.link.splice(b.link.indexOf(n), 1);
+                      affected = true;
                     }
                   });
                   if (b.link.length === 0) {
                     b.show = false;
                   }
-                });
+                  return affected && b.show;
+                }); 
+      console.log(affects);
+      affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
+             .forEach((b: Ball) => {
+                if (b.show && !this.isLinkBroken(b)) {
+                  b.show = false;
+                }
+      });
     }
   }
 
-  private checkBallLink(launchedBall: Ball) {
-    // launchedBall.link.filter(n => n);
+  private isLinkBroken(ball: Ball): {result:boolean, balls: number[]} {
+    if (ball.link.indexOf(-1) >= 0) {
+      return {result: false, balls: []};
+    }
+    ball.link.forEach((n: number) => {
+      const adjacentBall = this.balls[n];
+      if (adjacentBall.link.length < 2) {
+        ball.show = false;
+        adjacentBall.show = false;
+      } else {
+
+      }
+    });
+    return {result: true, balls:[]};
   }
 
   private calculateMargin(speed: number): Margin {
