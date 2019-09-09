@@ -19,24 +19,13 @@ export class BallComponent implements OnInit {
   launching = false;
   private angle = RA;
   private speed = 10;
+
+  // container width
   private cw: number;
+  // ball width
   private bw: number;
+
   constructor(private store: Store<IBallState>) {
-    store.pipe(select('iStates')).subscribe(state => {
-      this.balls = state.balls;
-      this.balls.map((ball, i) => {
-        if (ball.status === 'toLaunch') return ball;
-        if (i % COL > 0 && this.balls[i - 1].colorId === ball.colorId) {
-          this.mergeBallUnion(this.balls[i - 1], ball);
-        }
-        if (Math.floor(i / COL) > 0 && this.balls[i - COL].colorId === ball.colorId) {
-          this.mergeBallUnion(this.balls[i - COL], ball);
-        }
-        return ball;
-      });
-      this.dots = state.dots;
-      this.numberShow = state.numberShow;
-    });
     // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
     // this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
     // this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
@@ -69,14 +58,149 @@ export class BallComponent implements OnInit {
     });
     this.cw = this.container.nativeElement.offsetWidth;
     this.bw = this.cw / COL;
+    this.store.pipe(select('iStates')).subscribe(state => {
+      this.balls = state.balls;
+      this.dots = state.dots;
+      this.numberShow = state.numberShow;
+    });
   }
 
-  add() {
-    const ball = new Ball();
-    if (Ball.count <= 48) {
-      this.store.dispatch(new ballActions.Add(ball));
+  private launch(): void {
+    this.launching = true;
+    // move (x, y)
+    const margin = this.calculateMargin(this.speed);
+    // Distance of launching ball to left, right wall
+    const distanceToWall = Math.abs((this.cw / 2 - this.bw / 2) / Math.cos(this.angle));
+    const distanceToTop = Math.abs((HEIGHT - this.bw / 2) / Math.sin(this.angle));
+    const targetBalls = this.getTargetBalls(distanceToWall);
+    const launchedBall = this.getLaunchBall();
+    if (launchedBall) {
+      launchedBall.angle = this.angle;
+      if (targetBalls.length) {
+        launchedBall.dist = targetBalls[0].launchDist;
+        targetBalls.forEach((ball: Ball) => {
+          ball.linkBall(launchedBall);
+          if (ball.colorId === launchedBall.colorId) {
+            ball.unionBall(launchedBall, this.balls);
+          }
+        });
+
+        if (Math.abs(distanceToWall - targetBalls[0].launchDist) <= 1) {
+          launchedBall.link.push(-1);
+        }
+      } else {
+        launchedBall.dist = distanceToWall < distanceToTop ? distanceToWall : distanceToTop;
+        launchedBall.link = [-1];
+      }
+      console.log(targetBalls, launchedBall, distanceToWall, distanceToTop);
+      this.checkCollusion(targetBalls, launchedBall, margin);
     }
   }
+
+  /**
+   *   Calculate distance between ball and lauching ball
+   *   b2 = a2 + c2 + 2ac * cos(<b)
+   *   D = (2a cos(<b))**2 - 4 (a2 - b2)
+   *   if D > 0, ball collide with launching ball
+   *   return the top 2 balls will collide
+   *   if their launchDist(s) are close to 1px;
+   **/
+  private getTargetBalls(distanceToWall: number): Ball[] {
+    let shortestDist = HEIGHT;
+    return this.balls.filter((ball: Ball) => ball.status !== 'toLaunch' && ball.show)
+      .filter((ball: Ball) => {
+        const ang = Math.abs(ball.angle - this.angle);
+        const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - this.bw ** 2);
+
+        if (D <= 0) return false;
+
+        ball.launchDist = (Math.abs(2 * ball.dist * Math.cos(ang)) - Math.sqrt(D)) / 2;
+        shortestDist = shortestDist > ball.launchDist ? ball.launchDist : shortestDist;
+        // launchDist should be short than distanceToWall, or it will hit the wall
+        return distanceToWall >= ball.launchDist - 1;
+
+      }).filter((ball: Ball) => ball.launchDist - shortestDist <= 1);
+  }
+
+  private getLaunchBall(): Ball {
+    return this.balls.filter((ball) => ball.status === 'toLaunch')[0];
+  }
+
+  private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
+
+    if (targetBalls.length) {
+      for (let ball of targetBalls) {
+        if (ball.launchDist <= this.speed) {
+          const lastMargin: Margin = this.calculateMargin(ball.launchDist);
+
+          this.stopLaunchedBall(launchedBall, lastMargin);
+          this.checkBallColor(launchedBall);
+          return;
+        } else {
+          ball.launchDist -= this.speed;
+        }
+      }
+    } else {
+      const w = this.cw / 2 - this.bw / 2;
+      if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
+        const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
+        const lastMargin: Margin = {left: left, top: margin.top * left / margin.left}; // error
+        this.stopLaunchedBall(launchedBall, lastMargin);
+        return;
+      } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
+        const top = launchedBall.margin.top - this.bw / 2;
+        const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
+        this.stopLaunchedBall(launchedBall, lastMargin);
+        return;
+      }
+    }
+    this.store.dispatch(new ballActions.Move(margin)); // console.log(launchedBall.margin, margin);
+
+    setTimeout(() => {
+      this.checkCollusion(targetBalls, launchedBall, margin);
+    }, 100);
+  }
+
+  private stopLaunchedBall(launchedBall: Ball, lastMargin: Margin): void {
+    this.store.dispatch(new ballActions.Move(lastMargin));
+    this.launching = false;
+    launchedBall.status = 'stopped';
+    this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
+  }
+
+  private checkBallColor(launchedBall: Ball): void {
+    if (launchedBall.union.length > 2) {
+      launchedBall.union.forEach(n => {
+        this.balls[n].show = false;
+      });
+      this.balls.filter(b => b.show && b.status !== 'toLaunch')
+                .forEach(b => {
+                  launchedBall.union.forEach(n => {
+                    if (b.link.indexOf(n) >= 0) {
+                      b.link.splice(b.link.indexOf(n), 1);
+                    }
+                  });
+                  if (b.link.length === 0) {
+                    b.show = false;
+                  }
+                });
+    }
+  }
+
+  private checkBallLink(launchedBall: Ball) {
+    // launchedBall.link.filter(n => n);
+  }
+
+  private calculateMargin(speed: number): Margin {
+    return {left: Math.cos(this.angle) * speed, top: Math.sin(this.angle) * speed};
+  }
+
+  // add() {
+  //   const ball = new Ball();
+  //   if (Ball.count <= 48) {
+  //     this.store.dispatch(new ballActions.Add(ball));
+  //   }
+  // }
 
   remove(ball: Ball, i: number): void {
     ball.show = false;
@@ -90,124 +214,5 @@ export class BallComponent implements OnInit {
 
   showNumber(): void {
     this.store.dispatch(new ballActions.ToggleNumber());
-  }
-
-  private launch(): void {
-    this.launching = true;
-    const margin = {left: Math.cos(this.angle) * this.speed, top: Math.sin(this.angle) * this.speed};
-
-    const targetBalls = this.getTargetBalls(); console.log(targetBalls)
-    const launchedBall = this.getLaunchBall();
-    if (launchedBall) {
-      this.checkCollusion(targetBalls, launchedBall, margin);
-    }
-  }
-  private getTargetBalls(): Ball[] {
-    const balls = this.balls.filter((ball, i) => {
-      return ball.status !== 'toLaunch' && ball.show &&
-          (i >= 40 ||
-          (this.angle === RA && (i % COL === 3 || i % COL === 4)) ||
-          (this.angle < RA && (i % COL < 4)) ||
-          (this.angle > RA && (i % COL >= 4)));
-    }).sort((b1: Ball, b2: Ball) => b2.index - b1.index); console.log(balls)
-
-    const _isColValid = (...args) => { console.log(args)
-      const temp = args.map(n => balls[n].index);
-      for (let i = 1; i < temp.length; i++ ) {
-        if (temp[i - 1] !== temp[i] + 1) return false;
-      }
-      return true;
-
-    };
-    const arr = [];
-    for (let i = 0; i < balls.length; i ++) {
-      if (balls[i].index >= 40) arr.push(balls[i]);
-      if (this.angle === RA && balls[i].index % COL === 4 && balls.length >= i + 1 && _isColValid(i, i + 1)) {
-        arr.push(balls[i], balls[i + 1]);
-        return arr;
-      } else if ((this.angle < RA && balls[i].index % COL === 3 || this.angle > RA && balls[i].index % COL === 7)
-        && balls.length >= i + 3
-        && _isColValid(i, i + 1, i + 2, i + 3)
-      ) {
-        arr.push(balls[i], balls[i + 1], balls[i + 2], balls[i + 3]);
-        return arr;
-      } else {
-        arr.push(balls[i]);
-      }
-    }
-      return arr;
-  }
-
-  private getLaunchBall(): Ball {
-    return this.balls.filter((ball) => ball.status === 'toLaunch')[0];
-  }
-
-  private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
-    const w = this.cw / 2 - this.bw / 2;
-    const move_x = w + launchedBall.marginLeft;
-    const move_y = launchedBall.margin && launchedBall.margin.top ? launchedBall.margin.top - this.bw / 2 : HEIGHT;
-    const stopBall = (lastMargin: Margin) => {
-      this.store.dispatch(new ballActions.Move(lastMargin));
-      this.launching = false;
-      launchedBall.status = 'stopped';
-      this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
-    };
-    const checkBallColor = (ball: Ball) => {
-      if (ball.colorId === launchedBall.colorId) {
-        const union = this.mergeBallUnion(ball, launchedBall);
-        if (union.length > 2) {
-          union.forEach(n => this.balls[n].show = false);
-        }
-      }
-    }
-
-    for (let ball of targetBalls) {
-      const ball_x = ball.index < 40? ball.index % COL * this.bw : w + ball.marginLeft;
-      const ball_y = Math.floor(ball.index / COL) * this.bw;
-      const dist = Math.hypot(Math.abs(move_x - ball_x), Math.abs(move_y - ball_y));
-      if (dist - this.bw < this.speed) {
-        const speed = dist - this.bw;
-        const lastMargin: Margin = {left: margin.left * speed / this.speed, top: margin.top * speed / this.speed};
-        // console.log(move_x, move_y, ball_x, ball_y, lastMargin, this.bw, dist);
-        if (this.compareNumber(margin.left, move_x - ball_x - lastMargin.left)) {
-          stopBall(lastMargin);
-          checkBallColor(ball);
-          return;
-        } else {
-
-        }
-      }
-    }
-    if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
-      const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
-      const lastMargin: Margin = {left: left, top: margin.top * left / margin.left};
-      stopBall(lastMargin);
-      return;
-    } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
-      const top = launchedBall.margin.top - this.bw / 2;
-      const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
-      stopBall(lastMargin);
-      return;
-    }
-    this.store.dispatch(new ballActions.Move(margin)); // console.log(launchedBall.margin, margin);
-
-    setTimeout(() => {
-      this.checkCollusion(targetBalls, launchedBall, margin);
-    }, 100);
-  }
-
-  private compareNumber(n1: number, n2: number): boolean {
-    return (n1 > 0 && n2 > 0) || (n1 < 0 && n2 < 0) || (n1 === 0 && n2 === 0);
-  }
-
-  private mergeBallUnion(ball1: Ball, ball2: Ball): number[] {
-    const arr = [...ball1.union];
-    for (let n of ball2.union) {
-      if (arr.indexOf(n) < 0) {
-        arr.push(n);
-      }
-    }
-    arr.forEach(n => this.balls[n].union = arr);
-    return arr;
   }
 }

@@ -1,6 +1,5 @@
 import { ActionTypes, ActionUnion } from './ball.actions';
-import { Ball, Dot, RA, HEIGHT, ANG, Status } from './ball.model';
-// import { ActionReducer, Action } from '@ngrx/store';
+import { Ball, Dot, RA, HEIGHT, WIDTH, COL } from './ball.model';
 
 export interface IBallState {
     balls: Ball[];
@@ -8,8 +7,30 @@ export interface IBallState {
     numberShow: boolean;
 }
 
+const cw = 570;
+function createBalls(): Ball[] {
+  const balls = Array.from(new Array(40).keys()).map(i => new Ball());
+  balls.forEach((ball: Ball, i: number) => {
+    // To find adjacent same colored balls
+    if (i % COL > 0) {
+      ball.linkBall(balls[i - 1]);
+      if (balls[i - 1].colorId === ball.colorId) {
+        ball.unionBall(balls[i - 1], balls);
+      }
+    }
+    if (Math.floor(i / COL) > 0) {
+      ball.linkBall(balls[i - COL]);
+      if (balls[i - COL].colorId === ball.colorId) {
+        ball.unionBall(balls[i - COL], balls);
+      }
+    }
+    ball.setDist(WIDTH);
+  });
+  return [...balls, new Ball('toLaunch')];
+}
+
 export const initState: IBallState = {
-    balls: Array.from(new Array(41).keys()).map(i => i === 40 ? new Ball('toLaunch') : new Ball()),
+    balls: createBalls(),
     dots: Array.from(new Array(10).keys()).map(i => new Dot(0, HEIGHT - 12 * (i + 1))),
     numberShow: false
 };
@@ -60,7 +81,7 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
             return saveState(newState);
 
         case ActionTypes.Reset:
-            return saveState({...state, balls: []});
+            return saveState({...state, balls: createBalls()});
 
         case ActionTypes.Angle:
             return saveState({
