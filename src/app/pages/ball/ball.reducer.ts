@@ -7,7 +7,6 @@ export interface IBallState {
     numberShow: boolean;
 }
 
-const cw = 570;
 function createBalls(): Ball[] {
   const balls = Array.from(new Array(40).keys()).map(i => new Ball());
   balls.forEach((ball: Ball, i: number) => {
