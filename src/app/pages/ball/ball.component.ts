@@ -175,7 +175,7 @@ export class BallComponent implements OnInit {
       const affects = this.balls.filter(b => b.show && b.status !== 'toLaunch')
                 .filter((b: Ball) => {
 
-                  let affected = false; 
+                  let affected = false;
                   ball.union.forEach(n => {
 
                     this.balls[n].show = false;
@@ -188,31 +188,31 @@ export class BallComponent implements OnInit {
                     b.show = false;
                   }
                   return affected && b.show;
-                }); 
+                });
       console.log(affects);
       affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
              .forEach((b: Ball) => {
-                if (b.show && !this.isLinkBroken(b)) {
+                const brokenLinks = this.getBrokenLinks(b, []); console.log('broken', brokenLinks);
+                if (b.show && brokenLinks.length) {
                   b.show = false;
+                  brokenLinks.forEach(n => this.balls[n].show = false);
                 }
       });
     }
   }
 
-  private isLinkBroken(ball: Ball): {result:boolean, balls: number[]} {
+  private getBrokenLinks(ball: Ball, arr: number[]): number[] {
     if (ball.link.indexOf(-1) >= 0) {
-      return {result: false, balls: []};
+      return [];
     }
+    let allChecked = false;
     ball.link.forEach((n: number) => {
-      const adjacentBall = this.balls[n];
-      if (adjacentBall.link.length < 2) {
-        ball.show = false;
-        adjacentBall.show = false;
-      } else {
-
+      if (arr.indexOf(n) < 0) {
+        allChecked = true;
+        return this.getBrokenLinks(this.balls[n], [...arr, ball.index]);
       }
     });
-    return {result: true, balls:[]};
+    return [...arr, ball.index];
   }
 
   private calculateMargin(speed: number): Margin {
