@@ -205,14 +205,20 @@ export class BallComponent implements OnInit {
     if (ball.link.indexOf(-1) >= 0) {
       return [];
     }
-    let allChecked = false;
+    if (ball.link.length === 0) {
+      return [ball.index];
+    }
+  
     ball.link.forEach((n: number) => {
-      if (arr.indexOf(n) < 0) {
-        allChecked = true;
-        return this.getBrokenLinks(this.balls[n], [...arr, ball.index]);
+      
+      if (arr.indexOf(ball.index) < 0){
+        arr.push(ball.index);
+        if (arr.indexOf(n) < 0) {
+          return this.getBrokenLinks(this.balls[n], arr);
+        }
       }
     });
-    return [...arr, ball.index];
+    return arr;
   }
 
   private calculateMargin(speed: number): Margin {
