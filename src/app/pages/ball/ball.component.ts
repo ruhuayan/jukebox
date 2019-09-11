@@ -208,10 +208,10 @@ export class BallComponent implements OnInit {
     if (ball.link.length === 0) {
       return [ball.index];
     }
-  
+
     ball.link.forEach((n: number) => {
-      
-      if (arr.indexOf(ball.index) < 0){
+
+      if (arr.indexOf(ball.index) < 0) {
         arr.push(ball.index);
         if (arr.indexOf(n) < 0) {
           return this.getBrokenLinks(this.balls[n], arr);
