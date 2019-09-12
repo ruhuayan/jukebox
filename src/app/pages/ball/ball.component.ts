@@ -135,6 +135,7 @@ export class BallComponent implements OnInit {
 
           this.stopLaunchedBall(launchedBall, lastMargin);
           this.removeUnion(launchedBall);
+          this.resetLauchedBall(launchedBall);
           return;
         } else {
           ball.launchDist -= this.speed;
@@ -165,12 +166,14 @@ export class BallComponent implements OnInit {
     this.store.dispatch(new ballActions.Move(lastMargin));
     this.launching = false;
     launchedBall.status = 'stopped';
-    if (launchedBall.dist > this.bw) {
-      this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
-    } else {
-      setTimeout(() => window.alert('You lost !!!'), 100);
-    }
     
+  }
+  private resetLauchedBall(launchedBall): void {
+    if (launchedBall.dist < this.bw && launchedBall.show) {
+      setTimeout(() => window.alert('You lost !!!'), 100);
+    } else {
+      this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
+    }
   }
 
   private removeUnion(ball: Ball): void {
