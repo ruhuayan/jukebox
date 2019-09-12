@@ -12,7 +12,7 @@ function createBalls(): Ball[] {
   balls.forEach((ball: Ball, i: number) => {
     // To find adjacent same colored balls
     if (i % COL > 0) {
-      ball.linkBall(balls[i - 1]);
+      if (i % COL < COL) ball.linkBall(balls[i - 1]);
       if (balls[i - 1].colorId === ball.colorId) {
         ball.unionBall(balls[i - 1], balls);
       }

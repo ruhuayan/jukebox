@@ -59,7 +59,7 @@ export class BallComponent implements OnInit {
     this.cw = this.container.nativeElement.offsetWidth;
     this.bw = this.cw / COL;
     this.store.pipe(select('iStates')).subscribe(state => {
-      this.balls = state.balls;
+      this.balls = state.balls; // console.log(this.balls)
       this.dots = state.dots;
       this.numberShow = state.numberShow;
     });
@@ -165,7 +165,12 @@ export class BallComponent implements OnInit {
     this.store.dispatch(new ballActions.Move(lastMargin));
     this.launching = false;
     launchedBall.status = 'stopped';
-    this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
+    if (launchedBall.dist > this.bw) {
+      this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
+    } else {
+      setTimeout(() => window.alert('You lost !!!'), 100);
+    }
+    
   }
 
   private removeUnion(ball: Ball): void {
@@ -189,10 +194,10 @@ export class BallComponent implements OnInit {
                   }
                   return affected && b.show;
                 });
-      console.log(affects);
-      affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
-             .forEach((b: Ball) => {
-                const brokenLinks = this.getBrokenLinks(b, []); console.log('broken', brokenLinks);
+      console.log(affects)
+      //affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
+      affects.forEach((b: Ball) => {
+                const brokenLinks = this.getBrokenLinks(b, []); console.log(b, 'broken', brokenLinks);
                 if (b.show && brokenLinks.length) {
                   b.show = false;
                   brokenLinks.forEach(n => this.balls[n].show = false);
@@ -205,20 +210,16 @@ export class BallComponent implements OnInit {
     if (ball.link.indexOf(-1) >= 0) {
       return [];
     }
-    if (ball.link.length === 0) {
-      return [ball.index];
-    }
-  
-    ball.link.forEach((n: number) => {
-      
-      if (arr.indexOf(ball.index) < 0){
-        arr.push(ball.index);
+
+    if (arr.indexOf(ball.index) < 0) {
+      arr.push(ball.index);
+      for (let n of ball.link) {
         if (arr.indexOf(n) < 0) {
           return this.getBrokenLinks(this.balls[n], arr);
         }
       }
-    });
-    return arr;
+      return arr;
+    }
   }
 
   private calculateMargin(speed: number): Margin {

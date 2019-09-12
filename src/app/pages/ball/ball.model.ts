@@ -56,7 +56,7 @@ export class Ball {
 
     public linkBall(b1: Ball): void {
       this.link.push(b1.index);
-      b1.link = [...b1.link, this.index];
+      b1.link.push(this.index);
     }
 
     public setDist(cw: number): void {
@@ -74,11 +74,11 @@ export class Ball {
     }
 
     private initLink(): number[] {
-      return this.index < 40 && this.isLinkedToWall ? [-1] : [];
+      return this.index < 40 && this.isLinkedToWall() ? [-1] : [];
     }
 
     private isLinkedToWall(): boolean {
-      return Math.floor(this.index / COL) === 0 || this.index % COL === 0 || this.index % COL === COL - 1;
+      return this.index < COL || this.index % COL === 0 || this.index % COL === COL - 1;
     }
 }
 
