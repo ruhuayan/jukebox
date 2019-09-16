@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin, COL } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
 import { fromEvent } from 'rxjs';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-ball',
   templateUrl: './ball.component.html',
   styleUrls: ['./ball.component.scss']
 })
-export class BallComponent implements OnInit {
+export class BallComponent implements OnInit, OnDestroy {
   @ViewChild('container') container: any;
   balls: Ball[];
   dots: Dot[];
@@ -24,6 +25,7 @@ export class BallComponent implements OnInit {
   private cw: number;
   // ball width
   private bw: number;
+  private subscription: Subscription;
 
   constructor(private store: Store<IBallState>) {
     // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
@@ -58,11 +60,15 @@ export class BallComponent implements OnInit {
     });
     this.cw = this.container.nativeElement.offsetWidth;
     this.bw = this.cw / COL;
-    this.store.pipe(select('iStates')).subscribe(state => {
+    this.subscription = this.store.pipe(select('iStates')).subscribe(state => {
       this.balls = state.balls; // console.log(this.balls)
       this.dots = state.dots;
       this.numberShow = state.numberShow;
     });
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) this.subscription.unsubscribe();
   }
 
   private launch(): void {
@@ -147,11 +153,13 @@ export class BallComponent implements OnInit {
         const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
         const lastMargin: Margin = {left: left, top: margin.top * left / margin.left}; // error
         this.stopLaunchedBall(launchedBall, lastMargin);
+        this.resetLauchedBall(launchedBall);
         return;
       } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
         const top = launchedBall.margin.top - this.bw / 2;
         const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
         this.stopLaunchedBall(launchedBall, lastMargin);
+        this.resetLauchedBall(launchedBall);
         return;
       }
     }
