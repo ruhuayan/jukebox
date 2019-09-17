@@ -1,15 +1,148 @@
-header.menu .mContent .mItems ul.mList li{
-    &.in-poker {
-      display: none;
+header .mContent {
+    justify-content: space-between;
+
+    #menuToggle {
+        display: flex;
+        align-items: flex-end;
+        padding-right: 205px; 
+        input {
+            display: none;
+        }
+        
+        span {
+            display: none;
+           
+        }
+        #menuToggle-menu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            li {
+                display: inline-block;
+                border-left: 1px solid #fff;
+                a.mLink {
+                    font-size: 12px;
+                    padding-left: 1em;
+                    padding-right: 1em;
+                    color: #ffffff;
+                    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                    cursor: pointer;
+                    text-decoration: none;
+                    color: #fff;
+                }
+                &.last {
+                    border-right: 1px solid #fff;
+                }
+                &.in-poker {
+                    display: none;
+                }
+            }
+        }
     }
-} 
+}
+  
+@media(max-width: 878px){
+    header .mContent #menuToggle {
+        padding-right: 0;
+    }
+}
 @media(max-width: 640px){ 
-    header.menu .mContent .mItems ul.mList li{
-        display: none;
-    } 
+   
     header.menu.menu-show .mContent .mItems ul.mList li {
         &.in-poker {
             display: block;
+        }
+    }
+    header .mContent #menuToggle {
+        display: block;
+        position: relative;
+        top: 20px;
+        // left: 50px;   
+        z-index: 1;
+        -webkit-user-select: none;
+        user-select: none;
+        #menuToggle-menu {
+            display: none;
+        }
+        input {
+            display: block;
+            width: 40px;
+            height: 32px;
+            position: absolute;
+            top: -7px;
+            left: -5px;
+            
+            cursor: pointer;
+            
+            opacity: 0; /* hide this */
+            z-index: 2; /* and place it over the hamburger */
+            
+            -webkit-touch-callout: none;
+        }
+        span {
+            display: block;
+            width: 33px;
+            height: 4px;
+            margin-bottom: 5px;
+            position: relative;
+            
+            background: #ddd;
+            border-radius: 3px;
+            
+            z-index: 1;
+            
+            transform-origin: 4px 0px;
+            
+            transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+                        background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+                        opacity 0.55s ease;
+            &:first-child {
+                transform-origin: 0% 0%;
+            }
+            &:nth-last-child(2) {
+              transform-origin: 0% 100%;
+            }
+            
+        }
+        input:checked ~ span {
+            opacity: 1;
+            transform: rotate(45deg) translate(-2px, -1px);
+            // background: #ddd;
+        }
+        input:checked ~ span:nth-last-child(3) {
+            opacity: 0;
+            transform: rotate(0deg) scale(0.2, 0.2);
+        }
+        input:checked ~ span:nth-last-child(2){
+            transform: rotate(-45deg) translate(0, -1px);
+        }
+        input:checked ~ #menuToggle-menu {
+            display: flex;
+            position: fixed;
+            width: 70vw;
+            padding: 20px;
+            left: 0;
+            top: 0;
+            background: green;
+            list-style-type: none;
+            // -webkit-font-smoothing: antialiased;
+            z-index: 1000;
+            /* to stop flickering of text in safari */
+            
+            // transform-origin: 0% 0%;
+            // transform: translate(-100%, 0);
+            
+            // transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+            li {
+                // padding: 10px 0;
+                display: none;
+                border: none;
+                // a { font-size: 16px;}
+
+                &.in-poker {
+                    display: block;
+                }
+            }
         }
     }
 }
