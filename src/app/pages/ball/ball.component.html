@@ -24,7 +24,7 @@
                           (click)="remove(ball, i)">
             <div class="number" *ngIf="numberShow"> {{ball.index}} </div>
           </div>
-        <div class="dot" *ngFor="let dot of dots" [ngStyle]="{'margin-top': dot.y + 'px', 'margin-left': dot.x + 'px' }">.
+        <div class="dot" *ngFor="let dot of dots" [ngStyle]="{'margin-top': dot.y + 'px', 'margin-left': dot.x + 'px', 'color': balls[balls.length - 1].color }">.
         </div>
     </div>
   </div>

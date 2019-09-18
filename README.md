@@ -1,27 +1,27 @@
-# Jukebox
+# Jukebox - Angular 7.2.15
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.
+To see it working, visit https://www.richyan.com/
 
-## Development server
+## Image Game
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+App crops image into 5x5 after loading it and display randomly. You need to put it back.
 
-## Code scaffolding
+## Blackjack
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+A poker game, calculate the posibilities of winning
 
-## Build
+## Solitaire
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+A populaire card game
 
-## Running unit tests
+## 24 Points
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Giving 4 cards, you need to calculate them to the result of 24 points
 
-## Running end-to-end tests
+## Balls
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Launch a ball to two or more balls of the same color. 
 
-## Further help
+## Jukebox
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Music player
