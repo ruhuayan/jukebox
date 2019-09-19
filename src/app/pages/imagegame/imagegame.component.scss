@@ -59,7 +59,7 @@ body *::before {
   top: 0.25rem;
   pointer-events: none;
   padding-left: 0.125rem;
-  z-index: 1;
+  // z-index: 1;
   color: grey;
   font-size: 1rem;
   font-weight: normal;
@@ -291,11 +291,11 @@ body *::before {
   position: absolute;
   cursor: pointer;
   padding: 0;
-  z-index: 99;
+  // z-index: 99;
   transition: margin .3s ease-in-out;
   .canvas{
     border: 1px solid var(--main-blue-dark);
-    z-index: 100;
+    // z-index: 100;
   }
   .canvas-num {
     position: absolute;

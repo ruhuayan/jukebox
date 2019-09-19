@@ -119,14 +119,15 @@ header .mContent {
         input:checked ~ #menuToggle-menu {
             display: flex;
             position: fixed;
-            width: 70vw;
+            width: 100%;
             padding: 20px;
             left: 0;
-            top: 0;
+            bottom: 0;
             background: green;
             list-style-type: none;
             // -webkit-font-smoothing: antialiased;
             z-index: 1000;
+            flex-direction: column;
             /* to stop flickering of text in safari */
 
             // transform-origin: 0% 0%;
@@ -134,13 +135,14 @@ header .mContent {
 
             // transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
             li {
-                // padding: 10px 0;
+
                 display: none;
                 border: none;
-                // a { font-size: 16px;}
+                a { font-size: 16px;}
 
                 &.in-poker {
                     display: block;
+                    padding: 10px 0;
                 }
             }
         }
