@@ -128,43 +128,20 @@ header.menu .mContent {
       cursor: pointer;
       text-decoration: none;
       color: #fff; }
-  header.menu .mContent .mItems {
-    flex: 1;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding-right: 205px; }
-    header.menu .mContent .mItems .mList {
-      list-style-type: none;
-      padding: 0;
-      margin: 0; }
-      header.menu .mContent .mItems .mList li {
-        display: inline-block;
-        border-left: 1px solid #fff; }
-        header.menu .mContent .mItems .mList li a.mLink {
-          font-size: 1.1em;
-          padding-left: 1em;
-          padding-right: 1em;
-          color: #ffffff;
-          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-          cursor: pointer;
-          text-decoration: none;
-          color: #fff; }
-      header.menu .mContent .mItems .mList li.last {
-        border-right: 1px solid #fff; }
 
 .content {
-display: flex;
-flex-direction: column;
-width: 800px;
-padding: 20px 0;
-border-left: 1px solid #009900;
-border-right: 1px solid #009900;
-margin: 0 auto;
-z-index: 2;
--webkit-box-shadow: 0 0 10px #009900;
--moz-box-shadow: 0 0 10px #009900;
-box-shadow: 0 0 10px #009900; }
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  padding: 20px 0;
+  border-left: 1px solid #009900;
+  border-right: 1px solid #009900;
+  margin: 0 auto;
+  z-index: 2;
+  -webkit-box-shadow: 0 0 10px #009900;
+  -moz-box-shadow: 0 0 10px #009900;
+  box-shadow: 0 0 10px #009900; 
+}
 .content .conTitle {
   margin-left: 10px;
   font-size: 1.5em;
@@ -222,9 +199,10 @@ cursor: pointer;
 text-decoration: none; }
 
 @media (max-width: 877px) {
-  header.menu > .mContent, .content, .footer > .fContent {
+  header.menu > .mContent, 
+  .content, .footer > .fContent {
     width: 90%;
-    }
+  }
   header.menu > .mContent > .mItems {
     padding-right: 0; }
   .content .conText .conLeft {
@@ -232,7 +210,12 @@ text-decoration: none; }
   .content .conText .conRight {
     display: none; }
 }
-
+@media (max-width: 460px) {
+  header.menu > .mContent, 
+  .content, .footer > .fContent {
+    width: 96%;
+  }
+}
 body{
 
   // transition: opacity .3s ease-in-out;

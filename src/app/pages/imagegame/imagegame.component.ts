@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Title } from '@angular/platform-browser';
@@ -21,6 +21,7 @@ class Dimension {
 })
 export class ImagegameComponent implements OnInit, OnDestroy {
 
+  @ViewChild('conLeft') context: ElementRef;
   img: HTMLImageElement;
   public imgSubscription: Subscription;
   private thumbs: any[];

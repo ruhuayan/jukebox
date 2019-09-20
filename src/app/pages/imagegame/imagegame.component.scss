@@ -12,6 +12,11 @@ body *::before {
 .conSubTitle {
   font-family: "Helvetica", "Arial", sans-serif;
   display: flex;
+  flex-wrap: wrap;
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .form-group {
@@ -344,3 +349,18 @@ body *::before {
   position: absolute;
 }
 
+@media (max-width: 640px) {
+  .form-group {
+    width: 40%;
+    margin-left: 10px;
+  }
+  .buttons { 
+    margin-top: .5em;
+  }
+}
+
+@media (max-width: 460px) {
+   #download {
+    display: none;
+  }
+}

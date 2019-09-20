@@ -13,31 +13,33 @@
       </select>
       <i class="bar"></i>
     </div>
-
-    <a class="button" (click)="showNumber()">
-      <span class="text">Numbers</span>
-      <span class="bg"></span>
-    </a>
-    <a class="button" (click)="showImage()">
-      <span class="text">Image</span>
-      <span class="bg"></span>
-    </a>
-    <a class="button" (click)="shuffle()">
-      <span class="text">shuffle</span>
-      <span class="bg"></span>
-    </a>
-    <a class="button" id='download' (click)="download()">
-      <span class="text">download</span>
-      <span class="bg"></span>
-    </a>
-    <app-uploader [appAcceptType]="'image/*'"
-                  [appFileTypes]="['image/gif', 'image/jpeg', 'image/png']"
-                  [appFileSizeInMB]="2"
-                  (onUploaded)="onFileUploaded($event)">
-    </app-uploader>
+    <div class="buttons">
+      <a class="button" (click)="showNumber()">
+        <span class="text">Numbers</span>
+        <span class="bg"></span>
+      </a>
+      <a class="button" (click)="showImage()">
+        <span class="text">Image</span>
+        <span class="bg"></span>
+      </a>
+      <a class="button" (click)="shuffle()">
+        <span class="text">shuffle</span>
+        <span class="bg"></span>
+      </a>
+      <a class="button" id='download' (click)="download()">
+        <span class="text">download</span>
+        <span class="bg"></span>
+      </a>
+    
+      <app-uploader [appAcceptType]="'image/*'"
+                    [appFileTypes]="['image/gif', 'image/jpeg', 'image/png']"
+                    [appFileSizeInMB]="2"
+                    (onUploaded)="onFileUploaded($event)">
+      </app-uploader>
+    </div>
 </div>
 <div class="conText row">
-  <div class="conLeft" id="conLeft">
+  <div class="conLeft" id="conLeft" #conLeft>
     <div class="canvas-wrap" *ngFor="let i of numOfCan; let i = index"
         [attr.data-num]="i" [attr.data-ori]="i"
         (click)="shift($event, i)">
