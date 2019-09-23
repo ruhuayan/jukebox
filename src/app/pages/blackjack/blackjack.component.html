@@ -6,7 +6,7 @@
         <ul class="cards cards--dealer" [ngClass]="{'cards--stand': status === 1}">
           <div class="toaster" *ngIf="dealer.status"  [ngClass] = "{'three': dealer.cards.length===3, 'four': dealer.cards.length>=4, 'busted': status===4, 'blackjack': status===6}">
             {{dealer.status}}</div>
-          <li *ngFor="let card of dealer.cards" cardAnimate = "#deckLeft" >
+          <li *ngFor="let card of dealer.cards" cardAnimate = "#deckLeft" class="dealer-card" >
             <div class="card">
               <div class="card__back card__face">
                 <img [src]="deck.cardBackImg" alt="cardback" width="85" height="120">
@@ -29,7 +29,7 @@
         </div>
         <ul class="cards cards--player">
           <div class="toaster" *ngIf="player.status" [ngClass] = "{'three': player.cards.length===3, 'four': player.cards.length===4, 'five': player.cards.length>=5, 'busted': status===3, 'blackjack': player.status==='Blackjack'}">{{player.status}}</div>
-          <li *ngFor="let card of player.cards" cardAnimate = "#deckLeft">
+          <li *ngFor="let card of player.cards" cardAnimate = "#deckLeft" class="player-card">
             <div class="card">
               <div class="card__back card__face">
                 <img [src]="deck.cardBackImg" alt="cardback" width="85" height="120">

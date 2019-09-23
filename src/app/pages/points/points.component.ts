@@ -1,28 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Card } from '../../models/card.model';
 import { Deck } from '../../models/deck.model';
 import { Title } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-points',
   templateUrl: './points.component.html',
   styleUrls: ['./points.component.scss']
 })
-export class PointsComponent implements OnInit {
+export class PointsComponent implements OnInit, OnDestroy {
+  
   dealedCards: Card[] = [];
   deck = new Deck();
   ondealing = false;
   solution: string;
+  private loadImagesSubscription: Subscription
   constructor(private titleService: Title ) {
   }
   ngOnInit() {
     this.titleService.setTitle('24 Point - Poker Game');
     document.body.classList.add('loading');
-    this.deck.loadCardImages().then(() => {
+    this.loadImagesSubscription = this.deck.loadCardImages().subscribe(() => {
       document.body.classList.remove('loading');
       this.deck.shuffle();
       this.refresh();
     });
+  }
+  ngOnDestroy(): void {
+    this.loadImagesSubscription.unsubscribe();
   }
   refresh(): void {
     this.solution = null;

@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Card } from '../../models/card.model';
 import { Deck } from '../../models/deck.model';
 import { Title } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-blackjack',
   templateUrl: './blackjack.component.html',
   styleUrls: ['./blackjack.component.scss']
 })
-export class BlackjackComponent implements OnInit {
+export class BlackjackComponent implements OnInit, OnDestroy {
+  
   deck = new Deck(3);
   status = Status.ONDEALING;
   player = new Player('player');
@@ -18,16 +20,20 @@ export class BlackjackComponent implements OnInit {
   probabilities: object = {player_busted: 0, player_win: 0, dealer_busted: 0};
   prob_player = 0;
   prob_dealer: number = null;
+  private loadImagesSubscription: Subscription;
   constructor(private titleService: Title) {
     this.titleService.setTitle('Blackjack - Poker Game');
     document.body.classList.add('loading');
-    this.deck.loadCardImages().then(() =>{
+    this.loadImagesSubscription = this.deck.loadCardImages().subscribe(res =>{
       document.body.classList.remove('loading');
       this.deck.shuffle();
       this.refresh();
     });
   }
   ngOnInit() {}
+  ngOnDestroy(): void {
+    this.loadImagesSubscription.unsubscribe();
+  }
   private refresh(): void {
     if (this.deck.getCards().length < 10) {
       this.deck.reset();

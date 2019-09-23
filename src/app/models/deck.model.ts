@@ -1,4 +1,5 @@
 import { Card, Face, Suit } from './card.model';
+import { forkJoin, Observable } from 'rxjs';
 
 export class Deck {
     private cards: Card[] = [];
@@ -26,7 +27,7 @@ export class Deck {
             [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
         }
     }
-    public loadCardImages() {
+    public loadCardImages() : Observable<any> {
         const promises = []
         this.cards.forEach(card => {
             const promise = new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ export class Deck {
             });
             promises.push(promise);
         });
-        return Promise.all(promises);
+        return forkJoin(promises);
     }
 
     public dealOneCard(): Card {
