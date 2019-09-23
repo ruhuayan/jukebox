@@ -140,7 +140,7 @@ header.menu .mContent {
   z-index: 2;
   -webkit-box-shadow: 0 0 10px #009900;
   -moz-box-shadow: 0 0 10px #009900;
-  box-shadow: 0 0 10px #009900; 
+  box-shadow: 0 0 10px #009900;
 }
 .content .conTitle {
   margin-left: 10px;
@@ -199,7 +199,7 @@ cursor: pointer;
 text-decoration: none; }
 
 @media (max-width: 877px) {
-  header.menu > .mContent, 
+  header.menu > .mContent,
   .content, .footer > .fContent {
     width: 90%;
   }
@@ -211,7 +211,7 @@ text-decoration: none; }
     display: none; }
 }
 @media (max-width: 460px) {
-  header.menu > .mContent, 
+  header.menu > .mContent,
   .content, .footer > .fContent {
     width: 96%;
   }
@@ -245,7 +245,7 @@ body{
     font-family: Roboto, "Helvetica Neue", sans-serif;
     .conText .conLeft{
       box-shadow: 2px 2px 5px var(--main-gray);
-      overflow-x: hidden;
+      // overflow-x: hidden;
     }
   }
   app-chatbot{

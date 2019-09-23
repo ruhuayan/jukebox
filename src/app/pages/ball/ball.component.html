@@ -21,11 +21,13 @@
         <div class="ball" *ngFor="let ball of balls; let i = index;"
             [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0, 'margin-top': ball.marginTop, 'margin-left': ball.marginLeft+'px'}"
             [ngClass]="{'toLaunch': ball.status == 'toLaunch', 'stopped': ball.status == 'stopped'}"
-                          (click)="remove(ball, i)">
-            <div class="number" *ngIf="numberShow"> {{ball.index}} </div>
+                          (click)="ball.status =='toLaunch' && launch()">
+            <div class="number" *ngIf="numberShow"> {{ball.index + 1}} </div>
           </div>
         <div class="dot" *ngFor="let dot of dots" [ngStyle]="{'margin-top': dot.y + 'px', 'margin-left': dot.x + 'px', 'color': balls[balls.length - 1].color }">.
         </div>
+        <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-left" (touchstart)="moveArrows(37)">
+        <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-right" (touchstart)="moveArrows(39)">
     </div>
   </div>
   <div class="conRight" id="conRight">

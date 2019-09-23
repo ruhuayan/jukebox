@@ -316,7 +316,7 @@ body *::before {
   color: #000;
   line-height: 2rem;
   font-weight: 500;
-  z-index: 0;
+  z-index: -1;
   // transition: margin .3s ease-in-out;
   img.arrow {
     width: 25px;
@@ -354,7 +354,7 @@ body *::before {
     width: 40%;
     margin-left: 10px;
   }
-  .buttons { 
+  .buttons {
     margin-top: .5em;
   }
 }

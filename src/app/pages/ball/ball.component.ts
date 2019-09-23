@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy, ElementRef } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
-import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin, COL } from './ball.model';
+import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin, COL, WIDTH } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
 import { fromEvent } from 'rxjs';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
   styleUrls: ['./ball.component.scss']
 })
 export class BallComponent implements OnInit, OnDestroy {
-  @ViewChild('container') container: any;
+  @ViewChild('container') container: ElementRef;
   balls: Ball[];
   dots: Dot[];
   numberShow = false;
@@ -26,6 +26,7 @@ export class BallComponent implements OnInit, OnDestroy {
   // ball width
   private bw: number;
   private subscription: Subscription;
+  private isMousedown = false;
 
   constructor(private store: Store<IBallState>) {
     // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
@@ -39,16 +40,8 @@ export class BallComponent implements OnInit, OnDestroy {
       if (this.launching) return;
       switch (keycode) {
         case KEY.LEFT:
-          if (this.angle > ANG) {
-            this.angle -= ANG;
-            this.store.dispatch(new ballActions.Angle(RA - this.angle));
-          }
-          break;
         case KEY.RIGHT:
-          if (this.angle < Math.PI - ANG) {
-            this.angle += ANG;
-            this.store.dispatch(new ballActions.Angle(RA - this.angle));
-          }
+          this.moveArrows(keycode);
           break;
         case KEY.UP:
           this.launch();
@@ -61,17 +54,35 @@ export class BallComponent implements OnInit, OnDestroy {
     this.cw = this.container.nativeElement.offsetWidth;
     this.bw = this.cw / COL;
     this.subscription = this.store.pipe(select('iStates')).subscribe(state => {
-      this.balls = state.balls; // console.log(this.balls)
+      this.balls = state.balls.map((ball: Ball) => {
+        if (this.cw !== WIDTH && ball.index < 40) {
+          ball.setDist(this.cw);
+        }
+        return ball;
+      });
       this.dots = state.dots;
       this.numberShow = state.numberShow;
     });
   }
 
+  public moveArrows(direction: KEY): void {
+    if (direction === KEY.LEFT) {
+      if (this.angle > ANG) {
+        this.angle -= ANG;
+        this.store.dispatch(new ballActions.Angle(RA - this.angle));
+      }
+    } else if (direction === KEY.RIGHT) {
+      if (this.angle < Math.PI - ANG) {
+        this.angle += ANG;
+        this.store.dispatch(new ballActions.Angle(RA - this.angle));
+      }
+    }
+  }
   ngOnDestroy() {
     if (this.subscription) this.subscription.unsubscribe();
   }
 
-  private launch(): void {
+  launch(): void {
     this.launching = true;
     // move (x, y)
     const margin = this.calculateMargin(this.speed);
@@ -205,10 +216,10 @@ export class BallComponent implements OnInit, OnDestroy {
                   }
                   return affected && b.show;
                 });
-      console.log(affects)
+
       //affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
       affects.forEach((b: Ball) => {
-                const brokenLinks = this.getBrokenLinks(b, []); console.log(b, 'broken', brokenLinks);
+                const brokenLinks = this.getBrokenLinks(b, []);
                 if (b.show && brokenLinks.length) {
                   b.show = false;
                   brokenLinks.forEach(n => this.balls[n].show = false);

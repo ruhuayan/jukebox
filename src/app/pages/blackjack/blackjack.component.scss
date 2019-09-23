@@ -37,7 +37,7 @@
         padding: var(--sm-padding) var(--md-padding);
         text-decoration: none;
         font-size: 1rem;
-      
+
         &:disabled{
             background: #999;
             cursor: default;
@@ -51,6 +51,7 @@
       margin: var(--sm-padding) var(--md-padding);
       padding: 0;
       width: 300px;
+      z-index: 0;
       .toaster{
         z-index: 1000;
         position: absolute;

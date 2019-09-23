@@ -30,7 +30,7 @@
         <span class="text">download</span>
         <span class="bg"></span>
       </a>
-    
+
       <app-uploader [appAcceptType]="'image/*'"
                     [appFileTypes]="['image/gif', 'image/jpeg', 'image/png']"
                     [appFileSizeInMB]="2"
@@ -39,7 +39,7 @@
     </div>
 </div>
 <div class="conText row">
-  <div class="conLeft" id="conLeft" #conLeft>
+  <div class="conLeft" id="conLeft" #conLeft (window:resize)="width = conLeft.getBoundingClientRect().width">
     <div class="canvas-wrap" *ngFor="let i of numOfCan; let i = index"
         [attr.data-num]="i" [attr.data-ori]="i"
         (click)="shift($event, i)">

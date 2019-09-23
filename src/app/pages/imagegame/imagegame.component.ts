@@ -31,6 +31,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   private width = 0;
   public row = 5;
   private paused = false;
+  private contextWidth = 0;
   numberShow = false;
   numOfCan = Array.from(new Array(this.row * this.row).keys());
   imgs = ['assets/igame/picture_1.jpg', 'assets/igame/picture_2.jpg', 'assets/igame/picture_3.jpg'];
@@ -42,6 +43,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('Image Game');
     this.arrows = this.el.nativeElement.querySelectorAll('.arrow');
     this.loadImage(this.imgs[0]);
+    this.contextWidth = this.context.nativeElement.getBoundingClientRect().width;
   }
 
   private loadImage(imageSrc: string): void {
@@ -50,7 +52,8 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     const self = this;
     this.imgSubscription = new Observable((observer) => {
       this.img.onload = () => {
-        const height = self.img.height, width = self.img.width;
+        const height = self.img.height,
+              width = (self.img.width < this.contextWidth - 6) ? self.img.width : this.contextWidth - 6;
         observer.next(new Dimension(width, height));
       };
     }).subscribe((res: Dimension) => {
@@ -87,8 +90,10 @@ export class ImagegameComponent implements OnInit, OnDestroy {
 
   private setThumbStyle(thumb: any, i: number): void {
     const th = Math.floor(this.height / this.row), tw = Math.floor(this.width / this.row);
-    const marginLeft = i < this.row ** 2 ? (tw + 1) * (i % this.row) : (tw + 1) * this.row;
-    const marginTop = i < this.row ** 2 ? (th + 1) * Math.floor(i / this.row) : (th + 1) * (this.row - 1);
+    const marginLeft = i < this.row ** 2 ? (tw + 1) * (i % this.row) :
+      this.contextWidth < 400 ? (tw + 1) * (this.row - 1) : (tw + 1) * this.row;
+    const marginTop = i < this.row ** 2 ? (th + 1) * Math.floor(i / this.row) :
+    this.contextWidth < 400 ? (th + 1) * this.row : (th + 1) * (this.row - 1);
     this.renderer.setStyle(thumb, 'margin-left', marginLeft + 'px');
     this.renderer.setStyle(thumb, 'margin-top', marginTop + 'px');
   }

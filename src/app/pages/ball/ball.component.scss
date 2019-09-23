@@ -15,10 +15,17 @@ $tw: calc(100% / #{$n});
             text-align: center;
             box-shadow: inset -5px -5px 35px, inset 0px 0px 35px;
             transition: opacity .3s ease-out;
+            @media (max-width: 460px) {
+              box-shadow: inset -5px -5px 15px, inset 0px 0px 25px;
+            }
             div.number{
                 position: absolute;
                 margin-top: calc(100% / 2 * -1 - 6px);
                 margin-left: calc(100% / 2 - 8px);
+                color: #666;
+                @media (max-width: 460px) {
+                  font-size: 10px;
+                }
             }
 
             @for $i from 1 through $n {
@@ -52,6 +59,23 @@ $tw: calc(100% / #{$n});
           //     margin-top:  calc(540px - (#{$i} * 12));
           //   }
           // }
+        }
+
+        img.arrow {
+          width: 25px;
+          height: 25px;
+          position: absolute;
+          bottom: 0;
+
+          &.arrow-left {
+            transform: translateY(-50%) rotate(90deg);
+            // top: 50%;
+          }
+          &.arrow-right {
+            transform: translateY(-50%) rotate(-90deg);
+            right: 0px;
+            // top: 50%;
+          }
         }
     }
 }
