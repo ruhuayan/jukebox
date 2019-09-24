@@ -83,7 +83,7 @@
           background: #ffc107;
         }
       }
-     
+
       li{
           width: 85px;
           height: 120px;
@@ -92,6 +92,9 @@
           box-sizing: border-box;
           z-index: 1;
           margin-left: -40px;
+          &:first-child {
+            margin-left: 0;
+          }
           div.card{
             width: 100%;
             height: 100%;
@@ -127,9 +130,6 @@
           perspective: 1000;
       }
       &.cards--dealer{
-        .dealer-card:first-child {
-          margin-left: 0;
-        }
         li:nth-child(n+2).hover{
           position: relative;
           div.card{
@@ -146,9 +146,6 @@
         }
       }
       &.cards--player{
-        .player-card:first-child {
-          margin-left: 0;
-        }
         li.hover{
           position: relative;
           div.card{
@@ -157,6 +154,7 @@
         }
       }
     }
+
     .hints{
       min-height: 75px;
       text-align: left;

@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./blackjack.component.scss']
 })
 export class BlackjackComponent implements OnInit, OnDestroy {
-  
+
   deck = new Deck(3);
   status = Status.ONDEALING;
   player = new Player('player');
