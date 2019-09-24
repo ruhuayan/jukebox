@@ -26,7 +26,7 @@ export class BallComponent implements OnInit, OnDestroy {
   // ball width
   private bw: number;
   private subscription: Subscription;
-  private isMousedown = false;
+  private isTouchStart = false;
 
   constructor(private store: Store<IBallState>) {
     // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
@@ -65,7 +65,16 @@ export class BallComponent implements OnInit, OnDestroy {
     });
   }
 
-  public moveArrows(direction: KEY): void {
+  touchEvent(e: TouchEvent, direction: number): void {
+    e.preventDefault();
+    this.isTouchStart = true;
+    setTimeout(() => this.moveArrows(direction), 200);
+  }
+  endTouch(): void {
+    this.isTouchStart = false;
+  }
+
+  private moveArrows(direction: KEY): void {
     if (direction === KEY.LEFT) {
       if (this.angle > ANG) {
         this.angle -= ANG;
@@ -76,6 +85,9 @@ export class BallComponent implements OnInit, OnDestroy {
         this.angle += ANG;
         this.store.dispatch(new ballActions.Angle(RA - this.angle));
       }
+    }
+    if (this.isTouchStart) {
+      setTimeout(() => {this.moveArrows(direction);}, 100);
     }
   }
   ngOnDestroy() {

@@ -13,6 +13,7 @@ body *::before {
   font-family: "Helvetica", "Arial", sans-serif;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   .buttons {
     display: flex;
     flex-wrap: wrap;
