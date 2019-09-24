@@ -3,7 +3,7 @@
   <div class="conText row">
     <div class="conLeft" id="conLeft" >
       <div class="card--table">
-        <ul class="cards cards--dealer" [ngClass]="{'cards--stand': status === 1}">
+        <ul class="cards cards--dealer" [ngClass]="{'cards--stand': showStand}">
           <li *ngFor="let card of dealer.cards" cardAnimate = "#deckLeft" class="dealer-card" >
             <div class="card">
               <div class="card__back card__face">

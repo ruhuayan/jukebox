@@ -20,6 +20,7 @@ export class BlackjackComponent implements OnInit, OnDestroy {
   probabilities: object = {player_busted: 0, player_win: 0, dealer_busted: 0};
   prob_player = 0;
   prob_dealer: number = null;
+  showStand = false;
   private loadImagesSubscription: Subscription;
   constructor(private titleService: Title) {
     this.titleService.setTitle('Blackjack - Poker Game');
@@ -133,7 +134,8 @@ export class BlackjackComponent implements OnInit, OnDestroy {
   }
 
   stand(replay = 0): void {
-    this.status = Status.STAND;
+    this.status = Status.STAND; 
+    this.showStand = true;
     if (replay) {
       this.dealOneCard(Role.DEALER);
     }
@@ -183,6 +185,7 @@ export class BlackjackComponent implements OnInit, OnDestroy {
     this.showHint = false;
     setTimeout(() => {
       this.status = Status.ONDEALING;
+      this.showStand = false;
       this.player.empty();
       this.dealer.empty();
       this.refresh();
