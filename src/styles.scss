@@ -205,12 +205,11 @@ text-decoration: none; }
   }
   header.menu > .mContent > .mItems {
     padding-right: 0; }
-  .content .conText .conLeft {
-    width: 90%; }
+
   .content .conText .conRight {
     display: none; }
 }
-@media (max-width: 460px) {
+@media (max-width: 480px) {
   header.menu > .mContent,
   .content, .footer > .fContent {
     width: 96%;

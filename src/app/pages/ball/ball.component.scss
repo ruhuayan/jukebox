@@ -65,7 +65,11 @@ $tw: calc(100% / #{$n});
           width: 25px;
           height: 25px;
           position: absolute;
-          bottom: 0;
+          opacity: 0;
+          @media (max-width: 480px) {
+            opacity: 1;
+            bottom: 30px;
+          }
 
           &.arrow-left {
             transform: translateY(-50%) rotate(90deg);

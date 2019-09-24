@@ -53,7 +53,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     this.imgSubscription = new Observable((observer) => {
       this.img.onload = () => {
         const height = self.img.height,
-              width = (self.img.width < this.contextWidth - 6) ? self.img.width : this.contextWidth - 6;
+              width = (self.img.width < this.contextWidth - this.row) ? self.img.width : this.contextWidth - this.row;
         observer.next(new Dimension(width, height));
       };
     }).subscribe((res: Dimension) => {

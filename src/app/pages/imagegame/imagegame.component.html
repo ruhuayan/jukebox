@@ -39,7 +39,7 @@
     </div>
 </div>
 <div class="conText row">
-  <div class="conLeft" id="conLeft" #conLeft (window:resize)="width = conLeft.getBoundingClientRect().width">
+  <div class="conLeft" id="conLeft" #conLeft>
     <div class="canvas-wrap" *ngFor="let i of numOfCan; let i = index"
         [attr.data-num]="i" [attr.data-ori]="i"
         (click)="shift($event, i)">
