@@ -121,7 +121,7 @@ export class BallComponent implements OnInit, OnDestroy {
         launchedBall.dist = distanceToWall < distanceToTop ? distanceToWall : distanceToTop;
         launchedBall.link = [-1];
       }
-      console.log(targetBalls, launchedBall, distanceToWall, distanceToTop);
+      // console.log(targetBalls, launchedBall, distanceToWall, distanceToTop);
       this.checkCollusion(targetBalls, launchedBall, margin);
     }
   }
