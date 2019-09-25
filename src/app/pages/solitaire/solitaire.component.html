@@ -1,6 +1,6 @@
  <div class="conTitle" id="conTitle">
     <div class="description"> Solitaire </div>
-   <div class="subtitle__btns">
+    <div class="subtitle__btns">
       <button class="btn btn--shuffle button" (click)="newGame()">
         <!-- <img src="./assets/imgs/autorenew-24px.svg" alt="New Game" /> -->
         <span class="text">New Game</span>
@@ -14,12 +14,12 @@
     </div>
   </div>
 
-  <div class="conText row">
-    <div class="conLeft" id="conLeft" style="width: 100%" >
+  <div class="conText row" style="display: block;">
+    <div class="conLeft" id="conLeft" style="width: 96%; margin: 0 auto;" >
       <div class="deck">
         <div class="deck__left deck__td" id="deckLeft">
-          <div class="deck__cards--left" (click)="open()">
-              <img [src]="deck.cardBackImg" alt="card back" with="75" height="115" *ngIf="leftCards.length > 0">
+          <div class="deck__cards--left card" (click)="open()">
+              <img [src]="deck.cardBackImg" alt="card back" *ngIf="leftCards.length > 0">
           </div>
         </div>
         <div class="deck__cards deck__td">
@@ -54,10 +54,10 @@
                         (dropped)="onDropped($event, i, j)">
                       <div class="card">
                         <div class="card__back card__face">
-                          <img [src]="deck.cardBackImg" alt="cardback" width="75" height="115">
+                          <img [src]="deck.cardBackImg" alt="cardback" />
                         </div>
                         <div class="card__front card__face">
-                          <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="75" height="115" />
+                          <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" />
                         </div>
                       </div>
                   </li>
@@ -77,10 +77,10 @@
                  (dropped)="onDropped($event, i, j)">
               <div class="card">
                 <div class="card__back card__face">
-                  <img [src]="deck.cardBackImg" alt="cardback" width="75" height="115">
+                  <img [src]="deck.cardBackImg" alt="cardback" />
                 </div>
                 <div class="card__front card__face">
-                  <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="75" height="115" />
+                  <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" />
                 </div>
               </div>
             </li>

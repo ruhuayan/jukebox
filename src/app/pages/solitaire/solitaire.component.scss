@@ -1,8 +1,7 @@
 .conTitle {
   display: flex;
+  justify-content: space-between;
   .subtitle__btns {
-    flex: 1;
-    text-align: right;
     padding-right: 10px;
     .btn{
       width: 150px;
@@ -176,4 +175,35 @@ ul.cards.cards--dealer{
   li.hover.card__show:last-child{
     height: 115px;
   }
+}
+.card img {
+  width: 75px;
+  height: 115px;
+}
+@media(max-width: 878px){
+  .card img {
+    // width: 45px;
+    // height: 65px;
+  }
+  .deck__td {
+    width: 90px;
+  }
+  .deck .deck__cards--left,
+  ul.cards {
+    margin-right: 20px;
+    &::before{
+      // width: 42px;
+      // height: 63px;
+      // border-radius: 3px;
+      // border: 1px solid #999;
+    }
+  }
+
+
+}
+@media(max-width: 480px){
+  .conTitle .subtitle__btns .btn{
+      width: 100px;
+    }
+
 }
