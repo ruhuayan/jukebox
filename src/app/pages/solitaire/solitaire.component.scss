@@ -13,6 +13,7 @@
 .deck{
   display: flex;
   padding: var(--sm-padding) var(--md-padding);
+  justify-content: space-around;
   .deck__cards--left {
     cursor: pointer;
     outline:none;
@@ -46,7 +47,11 @@
     width: 75px;
   }
   .deck__td {
-    width: 105px;
+    // width: 105px;
+    // margin-right: 30px;
+    &.deck__td--empty { 
+      // width: 105px;
+    }
   }
   ul{
     padding:0;
@@ -58,9 +63,12 @@
     }
   }
   ul.deck__card--empty{
+    display: inline-flex;
+    justify-content: space-between;
+    width: 57%;
     li{
       width: 75px;
-      margin-right: 30px;
+      // margin-right: 30px;
     }
   }
 
@@ -162,9 +170,9 @@ ul.cards{
             // box-shadow: 2px 2px 5px #ddd;
         }
       }
-      li.hover:last-child {
-        height: 115px;
-      }
+      // li.hover:last-child {
+      //   height: 115px;
+      // }
 
 }
 ul.cards.cards--dealer{
@@ -182,20 +190,20 @@ ul.cards.cards--dealer{
 }
 @media(max-width: 878px){
   .card img {
-    // width: 45px;
-    // height: 65px;
+    width: 65px;
+    height: 100px;
   }
-  .deck__td {
-    width: 90px;
+  .deck .deck__td {
+    // margin-right: 20px;
   }
   .deck .deck__cards--left,
   ul.cards {
-    margin-right: 20px;
+    // margin-right: 20px;
     &::before{
-      // width: 42px;
-      // height: 63px;
-      // border-radius: 3px;
-      // border: 1px solid #999;
+      width: 61px;
+      height: 92px;
+      border-radius: 3px;
+      border: 1px solid #999;
     }
   }
 

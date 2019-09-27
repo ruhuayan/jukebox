@@ -28,6 +28,10 @@ const routes: Routes = [
     path: 'balls',
     loadChildren: './pages/ball/ball.module#BallModule'
     // loadChildren: () => import('./pages/ball/ball.module').then(m => m.BallModule)
+  },{ 
+    path: 'automation',
+    loadChildren: './pages/automate/automation.module#AutomationModule'
+    // loadChildren: () => import('./pages/ball/ball.module').then(m => m.BallModule)
   },{
 		path: '**',
 		redirectTo: '404',

@@ -31,16 +31,16 @@
                 (dropped)="onDropped($event, 11, j)" >
               <div class="card">
                 <div class="card__back card__face">
-                  <img [src]="deck.cardBackImg" alt="cardback" width="75" height="115">
+                  <img [src]="deck.cardBackImg" alt="cardback" >
                 </div>
                 <div class="card__front card__face">
-                  <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="75" height="115" />
+                  <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit"/>
                 </div>
               </div>
             </li>
           </ul>
         </div>
-        <div class="deck__td"></div>
+        <div class="deck__td deck__td--empty"></div>
         <ul class="deck__card--empty">
             <li *ngFor="let i of [7,8,9,10]; ">
               <ul class="cards empty" appDropzone [appCardList]="cols[i]" [appCardHomogeneous]="true" [attr.data-index]="i" [ngClass]="{'empty': cols[i]['length']===0}">
