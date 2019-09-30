@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Shape, Circle, RoundedRect } from './shape.model';
+import { Shape, Circle, RoundedRect, Arc, Line } from './shape.model';
+
+const WIDTH = 570, HEIGHT = 540, roundWidth = 30, initX = 130;
 
 @Component({
   selector: 'app-automation',
@@ -7,39 +9,67 @@ import { Shape, Circle, RoundedRect } from './shape.model';
   styleUrls: ['./automation.component.scss']
 })
 export class AutomationComponent implements OnInit {
+
   @ViewChild('canvas') canvasRef: ElementRef;
   private ctx: CanvasRenderingContext2D;
-  width = 570;
-  height = 540;
-  color = 'rgb(215, 215, 215)';
+  private color = 'rgb(215, 215, 215)';
+  private roundRect1: RoundedRect;
+  private roundRect2: RoundedRect;
+  private circle: Circle;
+  private speed = 10;
+  private arc: Arc;
+  private line: Line;
+
   constructor() { }
 
   ngOnInit() {
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
     this.layout();
+    // this.animate();
+  }
+
+  private clear(): void {
+    this.ctx.fillStyle = 'rgb(255, 255, 255)';
+    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
   }
 
   private layout(): void {
-    // this.ctx.fillStyle ='rgb(255, 255, 255)';
-    // this.ctx.fillRect(0, 0, this.width, this.height);
-
-    this.ctx.fillStyle =this.color;
-    this.ctx.fillRect(this.width / 2 - 1, 0, 2, this.height);
-    this.ctx.fillRect(0, this.height / 2 - 1, this.width, 2);
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(WIDTH / 2 - 1, 0, 2, HEIGHT);
+    this.ctx.fillRect(0, HEIGHT / 2 - 1, WIDTH, 2);
 
     this.ctx.font = '16px arial';
-    this.ctx.fillText('Ratio 1px : 1mm', this.width - 150 , 30);
+    this.ctx.fillText('Ratio 1px : 1mm', WIDTH - 150 , 30);
 
     Shape.setcontext(this.ctx);
 
-    const circle = new Circle (this.width / 2, this.height / 2, 250);
-    circle.setColor(this.color)
-          .draw();
+    this.circle = new Circle (WIDTH / 2, HEIGHT / 2, 250);
+    this.circle.setColor(this.color).draw();
 
-    const roundRect1 = new RoundedRect(135, (this.height - 50) / 2, 30, 50, 12);
-    roundRect1.draw();
+    this.arc = new Arc(WIDTH / 2, HEIGHT / 2, 180, Math.PI / 2 + Math.PI / 4, 0);
+    this.arc.setColor('rgba(150, 150, 150, .2)').draw();
 
-    const roundRect2 = new RoundedRect(this.width - 135 - 30, (this.height - 50) / 2, 30, 50, 12);
-    roundRect2.draw();
+    // initY: HEIGHT / 2 + 125 - 30 = 365, ; arc radius 176.78
+
+    this.roundRect1 = new RoundedRect(initX, /*(HEIGHT - roundWidth) / 2*/ 365, roundWidth, roundWidth, 10);
+    this.roundRect1.setColor(this.color).draw();
+    // this.line = new Line(initX + roundWidth, 395 + roundWidth, WIDTH / 2, HEIGHT / 2);
+    // this.line.setColor(this.color).draw();
+
+    this.roundRect2 = new RoundedRect(WIDTH - initX - roundWidth, /*(HEIGHT - roundWidth) / 2*/145, roundWidth, roundWidth, 10);
+    this.roundRect2.setColor(this.color).draw();
+  }
+
+  private animate(): void {
+    if (this.speed > 0 && this.roundRect2.y >= HEIGHT - 115 - roundWidth) {
+      // console.log(this.roundRect1.y, this.roundRect2.y)
+      return;
+    }
+    this.roundRect1.move(this.roundRect1.x, this.roundRect1.y - this.speed);
+    this.roundRect2.move(this.roundRect2.x, this.roundRect2.y + this.speed);
+    this.arc.move();
+    setTimeout(() => {
+      this.animate();
+    }, 200);
   }
 }
