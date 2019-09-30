@@ -59,21 +59,20 @@ export class Arc extends Shape {
   private radius: number;
   private ctx: CanvasRenderingContext2D;
   private startAngle: number;
-  private endAngle: number;
-  private ang: number;
+  private speed: number;
   constructor(x: number, y: number, radius: number, startAng: number, speed: number) {
     super(x, y);
     this.radius = radius;
     this.ctx = Shape.ctx;
     this.startAngle = startAng;
-    this.endAngle = startAng + speed;
-    this.ang = speed;
+    // this.endAngle = startAng + speed;
+    this.speed = speed;
   }
 
   public draw() {
     this.ctx.beginPath();
     this.ctx.moveTo(this.x, this.y);
-    this.ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle);
+    this.ctx.arc(this.x, this.y, this.radius, this.startAngle, this.startAngle);
     this.ctx.lineTo(this.x, this.y);
     this.ctx.fillStyle = this.color;
     this.ctx.fill();
@@ -82,8 +81,8 @@ export class Arc extends Shape {
   }
 
   public move() {
-    this.startAngle = this.endAngle;
-    this.endAngle += this.ang;
+    this.startAngle += this.speed;
+    // this.endAngle += this.ang;
     this.draw();
   }
 }

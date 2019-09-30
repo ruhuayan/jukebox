@@ -17,15 +17,17 @@ export class AutomationComponent implements OnInit {
   private roundRect2: RoundedRect;
   private circle: Circle;
   private speed = 10;
-  private arc: Arc;
-  private line: Line;
+  private arc1: Arc;
+  private arc2: Arc;
+  // private line: Line;
 
   constructor() { }
 
   ngOnInit() {
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
     this.layout();
-    // this.animate();
+    this.setElements();
+    this.animate();
   }
 
   private clear(): void {
@@ -40,14 +42,19 @@ export class AutomationComponent implements OnInit {
 
     this.ctx.font = '16px arial';
     this.ctx.fillText('Ratio 1px : 1mm', WIDTH - 150 , 30);
+  }
 
+  private setElements(): void {
     Shape.setcontext(this.ctx);
 
-    this.circle = new Circle (WIDTH / 2, HEIGHT / 2, 250);
+    this.circle = new Circle(WIDTH / 2, HEIGHT / 2, 250);
     this.circle.setColor(this.color).draw();
 
-    this.arc = new Arc(WIDTH / 2, HEIGHT / 2, 180, Math.PI / 2 + Math.PI / 4, 0);
-    this.arc.setColor('rgba(150, 150, 150, .2)').draw();
+    this.arc1 = new Arc(WIDTH / 2, HEIGHT / 2, 190, Math.PI / 2 + Math.PI / 4, Math.PI/50);
+    this.arc1.setColor('rgba(255, 0, 0, .1)').draw();
+
+    this.arc2 = new Arc(WIDTH / 2, HEIGHT / 2, 190, Math.PI * 7 / 4, Math.PI / 50);
+    this.arc2.setColor('rgba(255, 0, 0, .1)').draw();
 
     // initY: HEIGHT / 2 + 125 - 30 = 365, ; arc radius 176.78
 
@@ -65,9 +72,12 @@ export class AutomationComponent implements OnInit {
       // console.log(this.roundRect1.y, this.roundRect2.y)
       return;
     }
+    this.clear();
+    this.layout();
     this.roundRect1.move(this.roundRect1.x, this.roundRect1.y - this.speed);
     this.roundRect2.move(this.roundRect2.x, this.roundRect2.y + this.speed);
-    this.arc.move();
+    this.arc1.move();
+    this.arc2.move();
     setTimeout(() => {
       this.animate();
     }, 200);
