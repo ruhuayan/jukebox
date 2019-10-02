@@ -3,13 +3,14 @@ export interface Drawable {
   draw(): void;
 }
 export interface Movable {
-  setSpeed(speed: number): void;
+  setSpeed(speed: number): Movable;
   move(x: number, y: number): void;
 }
 
-export class Shape implements Drawable {
+export class Shape implements Drawable, Movable {
   x: number;
   y: number;
+  speed: number;
   color: string;
   static ctx: CanvasRenderingContext2D;
 
@@ -27,6 +28,16 @@ export class Shape implements Drawable {
     return this;
   }
   public draw(): void {}
+
+  public setSpeed(speed: number): Shape {
+    this.speed = speed;
+    return this;
+  }
+  public move(): void {
+    if (! this.speed) {
+      throw new Error('Can not move with speed');
+    }
+  }
 
 }
 
@@ -48,9 +59,7 @@ export class Line extends Shape {
     this.ctx.lineTo(this.endX, this.endY);
     this.ctx.stroke();
   }
-  public move(x: number, y: number): void {
-    this.x = x;
-    this.y = y;
+  public move(): void {
     this.draw();
   }
 }
@@ -59,7 +68,7 @@ export class Arc extends Shape {
   private radius: number;
   private ctx: CanvasRenderingContext2D;
   private startAngle: number;
-  private speed: number;
+  // private speed: number;
   constructor(x: number, y: number, radius: number, startAng: number, speed: number) {
     super(x, y);
     this.radius = radius;
@@ -145,9 +154,12 @@ export class RoundedRect extends Shape {
     this.ctx.stroke();
   }
 
-  public move(x: number, y: number): void {
-    this.x = x;
-    this.y = y;
+  public move(): void {
+    if (!this.speed) return;
+    const hypotenuse = Math.hypot(this.x, this.y); 
+    const angX = Math.asin(this.x / hypotenuse);
+    const angY = Math.PI - this.speed - angX;
+    this.y = Math.sin(this.speed) / Math.sin(angY) * hypotenuse;
     this.draw();
   }
 }

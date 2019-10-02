@@ -15,11 +15,11 @@ export class AutomationComponent implements OnInit {
   private color = 'rgb(215, 215, 215)';
   private roundRect1: RoundedRect;
   private roundRect2: RoundedRect;
-  private circle: Circle;
-  private speed = 10;
   private arc1: Arc;
   private arc2: Arc;
-  // private line: Line;
+  private circle: Circle;
+  private speed = 10;
+  private speedAng = Math.PI/50;
 
   constructor() { }
 
@@ -50,10 +50,10 @@ export class AutomationComponent implements OnInit {
     this.circle = new Circle(WIDTH / 2, HEIGHT / 2, 250);
     this.circle.setColor(this.color).draw();
 
-    this.arc1 = new Arc(WIDTH / 2, HEIGHT / 2, 190, Math.PI / 2 + Math.PI / 4, Math.PI/50);
+    this.arc1 = new Arc(WIDTH / 2, HEIGHT / 2, 190, Math.PI / 2 + Math.PI / 4, this.speedAng);
     this.arc1.setColor('rgba(255, 0, 0, .1)').draw();
 
-    this.arc2 = new Arc(WIDTH / 2, HEIGHT / 2, 190, Math.PI * 7 / 4, Math.PI / 50);
+    this.arc2 = new Arc(WIDTH / 2, HEIGHT / 2, 190, Math.PI * 7 / 4, this.speedAng);
     this.arc2.setColor('rgba(255, 0, 0, .1)').draw();
 
     // initY: HEIGHT / 2 + 125 - 30 = 365, ; arc radius 176.78
@@ -74,8 +74,9 @@ export class AutomationComponent implements OnInit {
     }
     this.clear();
     this.layout();
-    this.roundRect1.move(this.roundRect1.x, this.roundRect1.y - this.speed);
-    this.roundRect2.move(this.roundRect2.x, this.roundRect2.y + this.speed);
+    // const speed = this.roundRect1.y - this.speed;
+    this.roundRect1.setSpeed(this.speed).move();
+    this.roundRect2.move();
     this.arc1.move();
     this.arc2.move();
     setTimeout(() => {
