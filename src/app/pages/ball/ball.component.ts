@@ -163,8 +163,8 @@ export class BallComponent implements OnInit, OnDestroy {
           const lastMargin: Margin = this.calculateMargin(ball.launchDist);
 
           this.stopLaunchedBall(launchedBall, lastMargin);
-          this.removeUnion(launchedBall);
-          this.resetLauchedBall(launchedBall);
+          const removed = this.removeUnion(launchedBall);
+          this.resetLauchedBall(launchedBall, removed);
           return;
         } else {
           ball.launchDist -= this.speed;
@@ -197,9 +197,13 @@ export class BallComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ballActions.Move(lastMargin));
     this.launching = false;
     launchedBall.status = 'stopped';
-
   }
-  private resetLauchedBall(launchedBall): void {
+  private resetLauchedBall(launchedBall, removed: boolean = false): void {
+    if (removed) {
+      navigator.vibrate(300);
+    } else {
+      navigator.vibrate(100);
+    }
     if (launchedBall.dist < this.bw && launchedBall.show) {
       setTimeout(() => window.alert('You lost !!!'), 100);
     } else {
@@ -207,7 +211,7 @@ export class BallComponent implements OnInit, OnDestroy {
     }
   }
 
-  private removeUnion(ball: Ball): void {
+  private removeUnion(ball: Ball): boolean {
 
     if (ball.union.length > 2) {
 
@@ -237,7 +241,9 @@ export class BallComponent implements OnInit, OnDestroy {
                   brokenLinks.forEach(n => this.balls[n].show = false);
                 }
       });
+      return true;
     }
+    return false;
   }
 
   private getBrokenLinks(ball: Ball, arr: number[]): number[] {

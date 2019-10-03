@@ -68,15 +68,14 @@ export class AutomationComponent implements OnInit {
   }
 
   private animate(): void {
-    if (this.speed > 0 && this.roundRect2.y >= HEIGHT - 115 - roundWidth) {
+    if (this.speed > 0 && this.roundRect1.y <= 115 /*&& this.roundRect2.y >= HEIGHT - 115 - roundWidth*/ ) {
       // console.log(this.roundRect1.y, this.roundRect2.y)
       return;
     }
     this.clear();
     this.layout();
-    // const speed = this.roundRect1.y - this.speed;
-    this.roundRect1.setSpeed(this.speed).move();
-    this.roundRect2.move();
+    this.roundRect1.setSpeed(this.speedAng).move();
+    // this.roundRect2.move();
     this.arc1.move();
     this.arc2.move();
     setTimeout(() => {
