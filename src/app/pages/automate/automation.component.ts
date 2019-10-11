@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Shape, Circle, RoundedRect, Arc, Line } from './shape.model';
+import { Shape, Circle, RoundedRect, Arc, WIDTH, HEIGHT } from './shape.model';
 
-const WIDTH = 570, HEIGHT = 540, roundWidth = 30, initX = 130;
+const roundWidth = 30, initX = 130;
 
 @Component({
   selector: 'app-automation',
@@ -19,7 +19,7 @@ export class AutomationComponent implements OnInit {
   private arc2: Arc;
   private circle: Circle;
   private speed = 10;
-  private speedAng = Math.PI/50;
+  private speedAng = Math.PI / 50;
 
   constructor() { }
 
@@ -75,7 +75,7 @@ export class AutomationComponent implements OnInit {
     this.clear();
     this.layout();
     this.roundRect1.setSpeed(this.speedAng).move();
-    // this.roundRect2.move();
+    this.roundRect2.setSpeed(this.speedAng).move();
     this.arc1.move();
     this.arc2.move();
     setTimeout(() => {
