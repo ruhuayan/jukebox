@@ -1,14 +1,32 @@
-<header class="menu">
+<header class="menu" [ngClass]="{'menuChecked': menuChecked}">
     <div class="mContent">
         <div class="logo">
             <a href="http://www.richyan.com" class="aLogo">RichYan</a>
         </div>
         <div id="menuToggle">
-            <input type="checkbox">
+            <input type="checkbox" (change)="menuChecked = $event.target.checked" #inputToggle>
             <span></span>
             <span></span>
             <span></span>
             <ul id="menuToggle-menu">
+                <li class="in-poker" (click)="clickLink('jukebox')" [ngClass]="{'active': linkUrl == 'jukebox'}">
+                    <a class="mLink">Jukebox</a>
+                </li>
+                <li class="in-poker" (click)="clickLink('igame')" [ngClass]="{'active': linkUrl == 'igame'}">
+                    <a class="mLink" >Image Game</a>
+                </li>
+                <li class="in-poker" (click)="clickLink('blackjack')" [ngClass]="{'active': linkUrl == 'blackjack'}">
+                    <a class="mLink">Blackjack</a>
+                </li>
+                <li class="in-poker" (click)="clickLink('solitaire')" [ngClass]="{'active': linkUrl == 'solitaire'}">
+                    <a class="mLink">Solitaire</a>
+                </li>
+                <li class="in-poker" (click)="clickLink('points')" [ngClass]="{'active': linkUrl == 'points'}">
+                    <a class="mLink">24 Points</a>
+                </li>
+                <li class="in-poker" (click)="clickLink('balls')" [ngClass]="{'active': linkUrl == 'balls'}">
+                    <a class="mLink">Balls</a>
+                </li>
                 <li>
                     <a href="https://www.richyan.com" class="mLink">Home</a>
                 </li>
@@ -23,24 +41,6 @@
                 </li>
                 <li>
                     <a href="https://www.richyan.com/android" class="mLink">Android</a>
-                </li>
-                <li class="in-poker">
-                    <a routerLink="/jukebox" class="mLink">Jukebox</a>
-                </li>
-                <li class="in-poker">
-                    <a routerLink="/igame" class="mLink">Image Game</a>
-                </li>
-                <li class="in-poker">
-                    <a routerLink="/blackjack" class="mLink">Blackjack</a>
-                </li>
-                <li class="in-poker">
-                    <a routerLink="/solitaire" class="mLink">Solitaire</a>
-                </li>
-                <li class="in-poker">
-                    <a routerLink="/points" class="mLink">24 Points</a>
-                </li>
-                <li class="in-poker">
-                    <a routerLink="/balls" class="mLink">Balls</a>
                 </li>
                 <li class="last">
                     <a href="http://www.blog.richyan.com/" class="mLink">Blog</a>
