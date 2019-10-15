@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, HostBinding, HostListener, Output, Input, Renderer2, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { Position } from './position.model';
-import { Card, Suit } from '../models/card.model';
+import { Card } from '../models/card.model';
 import { Dropzone } from './dropzone.model';
 
 @Directive({
@@ -52,7 +52,7 @@ export class DraggableDirective {
   }
 
   @HostListener('document:mousemove', ['$event'])
-  @HostListener('touchmove', ['$event'])
+  @HostListener('document:touchmove', ['$event'])
   onMove(event: any) {
     event.preventDefault();
     if (!this.dragging && !this.card['grouped']) {
@@ -75,17 +75,18 @@ export class DraggableDirective {
     } else {
       this.position = this.card['position'];
     }
-
   }
 
   @HostListener('document:mouseup', ['$event'])
-  @HostListener('touchend', ['$event'])
+  @HostListener('document:touchend', ['$event'])
   onEnd(event: any) {
-    event.preventDefault();
+
+    // document:touchend cause other buttons malfuntion
+    // if $this not dragging, return to regular click event 
     if (!this.dragging && !this.card['grouped']) {
       return;
     }
-
+    event.preventDefault();
     if (this.droppableDropzone && this.droppableDropzone.entreZone(this.el.nativeElement.getBoundingClientRect())
       ) {
       this.dropped.emit(this.droppableDropzone.getId());

@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
 
   @ViewChild('inputToggle') inputToggle: ElementRef<HTMLElement>;
-  linkUrl = 'igame';
+  linkUrl: string;
+  menuChecked = false;
   constructor(private router: Router) { }
 
   ngOnInit() {

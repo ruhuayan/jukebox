@@ -85,7 +85,7 @@ export class SolitaireComponent implements OnInit, OnDestroy {
       while (this.cols[11].length > 0) {
         this.leftCards.push(this.cols[11].pop());
       }
-      this.actions.push({from: this.cols[11], to: this.leftCards, cards: [...this.cols[11]]});
+      this.actions.push({from: this.cols[11], to: this.leftCards, cards: this.cols[11].slice(0)});
     }
   }
   onDragStart(fromZoneId: number, cardIndex: number) {
@@ -127,7 +127,7 @@ export class SolitaireComponent implements OnInit, OnDestroy {
           this.groupedCards[i]['position'] = {x: 0, y: 0}; // cant remove
           this.cols[toDropzoneId].push(this.groupedCards[i]);
         }
-        action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: [card, ...this.groupedCards]};
+      action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: this.groupedCards.slice(0).concat([card])/*[card, ...this.groupedCards]*/};
     } else {
       action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: [card]};
     }
@@ -139,9 +139,9 @@ export class SolitaireComponent implements OnInit, OnDestroy {
     }
     this.actions.push(action);
     this.groupedCards = [];
-    if (this.gameFinished()) {
-      setTimeout(() => window.alert('You Won !'), 300);
-    }
+    // if (this.gameFinished()) {
+    //   setTimeout(() => window.alert('You Won !'), 300);
+    // }
   }
 
   private gameFinished(): boolean {
