@@ -1,7 +1,8 @@
 import { Directive, EventEmitter, HostBinding, HostListener, Output, Input, Renderer2, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { Position } from './position.model';
-import { Card } from '../models/card.model';
+import { Card, Suit } from '../models/card.model';
+import { Dropzone } from './dropzone.model';
 
 @Directive({
   selector: '[appDraggable]'
@@ -12,53 +13,65 @@ export class DraggableDirective {
       `translateX(${this.position.x}px) translateY(${this.position.y}px)`
     );
   }
-  // @HostBinding('class.draggable') draggable = true;
+
   @HostBinding('class.dragging') dragging = false;
   @Input('appDraggingCard') card: Card;
 
-  @Output() dragStart = new EventEmitter<MouseEvent>();
-  @Output() dragMove = new EventEmitter<MouseEvent>();
-  // @Output() dragEnd = new EventEmitter<MouseEvent>();
-  @Output() dropped = new EventEmitter<MouseEvent>();
+  @Output() dragStart = new EventEmitter();
+  @Output() dragMove = new EventEmitter<Position>();
+  @Output() dropped = new EventEmitter<number>();
 
   private position: Position = {x: 0, y: 0};
   private draggingStartPosition: Position;
-  private dropzones: any;
-  private droppableDropzone: any;
+  private dropzones: [HTMLElement];
+  private droppableDropzone: Dropzone;
 
   constructor(private sanitizer: DomSanitizer, private el: ElementRef, private renderer: Renderer2) {
   }
 
   @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent) {
+  @HostListener('touchstart', ['$event'])
+  onStart(event: any) {
     event.preventDefault();
     if (!this.card.show) {
       return;
     }
     this.dragging = true;
-    this.draggingStartPosition = {
-      x: event.clientX - this.position.x,
-      y: event.clientY - this.position.y
-    };
-    this.dragStart.emit(event);
+    if (event.touches) {
+      this.draggingStartPosition = {
+        x: event['touches'][0]['clientX'] - this.position.x,
+        y: event['touches'][0]['clientY'] - this.position.y
+      };
+    } else {
+      this.draggingStartPosition = {
+        x: event.clientX - this.position.x,
+        y: event.clientY - this.position.y
+      };
+    }
+    this.dragStart.emit();
   }
 
   @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
+  @HostListener('touchmove', ['$event'])
+  onMove(event: any) {
     event.preventDefault();
     if (!this.dragging && !this.card['grouped']) {
       return;
     }
     if (this.dragging) {
-      this.position = {
-        x: event.clientX - this.draggingStartPosition.x,
-        y: event.clientY - this.draggingStartPosition.y
-      };
-      event['position'] = this.position;
-      this.notify(true);
-      // this.renderer.setStyle(this.element.nativeElement, 'transform',
-      // `translateX(${this.position.x}px) translateY(${this.position.y}px)`);
-      this.dragMove.emit(event);
+      if (event.touches) {
+        this.position = {
+          x: event['touches'][0]['clientX'] - this.draggingStartPosition.x,
+          y: event['touches'][0]['clientY'] - this.draggingStartPosition.y
+        };
+      } else {
+        this.position = {
+          x: event.clientX - this.draggingStartPosition.x,
+          y: event.clientY - this.draggingStartPosition.y
+        };
+      }
+      this.droppableDropzone = this.getDroppableZone();
+      this.dragMove.emit(this.position);
     } else {
       this.position = this.card['position'];
     }
@@ -66,61 +79,38 @@ export class DraggableDirective {
   }
 
   @HostListener('document:mouseup', ['$event'])
-  onMouseUp(event: MouseEvent) {
+  @HostListener('touchend', ['$event'])
+  onEnd(event: any) {
     event.preventDefault();
     if (!this.dragging && !this.card['grouped']) {
       return;
     }
 
-    if (this.droppableDropzone &&
-      this.isEnterDropZone(this.el.nativeElement.getBoundingClientRect(), this.droppableDropzone.getBoundingClientRect())) {
-      const index = this.droppableDropzone.getAttribute('data-index');
-      event['dropzoneId'] = +index;
-      this.dropped.emit(event);
-
+    if (this.droppableDropzone && this.droppableDropzone.entreZone(this.el.nativeElement.getBoundingClientRect())
+      ) {
+      this.dropped.emit(this.droppableDropzone.getId());
     }
 
     this.position = {x: 0, y: 0};
     this.card['grouped'] = false;
-    if (this.dragging) {
-      this.notify(false);
-      this.dragging = false;
-      this.clearDroppable();
-    }
-  }
-  private isEnterDropZone(rect: ClientRect, DropZone: ClientRect) {
-    return rect.right > DropZone.left &&
-      rect.left < DropZone.right &&
-      rect.bottom > DropZone.top &&
-      rect.top < DropZone.bottom;
+    this.dragging = false;
   }
 
-  private notify(draggingStart: boolean) {
+  private getDroppableZone(): Dropzone {
     if (!this.dropzones) {
-      this.dropzones = document.querySelectorAll('.appDropzone');
+      this.dropzones = [].slice.call(document.querySelectorAll('.appDropzone'));
     }
     for (let i = 0; i < this.dropzones.length; i++) {
       if (this.dropzones[i].contains(this.el.nativeElement)) {
         continue;
       }
-      this.renderer.removeClass(this.dropzones[i], 'dropzone-activated');
-      if (draggingStart) {
-        const enterDropZone = this.isEnterDropZone(this.el.nativeElement.getBoundingClientRect(), this.dropzones[i].getBoundingClientRect());
-        if (enterDropZone) {
-          this.renderer.addClass(this.dropzones[i], 'dropzone-activated');
-          this.renderer.setAttribute(this.dropzones[i], 'card-value', `${this.card.value}|${this.card.suit}`);
-          if (this.dropzones[i].classList.contains('dropzone-droppable')) {
-            this.droppableDropzone = this.dropzones[i];
-          }
-        }
+      const dropzone = new Dropzone(this.dropzones[i]);
+      if (dropzone.entreZone(this.el.nativeElement.getBoundingClientRect()) &&
+          dropzone.isDroppable(this.card)) {
+          return dropzone;
       }
     }
-  }
-
-  private clearDroppable(): void {
-    for (let i = 0; i < this.dropzones.length; i++) {
-      this.renderer.removeClass(this.dropzones[i], 'dropzone-droppable');
-    }
+    return null;
   }
 
 }

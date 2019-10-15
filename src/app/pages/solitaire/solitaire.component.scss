@@ -1,7 +1,7 @@
 .conTitle {
   display: flex;
   justify-content: space-between;
-  .subtitle__btns {
+  .subtitle-btns {
     padding-right: 10px;
     .btn{
       width: 150px;
@@ -10,23 +10,41 @@
     }
   }
 }
-.deck{
-  display: flex;
+#conLeft {
+  width: 96% !important;
+  margin: 0 auto;
+}
+
+.deck,
+.card-table {
+  display: grid;
   padding: var(--sm-padding) var(--md-padding);
-  justify-content: space-around;
-  .deck__cards--left {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.deck .deck_cards-left,
+ul.cards {
+  width: 75px;
+
+  &::before{
+    content: "";
+    position: absolute;
+    margin-top: 2px;
+    width: 71px;
+    height: 106px;
+    border-radius: 5px;
+    border: 2px solid #999;
+  }
+}
+
+.deck{
+  > div {
+    height: 115px;
+  }
+  .deck_cards-left {
     cursor: pointer;
     outline:none;
-    width: 75px;
-    height: 115px;
     &::before {
-      content: "";
-      position: absolute;
-      margin-top: 2px;
-      width: 71px;
-      height: 108px;
-      border-radius: 5px;
-      border: 2px solid #999;
       background: url(/assets/imgs/autorenew-24px.svg) center center no-repeat;
       z-index: -1;
       user-select: none; /* supported by Chrome and Opera */
@@ -43,16 +61,7 @@
       -ms-user-select: none; /* Internet Explorer/Edge */
     }
   }
-  .deck__cards {
-    width: 75px;
-  }
-  .deck__td {
-    // width: 105px;
-    // margin-right: 30px;
-    &.deck__td--empty { 
-      width: 105px;
-    }
-  }
+
   ul{
     padding:0;
     margin:0;
@@ -62,52 +71,23 @@
       height: 0px;
     }
   }
-  ul.deck__card--empty{
-    display: inline-flex;
-    justify-content: space-between;
-    width: 57%;
-    li{
-      width: 75px;
-      // margin-right: 30px;
-    }
-  }
-
 }
 
-.card--table{
-    display: flex;
-    .cards--wrapper:nth-child(1){
-        padding-left: var(--md-padding);
-    }
-}
 ul.cards{
       list-style-type: none;
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      // margin: var(--sm-padding) var(--md-padding);
       padding: 0;
-      width: 75px;
-      margin-right: 30px;
-      &::before{
-        content: "";
-        position: absolute;
-        margin-top: 2px;
-        width: 71px;
-        height: 108px;
-        border-radius: 5px;
-        border: 2px solid #999;
-      }
+
       &.empty {
         height: 115px;
       }
 
       li{
-          width: 75px;
           height: 35px;
           position: relative;
           box-sizing: border-box;
-          z-index: 1;
 
           cursor: move;
           user-select: none;
@@ -127,7 +107,9 @@ ul.cards{
           &.dragging:last-child{
             height: 112px;
           }
-
+          &:last-child {
+            height: 115px;
+          }
           div.card{
             width: 100%;
             height: 100%;
@@ -170,48 +152,106 @@ ul.cards{
             // box-shadow: 2px 2px 5px #ddd;
         }
       }
-      // li.hover:last-child {
-      //   height: 115px;
-      // }
+}
 
-}
-ul.cards.cards--dealer{
-  height: 115px;
-  li.hover.card__show{
-    height: 0px
-  }
-  li.hover.card__show:last-child{
-    height: 115px;
-  }
-}
 .card img {
   width: 75px;
   height: 115px;
 }
 @media(max-width: 878px){
-  .card img {
+  .deck > div {
+    height: 100px;
+  }
+
+  .card img, div.card {
     width: 65px;
     height: 100px;
   }
-  .deck .deck__td {
-    // margin-right: 20px;
-  }
-  .deck .deck__cards--left,
+
+  .deck .deck_cards-left,
   ul.cards {
-    // margin-right: 20px;
+    width: 65px;
     &::before{
       width: 61px;
       height: 92px;
       border-radius: 3px;
-      border: 1px solid #999;
     }
   }
+  ul.cards {
+    &.empty {
+      height: 100px;
+    }
+    li:last-child {
+      height: 100px;
+    }
+    li.dragging:last-child{
+      height: 98px;
+    }
+  }
+}
 
+@media(max-width: 640px){
+  .card img, div.card {
+    width: 55px;
+    height: 85px;
+  }
 
+  .deck .deck_cards-left,
+  ul.cards {
+    width: 55px;
+    &::before{
+      width: 52px;
+      height: 80px;
+    }
+  }
+  ul.cards {
+    &.empty {
+      height: 85px;
+    }
+    li:last-child {
+      height: 85px;
+    }
+    li.dragging:last-child{
+      height: 83px;
+    }
+  }
 }
 @media(max-width: 480px){
-  .conTitle .subtitle__btns .btn{
+  .conTitle .subtitle-btns .btn{
       width: 100px;
     }
 
+    .deck > div {
+      height: 60px;
+    }
+    .card img, div.card {
+      width: 40px;
+      height: 61px;
+    }
+
+    .deck .deck_cards-left,
+    ul.cards {
+      width: 40px;
+      &::before{
+        width: 39px;
+        height: 57px;
+        border-radius: 3px;
+        border: 1px solid #999;
+      }
+    }
+
+    ul.cards {
+      &.empty {
+        height: 61px;
+      }
+      li {
+        height: 25px;
+      }
+      li:last-child {
+        height: 61px;
+      }
+      li.dragging:last-child{
+        height: 59px;
+      }
+    }
 }

@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./solitaire.component.scss']
 })
 export class SolitaireComponent implements OnInit, OnDestroy {
-  
+
   deck: Deck = new Deck(1);
   leftCards: Card[] = this.deck.getCards();
   // 0 - 6: 7 rows in main screen;; 7 - 10: 4 rows on top right corner; 11 - top left (openedCards)
@@ -88,7 +88,7 @@ export class SolitaireComponent implements OnInit, OnDestroy {
       this.actions.push({from: this.cols[11], to: this.leftCards, cards: [...this.cols[11]]});
     }
   }
-  onDragStart($event: MouseEvent, fromZoneId: number, cardIndex: number) {
+  onDragStart(fromZoneId: number, cardIndex: number) {
     this.groupedCards = [];
     if (this.cols[fromZoneId].length > cardIndex - 1) {
       for (let i = cardIndex + 1; i < this.cols[fromZoneId].length; i++) {
@@ -98,17 +98,17 @@ export class SolitaireComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDragMove($event: MouseEvent, fromZoneId: number, cardIndex: number) {
+  onDragMove(position: Position, fromZoneId: number, cardIndex: number) {
     if (this.groupedCards.length) {
-      const position: Position = $event['position'];
+      // const position: Position = $event['position'];
       this.groupedCards.map(card => {
         card['position'] = position;
       });
     }
   }
 
-  onDropped($event: MouseEvent, fromZoneId: number, cardIndex: number) {
-    const toDropzoneId = $event['dropzoneId'];
+  onDropped(toDropzoneId: number, fromZoneId: number, cardIndex: number) {
+    // const toDropzoneId = $event['dropzoneId'];
     // can not drop multiple card on cols 7 - 10
     // if (toDropzoneId >= 7 && toDropzoneId <= 10 && this.groupedCards.length) {
     //     for (let i = 0; i < this.groupedCards.length; i++) {

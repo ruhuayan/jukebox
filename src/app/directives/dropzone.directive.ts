@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, OnInit, Output, Input, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, OnInit, Input, Renderer2 } from '@angular/core';
 import { Card, Suit } from '../models/card.model';
 
 const suitArr = [[Suit.CLUBS, Suit.SPADES], [Suit.DIAMONDS, Suit.HEARTS]];

@@ -3,20 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { CardAnimateDirective } from './card-animate.directive';
 import { DraggableDirective } from './draggable.directive';
-import { DropzoneDirective } from './dropzone.directive';
 
 @NgModule({
-	imports: [CommonModule],
-	declarations: [
-    DraggableDirective,
-		CardAnimateDirective,
-		DropzoneDirective
-	],
-	exports: [
-		DraggableDirective,
-		CardAnimateDirective,
-		DropzoneDirective
-	],
-	providers: []
+    imports: [CommonModule],
+    declarations: [
+      DraggableDirective,
+      CardAnimateDirective,
+    ],
+    exports: [
+      DraggableDirective,
+      CardAnimateDirective,
+    ],
+    providers: []
 })
 export class AnimateModule {}

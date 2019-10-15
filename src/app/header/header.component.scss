@@ -90,13 +90,14 @@ header .mContent {
 @media(max-width: 640px){
     header::before {
       content: "";
+      display: flex;
       position: absolute;
       width: 100%;
-      height: 115%;
+      height: 100%;
       overflow-y: hidden;
-      top: 50px;
+      // top: 50px;
       left: 0;
-      z-index: 0;
+      z-index: -1;
       background: #333;
       opacity: 0;
       transition: opacity .3s ease-in;
@@ -137,7 +138,7 @@ header .mContent {
               &.active {
                 background: #006600;
                 a {
-                  color: #333;
+                  color: #999;
                 }
               }
             }
