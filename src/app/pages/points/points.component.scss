@@ -28,7 +28,7 @@
               margin-right: 5px;
               text-decoration: none;
               font-size: 1rem;
-  
+
               &:disabled{
                   background: #999;
                   cursor: default;
@@ -52,7 +52,6 @@ ul.cards{
       position: relative;
       margin: var(--sm-padding) var(--md-padding);
       box-sizing: border-box;
-      z-index: 1;
 
       div.card{
         width: 100%;
