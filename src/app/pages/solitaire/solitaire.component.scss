@@ -45,7 +45,7 @@ ul.cards {
     cursor: pointer;
     outline:none;
     &::before {
-      background: url(/assets/imgs/autorenew-24px.svg) center center no-repeat;
+      background: url(https://www.richyan.com/angular/assets/imgs/autorenew-24px.svg) center center no-repeat;
       z-index: -1;
       user-select: none; /* supported by Chrome and Opera */
       -webkit-user-select: none; /* Safari */
