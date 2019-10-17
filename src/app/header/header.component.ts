@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +14,13 @@ export class HeaderComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
+    if (!this.linkUrl) {
+      this.router.events.subscribe(e => {
+        if (e instanceof NavigationEnd) {
+          this.linkUrl = e.url.slice(1);
+        }
+      });
+    }
   }
 
   clickLink(url: string): void {

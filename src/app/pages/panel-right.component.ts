@@ -7,22 +7,22 @@ import { Component, OnInit } from '@angular/core';
             <a href="javascript:;">Angular Games</a>
         </div>
         <div class="category">
-            <a routerLink="/jukebox">JukeBox</a>
+            <a routerLink="/jukebox" routerLinkActive="active">JukeBox</a>
         </div>
         <div class="category">
-            <a routerLink="/igame">Image Game</a>
+            <a routerLink="/igame" routerLinkActive="active">Image Game</a>
         </div>
         <div class="category">
-            <a routerLink="/blackjack">Blackjack</a>
+            <a routerLink="/blackjack" routerLinkActive="active">Blackjack</a>
         </div>
         <div class="category">
-            <a routerLink="/solitaire">Solitaire</a>
+            <a routerLink="/solitaire" routerLinkActive="active">Solitaire</a>
         </div>
         <div class="category">
-          <a routerLink="/points" >24 Points</a>
+          <a routerLink="/points" routerLinkActive="active">24 Points</a>
         </div>
         <div class="category">
-          <a routerLink="/balls" >Balls</a>
+          <a routerLink="/balls" routerLinkActive="active">Balls</a>
         </div>
        `
 })

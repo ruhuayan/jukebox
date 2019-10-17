@@ -331,7 +331,11 @@ body {
       border-bottom: 1px dashed grey; }
   .content .conText .category {
     padding-left: 20px;
-    padding-bottom: 10px; }
+    padding-bottom: 10px; 
+    a.active {
+      font-weight: 600;
+    }
+  }
 
 footer {
 width: 100%;
