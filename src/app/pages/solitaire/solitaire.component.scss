@@ -93,10 +93,6 @@ ul.cards{
           user-select: none;
           touch-action: none; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; user-select: none;
 
-          // &.dragglable:not(.dragging) {
-          //   transition: transform 300ms ease-in-out;
-          // }
-
           &.grouped, &.dragging {
             z-index: 100;
             box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
@@ -146,7 +142,6 @@ ul.cards{
       }
       li.hover{
         position: relative;
-        // height: 115px;
         div.card{
             transform: rotateY(180deg);
             // box-shadow: 2px 2px 5px #ddd;

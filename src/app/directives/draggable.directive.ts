@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, HostBinding, HostListener, Output, Input, Renderer2, ElementRef } from '@angular/core';
+import { Directive, EventEmitter, HostBinding, HostListener, Output, Input, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { Position } from './position.model';
 import { Card } from '../models/card.model';
@@ -15,7 +15,7 @@ export class DraggableDirective {
   }
 
   @HostBinding('class.dragging') dragging = false;
-  @Input('appDraggingCard') card: Card;
+  @Input('appDraggingCard') draggingCard: Card;
 
   @Output() dragStart = new EventEmitter();
   @Output() dragMove = new EventEmitter<Position>();
@@ -26,14 +26,14 @@ export class DraggableDirective {
   private dropzones: [HTMLElement];
   private droppableDropzone: Dropzone;
 
-  constructor(private sanitizer: DomSanitizer, private el: ElementRef, private renderer: Renderer2) {
+  constructor(private sanitizer: DomSanitizer, private el: ElementRef) {
   }
 
   @HostListener('mousedown', ['$event'])
   @HostListener('touchstart', ['$event'])
   onStart(event: any) {
     event.preventDefault();
-    if (!this.card.show) {
+    if (!this.draggingCard.show) {
       return;
     }
     this.dragging = true;
@@ -55,7 +55,7 @@ export class DraggableDirective {
   @HostListener('document:touchmove', ['$event'])
   onMove(event: any) {
     event.preventDefault();
-    if (!this.dragging && !this.card['grouped']) {
+    if (!this.dragging && !this.draggingCard['grouped']) {
       return;
     }
     if (this.dragging) {
@@ -73,7 +73,7 @@ export class DraggableDirective {
       this.droppableDropzone = this.getDroppableZone();
       this.dragMove.emit(this.position);
     } else {
-      this.position = this.card['position'];
+      this.position = this.draggingCard['position'];
     }
   }
 
@@ -82,8 +82,8 @@ export class DraggableDirective {
   onEnd(event: any) {
 
     // document:touchend cause other buttons malfuntion
-    // if $this not dragging, return to regular click event 
-    if (!this.dragging && !this.card['grouped']) {
+    // if $this not dragging, return to regular click event
+    if (!this.dragging && !this.draggingCard['grouped']) {
       return;
     }
     event.preventDefault();
@@ -93,7 +93,7 @@ export class DraggableDirective {
     }
 
     this.position = {x: 0, y: 0};
-    this.card['grouped'] = false;
+    this.draggingCard['grouped'] = false;
     this.dragging = false;
   }
 
@@ -107,7 +107,7 @@ export class DraggableDirective {
       }
       const dropzone = new Dropzone(this.dropzones[i]);
       if (dropzone.entreZone(this.el.nativeElement.getBoundingClientRect()) &&
-          dropzone.isDroppable(this.card)) {
+          dropzone.isDroppable(this.draggingCard)) {
           return dropzone;
       }
     }
