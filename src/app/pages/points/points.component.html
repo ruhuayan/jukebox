@@ -21,7 +21,7 @@
         </div>
       </div>
       <ul class="cards">
-        <li *ngFor="let card of dealedCards" cardAnimate = "#deckLeft" (click)="clickEvent(card)">
+        <li *ngFor="let card of dealedCards" appCanimate="#deckLeft" (click)="clickEvent(card)">
           <div class="card">
             <div class="card__back card__face">
               <img class="svg-card" [src]="deck.cardBackImg" alt="cardback">

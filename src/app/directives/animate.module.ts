@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CardAnimateDirective } from './card-animate.directive';
+import { CardAnimateDirective } from './canimate.directive';
 import { DraggableDirective } from './draggable.directive';
 
 @NgModule({

@@ -1,4 +1,4 @@
- <div class="conTitle" id="conTitle">
+  <div class="conTitle" id="conTitle">
     <div class="description"> Solitaire </div>
     <div class="subtitle-btns">
       <button class="btn btn-shuffle button" (click)="newGame()">
@@ -24,7 +24,7 @@
 
         <div class="deck_cards deck_td">
           <ul class="cards cards-dealer">
-            <li *ngFor="let card of cols[11]; let j = index" cardAnimate = "#deckLeft"
+            <li *ngFor="let card of cols[11]; let j = index" appCanimate="#deckLeft"
                 appDraggable
                 [appDraggingCard]="card"
                 (dropped)="onDropped($event, 11, j)" >

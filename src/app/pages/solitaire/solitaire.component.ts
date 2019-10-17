@@ -14,7 +14,7 @@ export class SolitaireComponent implements OnInit, OnDestroy {
 
   deck: Deck = new Deck(1);
   leftCards: Card[] = this.deck.getCards();
-  // 0 - 6: 7 rows in main screen;; 7 - 10: 4 rows on top right corner; 11 - top left (openedCards)
+  // 0 - 6: 7 rows in main screen; 7 - 10: 4 rows on top right corner; 11 - top left (openedCards)
   cols = new Array(12);
   private groupedCards: Card[] = [];
   actions: Action[] = [];
@@ -127,7 +127,7 @@ export class SolitaireComponent implements OnInit, OnDestroy {
           this.groupedCards[i]['position'] = {x: 0, y: 0}; // cant remove
           this.cols[toDropzoneId].push(this.groupedCards[i]);
         }
-      action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: this.groupedCards.slice(0).concat([card])/*[card, ...this.groupedCards]*/};
+      action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: [card].concat(this.groupedCards)/*[card, ...this.groupedCards]*/};
     } else {
       action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: [card]};
     }
