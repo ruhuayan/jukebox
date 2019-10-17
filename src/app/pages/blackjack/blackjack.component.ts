@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './blackjack.component.html',
   styleUrls: ['./blackjack.component.scss']
 })
-export class BlackjackComponent implements OnInit, OnDestroy {
+export class BlackjackComponent implements OnInit {
 
   deck = new Deck(3);
   status = Status.ONDEALING;
@@ -21,20 +21,22 @@ export class BlackjackComponent implements OnInit, OnDestroy {
   prob_player = 0;
   prob_dealer: number = null;
   showStand = false;
-  private loadImagesSubscription: Subscription;
+
   constructor(private titleService: Title) {
     this.titleService.setTitle('Blackjack - Poker Game');
-    document.body.classList.add('loading');
-    this.loadImagesSubscription = this.deck.loadCardImages().subscribe(res =>{
-      document.body.classList.remove('loading');
+  }
+  ngOnInit() {
+    if (!Deck.isLoaded()) {
+      this.deck.loadCardImages(() => {
+        this.deck.shuffle();
+        this.refresh();
+      });
+    } else {
       this.deck.shuffle();
       this.refresh();
-    });
+    }
   }
-  ngOnInit() {}
-  ngOnDestroy(): void {
-    this.loadImagesSubscription.unsubscribe();
-  }
+
   private refresh(): void {
     if (this.deck.getCards().length < 10) {
       this.deck.reset();
@@ -53,6 +55,7 @@ export class BlackjackComponent implements OnInit, OnDestroy {
     const card: Card = this.deck.dealOneCard();
     if (card) {
       if (role === Role.DEALER) {
+        card.show = this.dealer.cards.length ===0 ? false : true;
         this.dealer.cards.push(card);
       } else {
         this.player.cards.push(card);
@@ -63,6 +66,7 @@ export class BlackjackComponent implements OnInit, OnDestroy {
   private updateStatus(role: number) {
 
     if (role === Role.DEALER) {  // dealer
+        this.dealer.cards[0].show = true;
         const total = this.dealer.getSum();
 
         if (total < 21) {

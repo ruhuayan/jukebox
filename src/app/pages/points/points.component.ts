@@ -9,27 +9,27 @@ import { Subscription } from 'rxjs';
   templateUrl: './points.component.html',
   styleUrls: ['./points.component.scss']
 })
-export class PointsComponent implements OnInit, OnDestroy {
+export class PointsComponent implements OnInit {
   
   dealedCards: Card[] = [];
   deck = new Deck();
   ondealing = false;
   solution: string;
-  private loadImagesSubscription: Subscription
   constructor(private titleService: Title ) {
   }
   ngOnInit() {
     this.titleService.setTitle('24 Point - Poker Game');
-    document.body.classList.add('loading');
-    this.loadImagesSubscription = this.deck.loadCardImages().subscribe(() => {
-      document.body.classList.remove('loading');
+    if (!Deck.isLoaded()) {
+      this.deck.loadCardImages(() => {
+        this.deck.shuffle();
+        this.refresh();
+      });
+    } else {
       this.deck.shuffle();
       this.refresh();
-    });
+    }
   }
-  ngOnDestroy(): void {
-    this.loadImagesSubscription.unsubscribe();
-  }
+
   refresh(): void {
     this.solution = null;
     this.ondealing = true;

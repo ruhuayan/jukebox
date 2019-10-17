@@ -3,14 +3,13 @@ import { Card } from '../../models/card.model';
 import { Deck } from '../../models/deck.model';
 import { Position } from '../../directives/position.model';
 import { Title } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-points',
   templateUrl: './solitaire.component.html',
   styleUrls: ['./solitaire.component.scss']
 })
-export class SolitaireComponent implements OnInit, OnDestroy {
+export class SolitaireComponent implements OnInit {
 
   deck: Deck = new Deck(1);
   leftCards: Card[] = this.deck.getCards();
@@ -18,23 +17,24 @@ export class SolitaireComponent implements OnInit, OnDestroy {
   cols = new Array(12);
   private groupedCards: Card[] = [];
   actions: Action[] = [];
-  private loadImagesSubscription: Subscription;
   constructor(private titleService: Title) {
     this.titleService.setTitle('Solitaire - Poker Game');
     for (let i = 0; i < this.cols.length; i++) {
       this.cols[i] = new Array<Card>();
     }
-    document.body.classList.add('loading');
-    this.loadImagesSubscription = this.deck.loadCardImages().subscribe(() => {
-      document.body.classList.remove('loading');
+   }
+  ngOnInit() {
+    if (!Deck.isLoaded()) {
+      this.deck.loadCardImages(() => {
+        this.deck.shuffle();
+        this.refresh();
+      });
+    } else {
       this.deck.shuffle();
       this.refresh();
-    });
-   }
-  ngOnInit() {}
-  ngOnDestroy(): void {
-    this.loadImagesSubscription.unsubscribe();
+    }
   }
+
   newGame() {
     this.deck.reset();
     this.refresh();

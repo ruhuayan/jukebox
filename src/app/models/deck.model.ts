@@ -1,5 +1,5 @@
 import { Card, Face, Suit } from './card.model';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 export class Deck {
     private cards: Card[] = [];
@@ -27,7 +27,13 @@ export class Deck {
             [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
         }
     }
-    public loadCardImages() : Observable<any> {
+
+    static isLoaded(): boolean {
+        return document.body.classList.contains('loaded');
+    }
+
+    public loadCardImages(callback: any) : void {
+        document.body.classList.add('loading');
         const promises = []
         this.cards.forEach(card => {
             const promise = new Promise((resolve, reject) => {
@@ -37,7 +43,12 @@ export class Deck {
             });
             promises.push(promise);
         });
-        return forkJoin(promises);
+        const subscription: Subscription = forkJoin(promises).subscribe(() => {
+                                            document.body.classList.remove('loading');
+                                            document.body.classList.add('loaded');
+                                            callback();
+                                            subscription.unsubscribe();
+                                        });
     }
 
     public dealOneCard(): Card {

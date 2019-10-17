@@ -87,7 +87,7 @@
                 <div class="card__back card__face">
                   <img [src]="deck.cardBackImg" alt="cardback" />
                 </div>
-                <div class="card__front card__face">
+                <div class="card__front card__face" *ngIf="card.show">
                   <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" />
                 </div>
               </div>

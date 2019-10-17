@@ -10,7 +10,7 @@
                 <img [src]="deck.cardBackImg" alt="cardback" width="85" height="120">
               </div>
               <div class="card__front card__face">
-                <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="85" height="120" />
+                <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="85" height="120" *ngIf="card.show" />
               </div>
             </div>
           </li>
