@@ -91,7 +91,7 @@ export class UploaderComponent implements OnInit, OnDestroy {
 
   private setError(err: string): void {
     this.error =  err;
-    setTimeout(() => this.error = null, 3000);
+    setTimeout(() => this.error = null, 2000);
   }
 
   private upload() {

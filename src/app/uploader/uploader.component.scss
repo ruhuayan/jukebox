@@ -68,11 +68,21 @@ div.appUpload{
 .upload-msg {
   color: var(--utility-red-dark);
   position: absolute;
-  margin-top: 5px;
+  margin-top: 15px;
   background: #fff;
+  z-index: 1;
+  
   @media (min-width: 812px) {
     margin-top: -1.2em;
     margin-left: 85px;
+  }
+  @media(max-width: 640px) {
+    padding: 1rem .5rem;
+    transform: translateX(-50%);
+    left: 50%;
+    width: 200px;
+    text-align: center;
+    background: rgba(255, 255, 255, .85);
   }
 }
 .upload-modal {
