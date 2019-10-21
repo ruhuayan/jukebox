@@ -1,4 +1,13 @@
-video {
-  width: 100%;
-  height: auto;
+#conLeft {
+  position: relative;
+  width: 100% !important;
+  video {
+    width: 100%;
+    height: auto;
+  }
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }

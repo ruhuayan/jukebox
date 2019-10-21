@@ -6,11 +6,10 @@
   </button>
 </div>
 <div class="conText row">
-  <div class="conLeft" id="conLeft" >
-    <video #videoEl autoplay muted></video>
-  </div>
-
-  <div class="conRight" id="conRight">
-    <app-panel-right></app-panel-right>
+  <div class="conLeft" id="conLeft">
+    <video #videoEl autoplay muted (play)="detect()" (ended)="end()">
+      <source *ngIf="supportMedia" src="/assets/videos/google.mp4" type="video/mp4">
+    </video>
+    <canvas #canvas></canvas>
   </div>
 </div>
