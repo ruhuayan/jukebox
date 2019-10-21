@@ -28,10 +28,14 @@ export const routes: Routes = [
     path: 'balls',
     loadChildren: './pages/ball/ball.module#BallModule'
     // loadChildren: () => import('./pages/ball/ball.module').then(m => m.BallModule)
-  },{ 
+  },{
+    path: 'faceapi',
+    loadChildren: './pages/faceapi/faceapi.module#FaceapiModule'
+    // loadChildren: () => import('./pages/faceapi/faceapi.module').then(m => m.FaceapiModule)
+  },{
     path: 'automation',
     loadChildren: './pages/automate/automation.module#AutomationModule'
-    // loadChildren: () => import('./pages/ball/ball.module').then(m => m.BallModule)
+    // loadChildren: () => import('./pages/automate/automation.module').then(m => m.AutomationModule)
   },{
 		path: '**',
 		redirectTo: '404',

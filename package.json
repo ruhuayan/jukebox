@@ -30,6 +30,7 @@
     "@ngrx/store": "^7.4.0",
     "audio-metadata": "^0.3.0",
     "core-js": "^2.5.4",
+    "face-api.js": "^0.21.0",
     "file-saver": "^2.0.1",
     "jszip": "^3.2.1",
     "rxjs": "~6.5.2",
