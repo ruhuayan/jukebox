@@ -13,6 +13,9 @@ import { Component, OnInit } from '@angular/core';
             <a routerLink="/igame" routerLinkActive="active">Image Game</a>
         </div>
         <div class="category">
+            <a routerLink="/faceapi" routerLinkActive="active">Face Detection</a>
+        </div>
+        <div class="category">
             <a routerLink="/blackjack" routerLinkActive="active">Blackjack</a>
         </div>
         <div class="category">

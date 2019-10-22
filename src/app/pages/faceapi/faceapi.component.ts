@@ -13,17 +13,18 @@ import { forkJoin, interval } from 'rxjs';
 export class FaceapiComponent implements OnInit, OnDestroy {
   @ViewChild('videoEl') videoEl: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
-  private _navigator = <any> navigator;
+  private _navigator = <any> window.navigator;
   private subscription: Subscription;
   private intervalSubscribe: Subscription;
   private video: any;
   public supportMedia = true;
+  public canShow = false;
 
   constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
     this.video = this.videoEl.nativeElement;
-    this._navigator = <any>navigator;
+    this._navigator = <any>window.navigator;
     this._navigator.getUserMedia = ( this._navigator.getUserMedia || this._navigator.webkitGetUserMedia
       || this._navigator.mozGetUserMedia || this._navigator.msGetUserMedia );
 
@@ -37,7 +38,7 @@ export class FaceapiComponent implements OnInit, OnDestroy {
       this.startVideo();
       sub.unsubscribe();
     });
-    
+
   }
 
   private startVideo(): void {
@@ -54,7 +55,8 @@ export class FaceapiComponent implements OnInit, OnDestroy {
                         );
   }
 
-  public start(): void {
+  public toggle(): void {
+    this.canShow = !this.canShow;
   }
 
   public detect(): void {
@@ -76,12 +78,12 @@ export class FaceapiComponent implements OnInit, OnDestroy {
     });
   }
 
-  public end():void {
+  public end(): void {
     console.log('ended');
     this.intervalSubscribe.unsubscribe();
   }
   ngOnDestroy() {
-    if (this.subscription) { 
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
     if (this.intervalSubscribe) {
