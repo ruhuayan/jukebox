@@ -12,7 +12,7 @@ import { forkJoin, interval } from 'rxjs';
 export class FaceapiComponent implements OnInit, OnDestroy {
   @ViewChild('videoEl') videoEl: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
-  private _navigator = <any> window.navigator;
+  // private _navigator = <any>window.navigator.mediaDevices;
   private subscription: Subscription;
   private intervalSubscribe: Subscription;
   private video: any;
@@ -23,9 +23,6 @@ export class FaceapiComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.video = this.videoEl.nativeElement;
-    this._navigator = <any>window.navigator;
-    this._navigator.getUserMedia = ( this._navigator.getUserMedia || this._navigator.webkitGetUserMedia
-      || this._navigator.mozGetUserMedia || this._navigator.msGetUserMedia );
 
     const model_url = 'https://gitcdn.xyz/repo/justadudewhohacks/face-api.js/master/weights/'; 
     // const model_url = 'https://www.richyan.com/assets/models/';
@@ -43,16 +40,22 @@ export class FaceapiComponent implements OnInit, OnDestroy {
 
   private startVideo(): void {
 
-    const promise = this._navigator.mediaDevices.getUserMedia({video: true, audio: false});
-    this.subscription = from(promise).subscribe(
-                          stream => {
-                            this.video.srcObject  = stream;
-                          },
-                          err => {
-                            this.supportMedia = false;
-                            console.log(err);
-                          }
-                        );
+    try{
+      const promise = window.navigator.mediaDevices.getUserMedia({video: true, audio: false});
+      this.subscription = from(promise).subscribe(
+                            stream => {
+                              this.video.srcObject  = stream;
+                            },
+                            err => {
+                              this.supportMedia = false;
+                              console.log(err);
+                            }
+                          );
+    } catch (err) {
+      this.supportMedia = false;
+      console.log(err);
+    }
+    
   }
 
   public toggle(): void {
