@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, ElementRef, Renderer2 } from '@angular/core';
-// import { Observable } from 'rxjs/internal/Observable';
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { from } from 'rxjs/internal/observable/from';
 import * as faceapi from 'face-api.js';
@@ -18,9 +17,9 @@ export class FaceapiComponent implements OnInit, OnDestroy {
   private intervalSubscribe: Subscription;
   private video: any;
   public supportMedia = true;
-  public canShow = false;
+  public canShow = true;
 
-  constructor(private renderer: Renderer2) { }
+  constructor() { }
 
   ngOnInit() {
     this.video = this.videoEl.nativeElement;
@@ -28,17 +27,18 @@ export class FaceapiComponent implements OnInit, OnDestroy {
     this._navigator.getUserMedia = ( this._navigator.getUserMedia || this._navigator.webkitGetUserMedia
       || this._navigator.mozGetUserMedia || this._navigator.msGetUserMedia );
 
-    const promises = [faceapi.nets.tinyFaceDetector.loadFromUri('/assets/models'),
-                      faceapi.nets.faceLandmark68Net.loadFromUri('/assets/models'),
-                      faceapi.nets.faceRecognitionNet.loadFromUri('/assets/models'),
-                      faceapi.nets.faceExpressionNet.loadFromUri('/assets/models')
+    const model_url = 'https://gitcdn.xyz/repo/justadudewhohacks/face-api.js/master/weights/'; 
+    // const model_url = 'https://www.richyan.com/assets/models/';
+    const promises = [faceapi.nets.tinyFaceDetector.loadFromUri(model_url),
+                      faceapi.nets.faceLandmark68Net.loadFromUri(model_url),
+                      faceapi.nets.faceRecognitionNet.loadFromUri(model_url),
+                      faceapi.nets.faceExpressionNet.loadFromUri(model_url)
                     ];
 
     const sub = forkJoin(promises).subscribe(() => {
       this.startVideo();
       sub.unsubscribe();
     });
-
   }
 
   private startVideo(): void {
@@ -68,8 +68,8 @@ export class FaceapiComponent implements OnInit, OnDestroy {
 
     const source = interval(100);
     this.intervalSubscribe = source.subscribe(async () => {
-        const detections = await faceapi.detectAllFaces(this.video, new faceapi.TinyFaceDetectorOptions())
-                                        .withFaceLandmarks().withFaceExpressions(); console.log(detections)
+        const detections = await faceapi.detectAllFaces(this.video, new faceapi.TinyFaceDetectorOptions(/*{ inputSize: 128, scoreThreshold: 0.4 }*/))
+                                        .withFaceLandmarks().withFaceExpressions();
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         faceapi.draw.drawDetections(canvas, resizedDetections);

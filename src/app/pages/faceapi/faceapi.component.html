@@ -7,7 +7,7 @@
 </div>
 <div class="conText row">
   <div class="conLeft" id="conLeft">
-    <video #videoEl autoplay muted (play)="detect()" (ended)="end()">
+    <video autoplay muted controls (play)="detect()" (ended)="end()" #videoEl>
       <source *ngIf="!supportMedia" src="/assets/videos/google.mp4" type="video/mp4">
     </video>
     <canvas #canvas [ngClass]="{'show': canShow}"></canvas>
