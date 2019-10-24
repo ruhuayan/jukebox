@@ -4,6 +4,7 @@ import { FaceapiComponent } from './faceapi.component';
 import { RouterModule } from '@angular/router';
 import { AnimateModule } from '../../directives/animate.module';
 import { PanelRightModule } from '../panel-right.module';
+import { WebWorkerService } from 'ngx-web-worker';
 
 @NgModule({
 imports: [
@@ -15,7 +16,7 @@ imports: [
     }
   ])
 ],
-providers: [],
+providers: [WebWorkerService],
 declarations: [FaceapiComponent]
 })
 export class FaceapiModule {}

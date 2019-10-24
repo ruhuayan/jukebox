@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { from } from 'rxjs/internal/observable/from';
 import * as faceapi from 'face-api.js';
 import { forkJoin, interval } from 'rxjs';
+import { WebWorkerService } from 'ngx-web-worker';
 
 @Component({
   selector: 'app-faceapi',
@@ -12,14 +13,14 @@ import { forkJoin, interval } from 'rxjs';
 export class FaceapiComponent implements OnInit, OnDestroy {
   @ViewChild('videoEl') videoEl: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
-  // private _navigator = <any>window.navigator.mediaDevices;
+
   private subscription: Subscription;
   private intervalSubscribe: Subscription;
   private video: any;
   public supportMedia = true;
   public canShow = true;
 
-  constructor() { }
+  constructor(private _webWorkerService: WebWorkerService) { }
 
   ngOnInit() {
     this.video = this.videoEl.nativeElement;
@@ -71,14 +72,19 @@ export class FaceapiComponent implements OnInit, OnDestroy {
 
     const source = interval(100);
     this.intervalSubscribe = source.subscribe(async () => {
-        const detections = await faceapi.detectAllFaces(this.video, new faceapi.TinyFaceDetectorOptions(/*{ inputSize: 128, scoreThreshold: 0.4 }*/))
-                                        .withFaceLandmarks().withFaceExpressions();
+
+        const detections = await this._webWorkerService.run(this.detections);
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         faceapi.draw.drawDetections(canvas, resizedDetections);
         faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
         faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
     });
+  }
+
+  private detections(): any{
+    return faceapi.detectAllFaces(this.video, new faceapi.TinyFaceDetectorOptions(/*{ inputSize: 128, scoreThreshold: 0.4 }*/))
+        .withFaceLandmarks().withFaceExpressions();
   }
 
   public end(): void {

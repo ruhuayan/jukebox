@@ -33,6 +33,7 @@
     "face-api.js": "^0.21.0",
     "file-saver": "^2.0.1",
     "jszip": "^3.2.1",
+    "ngx-web-worker": "^8.0.0",
     "rxjs": "~6.5.2",
     "stream": "0.0.2",
     "tslib": "^1.9.0",
