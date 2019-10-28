@@ -18,7 +18,7 @@ export class PointsComponent implements OnInit {
   constructor(private titleService: Title ) {
   }
   ngOnInit() {
-    this.titleService.setTitle('24 Point - Poker Game');
+    this.titleService.setTitle('24 Point - richyan.com');
     if (!Deck.isLoaded()) {
       this.deck.loadCardImages(() => {
         this.deck.shuffle();

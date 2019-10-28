@@ -6,6 +6,7 @@ import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
 import { fromEvent } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ball',
@@ -13,7 +14,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
   styleUrls: ['./ball.component.scss']
 })
 export class BallComponent implements OnInit, OnDestroy {
-  @ViewChild('container') container: ElementRef;
+  @ViewChild('container', {static: true}) container: ElementRef<HTMLElement>;
   balls: Ball[];
   dots: Dot[];
   numberShow = false;
@@ -28,7 +29,8 @@ export class BallComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private isTouchStart = false;
 
-  constructor(private store: Store<IBallState>) {
+  constructor(private store: Store<IBallState>, private titleService: Title) {
+    this.titleService.setTitle('Ball - richyan.com');
     // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
     // this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
     // this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));

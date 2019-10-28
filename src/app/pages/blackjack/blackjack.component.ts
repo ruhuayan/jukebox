@@ -23,7 +23,7 @@ export class BlackjackComponent implements OnInit {
   showStand = false;
 
   constructor(private titleService: Title) {
-    this.titleService.setTitle('Blackjack - Poker Game');
+    this.titleService.setTitle('Blackjack - richyan.com');
   }
   ngOnInit() {
     if (!Deck.isLoaded()) {

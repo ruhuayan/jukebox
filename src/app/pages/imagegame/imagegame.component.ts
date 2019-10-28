@@ -21,7 +21,7 @@ class Dimension {
 })
 export class ImagegameComponent implements OnInit, OnDestroy {
 
-  @ViewChild('conLeft') context: ElementRef;
+  @ViewChild('conLeft', {static: true}) context: ElementRef;
   img: HTMLImageElement;
   public imgSubscription: Subscription;
   private thumbs: any[];
@@ -40,7 +40,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
               private renderer: Renderer2) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Image Game');
+    this.titleService.setTitle('Image Game - richyan.com');
     this.arrows = this.el.nativeElement.querySelectorAll('.arrow');
     this.loadImage(this.imgs[0]);
     this.contextWidth = this.context.nativeElement.getBoundingClientRect().width;

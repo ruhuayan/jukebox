@@ -26,11 +26,11 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   metadata: Metadata;
   private isPlaying = false;
 
-  @ViewChild('canvas') canvasRef: ElementRef;
-  @ViewChild('progressbar') progressbarRef: ElementRef;
-  @ViewChild('lyricDiv') lyricRef: ElementRef;
-  @ViewChild('albumDiv') albumRef: ElementRef;
-  @ViewChild('playpause') toggleRef: ElementRef;
+  @ViewChild('canvas', {static: true}) canvasRef: ElementRef<HTMLCanvasElement>;
+  @ViewChild('progressbar', {static: true}) progressbarRef: ElementRef<HTMLElement>;
+  @ViewChild('lyricDiv', {static: true}) lyricRef: ElementRef<HTMLElement>;
+  @ViewChild('albumDiv', {static: true}) albumRef: ElementRef<HTMLElement>;
+  @ViewChild('playpause', {static: true}) toggleRef: ElementRef<HTMLElement>;
   private drawContext: CanvasRenderingContext2D;
 
   constructor(private titleService: Title,
@@ -41,7 +41,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.context = new (window.AudioContext || window.webkitAudioContext)();
   }
   ngOnInit() {
-    this.titleService.setTitle('Jukebox 1.3');
+    this.titleService.setTitle('Jukebox 1.3 - richyan.com');
     document.body.classList.add('loading');
     this.infoSubscription = this.jukeService.getMusicInfo().subscribe(res => {
       if (res && res.length) {

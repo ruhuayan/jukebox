@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { from } from 'rxjs/internal/observable/from';
 import * as faceapi from 'face-api.js';
 import { forkJoin, interval } from 'rxjs';
-import { WebWorkerService } from 'ngx-web-worker';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-faceapi',
@@ -11,8 +11,8 @@ import { WebWorkerService } from 'ngx-web-worker';
   styleUrls: ['./faceapi.component.scss']
 })
 export class FaceapiComponent implements OnInit, OnDestroy {
-  @ViewChild('videoEl') videoEl: ElementRef;
-  @ViewChild('canvas') canvas: ElementRef;
+  @ViewChild('videoEl', {static: true}) videoEl: ElementRef<HTMLElement>;
+  @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
 
   private subscription: Subscription;
   private intervalSubscribe: Subscription;
@@ -20,9 +20,10 @@ export class FaceapiComponent implements OnInit, OnDestroy {
   public supportMedia = true;
   public canShow = true;
 
-  constructor(private _webWorkerService: WebWorkerService) { }
+  constructor(private titleService: Title) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Face Detection - richyan.com');
     this.video = this.videoEl.nativeElement;
 
     const model_url = 'https://gitcdn.xyz/repo/justadudewhohacks/face-api.js/master/weights/'; 
@@ -37,6 +38,7 @@ export class FaceapiComponent implements OnInit, OnDestroy {
       this.startVideo();
       sub.unsubscribe();
     });
+    // this.detections();
   }
 
   private startVideo(): void {
@@ -73,7 +75,8 @@ export class FaceapiComponent implements OnInit, OnDestroy {
     const source = interval(100);
     this.intervalSubscribe = source.subscribe(async () => {
 
-        const detections = await this._webWorkerService.run(this.detections);
+        const detections = await faceapi.detectAllFaces(this.video, new faceapi.TinyFaceDetectorOptions(/*{ inputSize: 128, scoreThreshold: 0.4 }*/))
+                                  .withFaceLandmarks().withFaceExpressions();
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         faceapi.draw.drawDetections(canvas, resizedDetections);
@@ -83,8 +86,13 @@ export class FaceapiComponent implements OnInit, OnDestroy {
   }
 
   private detections(): any{
-    return faceapi.detectAllFaces(this.video, new faceapi.TinyFaceDetectorOptions(/*{ inputSize: 128, scoreThreshold: 0.4 }*/))
-        .withFaceLandmarks().withFaceExpressions();
+    if (typeof Worker !== 'undefined') {
+      const worker = new Worker('./faceapi.worker', {type: 'module'});
+      worker.onmessage = ({data}) => {
+        console.log(`page got message: ${data}`);
+      }
+      worker.postMessage('hello');
+    }
   }
 
   public end(): void {

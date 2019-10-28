@@ -18,9 +18,9 @@ export class Message {
 })
 export class ChatbotComponent implements OnInit, OnDestroy {
   private dialogSubscription: Subscription;
-  @ViewChild('msgForm') msgForm: any;
-  @ViewChild('messageTA') messageTA: ElementRef;
-  @ViewChild('msgList') msgList: ElementRef;
+  @ViewChild('msgForm', {static: false}) msgForm: any;
+  @ViewChild('messageTA', {static: false}) messageTA: ElementRef;
+  @ViewChild('msgList', {static: false}) msgList: ElementRef;
   messages: Message[] = [new Message('Hi, buddy', null, 'chatbot')];
   message: Message = new Message('', null, 'user');
   @HostBinding('class.show') show = false;

@@ -18,7 +18,7 @@ export class SolitaireComponent implements OnInit {
   private groupedCards: Card[] = [];
   actions: Action[] = [];
   constructor(private titleService: Title) {
-    this.titleService.setTitle('Solitaire - Poker Game');
+    this.titleService.setTitle('Solitaire - richyan.com');
     for (let i = 0; i < this.cols.length; i++) {
       this.cols[i] = new Array<Card>();
     }

@@ -10,7 +10,7 @@ const roundWidth = 30, initX = 130;
 })
 export class AutomationComponent implements OnInit {
 
-  @ViewChild('canvas') canvasRef: ElementRef;
+  @ViewChild('canvas', {static: true}) canvasRef: ElementRef;
   private ctx: CanvasRenderingContext2D;
   private color = 'rgb(215, 215, 215)';
   private roundRect1: RoundedRect;

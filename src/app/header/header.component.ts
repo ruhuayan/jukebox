@@ -8,7 +8,7 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
 
-  @ViewChild('inputToggle') inputToggle: ElementRef<HTMLElement>;
+  @ViewChild('inputToggle', {static: false}) inputToggle: ElementRef<HTMLElement>;
   linkUrl: string;
   menuChecked = false;
   constructor(private router: Router) { }

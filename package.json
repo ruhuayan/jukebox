@@ -15,17 +15,17 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~7.2.15",
-    "@angular/common": "~7.2.15",
-    "@angular/compiler": "~7.2.15",
-    "@angular/core": "~7.2.15",
-    "@angular/forms": "~7.2.15",
-    "@angular/http": "~7.2.15",
-    "@angular/platform-browser": "~7.2.15",
-    "@angular/platform-browser-dynamic": "~7.2.15",
+    "@angular/animations": "~8.2.12",
+    "@angular/common": "~8.2.12",
+    "@angular/compiler": "~8.2.12",
+    "@angular/core": "~8.2.12",
+    "@angular/forms": "~8.2.12",
+    "@angular/http": "^7.2.15",
+    "@angular/platform-browser": "~8.2.12",
+    "@angular/platform-browser-dynamic": "~8.2.12",
     "@angular/pwa": "^0.12.4",
-    "@angular/router": "~7.2.15",
-    "@angular/service-worker": "~7.2.15",
+    "@angular/router": "~8.2.12",
+    "@angular/service-worker": "~8.2.12",
     "@ngrx/effects": "^7.4.0",
     "@ngrx/store": "^7.4.0",
     "audio-metadata": "^0.3.0",
@@ -33,17 +33,17 @@
     "face-api.js": "^0.21.0",
     "file-saver": "^2.0.1",
     "jszip": "^3.2.1",
-    "ngx-web-worker": "^8.0.0",
+  
     "rxjs": "~6.5.2",
     "stream": "0.0.2",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.9",
     "@angular/cli": "~7.3.9",
-    "@angular/compiler-cli": "^7.2.15",
-    "@angular/language-service": "~7.2.15",
+    "@angular/compiler-cli": "^8.2.12",
+    "@angular/language-service": "~8.2.12",
     "@compodoc/compodoc": "^1.1.10",
     "@types/file-saver": "^2.0.0",
     "@types/jasmine": "~2.8.8",
@@ -61,6 +61,6 @@
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
-    "typescript": "~3.2.4"
+    "typescript": "~3.5.3"
   }
 }
