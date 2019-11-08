@@ -2,9 +2,16 @@ export const COLORS = ['#663399', '#FF00FF', '#FFA500', '#6B8E23' ];
 
 export const RA = Math.PI / 2;
 export const ANG = Math.PI / 120;
-export const HEIGHT = 540;
-export const WIDTH = 570;
 export const COL = 8;
+export interface Square {
+  width: number;
+  height: number;
+}
+
+export const conleft: Square = {
+  width: 570,
+  height: 540
+}
 
 export interface Margin {
   left: number;
@@ -59,9 +66,9 @@ export class Ball {
       b1.link.push(this.index);
     }
 
-    public setDist(cw: number): void {
+    public setDist(cw: number, height:number = conleft.height): void {
       const bw = cw / COL;
-      const opposite = HEIGHT - bw / 2 - bw * Math.floor(this.index / COL);
+      const opposite = height - bw / 2 - bw * Math.floor(this.index / COL);
       let adjacent: number;
       if (this.index % COL < COL / 2) {
         adjacent = cw / 2 - bw / 2 - bw * (this.index % COL);

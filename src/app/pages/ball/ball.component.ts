@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
-import { Ball, Dot, KEY, RA, ANG, HEIGHT, Margin, COL, WIDTH } from './ball.model';
+import { Ball, Dot, KEY, RA, ANG, conleft, Margin, COL, Square } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
 import { fromEvent } from 'rxjs';
@@ -54,11 +54,19 @@ export class BallComponent implements OnInit, OnDestroy {
       }
     });
     this.cw = this.container.nativeElement.offsetWidth;
+    if (this.cw !== conleft.width) {
+      if (this.cw < 480) {
+        conleft.height = 480;
+      }
+      const con: Square = {width: this.cw, height: conleft.height};
+      this.store.dispatch(new ballActions.UpdateConleft(con));
+    }
+    
     this.bw = this.cw / COL;
     this.subscription = this.store.pipe(select('iStates')).subscribe(state => {
       this.balls = state.balls.map((ball: Ball) => {
-        if (this.cw !== WIDTH && ball.index < 40) {
-          ball.setDist(this.cw);
+        if (this.cw !== conleft.width && ball.index < 40) {
+          ball.setDist(this.cw, conleft.height);
         }
         return ball;
       });
@@ -102,7 +110,7 @@ export class BallComponent implements OnInit, OnDestroy {
     const margin = this.calculateMargin(this.speed);
     // Distance of launching ball to left, right wall
     const distanceToWall = Math.abs((this.cw / 2 - this.bw / 2) / Math.cos(this.angle));
-    const distanceToTop = Math.abs((HEIGHT - this.bw / 2) / Math.sin(this.angle));
+    const distanceToTop = Math.abs((conleft.height - this.bw / 2) / Math.sin(this.angle));
     const targetBalls = this.getTargetBalls(distanceToWall);
     const launchedBall = this.getLaunchBall();
     if (launchedBall) {
@@ -137,7 +145,7 @@ export class BallComponent implements OnInit, OnDestroy {
    *   if their launchDist(s) are close to 1px;
    **/
   private getTargetBalls(distanceToWall: number): Ball[] {
-    let shortestDist = HEIGHT;
+    let shortestDist = conleft.height;
     return this.balls.filter((ball: Ball) => ball.status !== 'toLaunch' && ball.show)
       .filter((ball: Ball) => {
         const ang = Math.abs(ball.angle - this.angle);

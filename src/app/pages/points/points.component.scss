@@ -9,9 +9,12 @@
       flex-direction: column;
 
       .deck__title{
-          // text-align: center;
           font-size: 1rem;
           padding-top: 15px;
+          @media (max-width: 480px) {
+            padding-top: 0;
+            font-weight: 600;
+          }
       }
       .deck__title--emphasize{
           // font-size: 1.2rem;
@@ -107,7 +110,10 @@ img.svg-card{
   width: 85px;
   height: 120px;
 }
-@media (max-width: 450px) {
+@media (max-width: 480px) {
+  #conLeft {
+    padding-left: .5rem;
+  }
   .deck .deck__right .deck__btns{
     flex-direction: column-reverse;
     .btn{
@@ -115,14 +121,7 @@ img.svg-card{
     }
   }
   ul.cards li{
-    width: 100px;
-    height: 142px;
-    margin-right: 1rem;
-    margin-left: 1rem;
-    img.svg-card{
-      width: 100px;
-      height: 140px;
-    }
+    margin-right: 2rem;
   }
   .solution{
     font-size: 1rem;

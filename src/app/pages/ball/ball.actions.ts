@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Ball, Margin } from './ball.model';
+import { Ball, Margin, Square } from './ball.model';
 
 export enum ActionTypes {
     Move    = '[Ball Component] Move',
@@ -8,7 +8,8 @@ export enum ActionTypes {
     Remove  = '[Ball Component] Remove',
     Reset   = '[Ball Component] Reset',
     Angle   = '[Ball Component] Change_Angle',
-    ToggleNumber = '[Ball Component] Toggle_Number'
+    ToggleNumber = '[Ball Component] Toggle_Number',
+    UpdateConleft = '[Ball Component] Update_Conleft'
 }
 
 export class Move implements Action {
@@ -40,4 +41,9 @@ export class ToggleNumber implements Action {
     readonly type = ActionTypes.ToggleNumber;
 }
 
-export type ActionUnion = Move | Add | Remove | Reset | Update | Angle | ToggleNumber;
+export class UpdateConleft implements Action {
+    readonly type = ActionTypes.UpdateConleft;
+    constructor(public payload: Square) {}
+}
+
+export type ActionUnion = Move | Add | Remove | Reset | Update | Angle | ToggleNumber | UpdateConleft;

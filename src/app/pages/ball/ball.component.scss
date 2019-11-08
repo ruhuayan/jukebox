@@ -39,7 +39,7 @@ $tw: calc(100% / #{$n});
               }
             }
             &.toLaunch {
-              margin-top: calc(540px - 100% / 16);
+              margin-top: calc(var(--min-height) - 100% / 16);
               left: calc(100% / 2 - 100% / 16);
               transition: margin .1s ease-out;
             }

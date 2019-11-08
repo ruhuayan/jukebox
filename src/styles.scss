@@ -76,6 +76,7 @@
   --lg--padding: 2rem;
   --md-padding: 1rem;
   --sm-padding: .5rem;
+  --min-height: 540px;
 }
 
 @font-face {
@@ -115,7 +116,7 @@ body {
     z-index: 10000;
   }
   .content{
-    min-height: 600px;
+    
     font-family: Roboto, "Helvetica Neue", sans-serif;
     transition: opacity .3s ease-in;
     .conText .conLeft{
@@ -315,7 +316,8 @@ body {
     border: 1px solid grey;
     border-top: 1px solid grey;
     margin-right: 10px;
-    min-height: 540px; }
+    min-height: var(--min-height); 
+  }
   .content .conText .conRight {
     width: 200px;
     border-left: 1px dashed grey; }
@@ -419,18 +421,21 @@ text-decoration: none; }
   .content .conText .conRight {
     display: none; }
 }
-@media (max-width: 480px) {
-
-  .content, .footer > .fContent {
-    width: 96%;
-  }
-}
 
 @media(max-width: 640px){
   :root{
       --lg--padding: 1rem;
       --md-padding: .5rem;
       --sm-padding: .3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content, .footer > .fContent {
+    width: 96%;
+  }
+  :root{
+    --min-height: 480px;
   }
 }
 

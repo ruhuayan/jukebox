@@ -189,6 +189,11 @@
     .deck__btns{
       flex-direction: column;
       margin: 0 auto;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      .btn {
+        margin-top: 0;
+      }
     }
     ul.cards li{
       margin-left: -55px;
