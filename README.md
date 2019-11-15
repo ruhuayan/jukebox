@@ -1,4 +1,4 @@
-# Jukebox - Angular 7.2.15
+# Jukebox - Angular 8.3.15
 
 To see it working, visit https://www.richyan.com/
 
@@ -25,3 +25,7 @@ Launch a ball to two or more balls of the same color.
 ## Jukebox
 
 Music player
+
+## faceapi
+
+Face Detection
