@@ -296,6 +296,10 @@ body {
   -webkit-box-shadow: 0 0 10px #009900;
   -moz-box-shadow: 0 0 10px #009900;
   box-shadow: 0 0 10px #009900;
+  
+  @media (max-width: 480px) {
+    padding: 10px 0;
+  }
 }
 .content .conTitle {
   margin-left: 10px;

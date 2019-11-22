@@ -29,9 +29,11 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   private emptyThumb: any;
   private height = 0;
   private width = 0;
+  private tw = 0;
+  private th = 0;
   public row = 5;
   private paused = false;
-  private contextWidth = 0;
+  private contextRect: ClientRect;
   numberShow = false;
   numOfCan = Array.from(new Array(this.row * this.row).keys());
   imgs = ['assets/igame/picture_1.jpg', 'assets/igame/picture_2.jpg', 'assets/igame/picture_3.jpg'];
@@ -43,7 +45,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('Image Game - richyan.com');
     this.arrows = this.el.nativeElement.querySelectorAll('.arrow');
     this.loadImage(this.imgs[0]);
-    this.contextWidth = this.context.nativeElement.getBoundingClientRect().width;
+    this.contextRect = this.context.nativeElement.getBoundingClientRect();
   }
 
   private loadImage(imageSrc: string): void {
@@ -52,9 +54,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     const self = this;
     this.imgSubscription = new Observable((observer) => {
       this.img.onload = () => {
-        const height = self.img.height,
-              width = (self.img.width < this.contextWidth - this.row) ? self.img.width : this.contextWidth - this.row;
-        observer.next(new Dimension(width, height));
+        observer.next(new Dimension(self.img.width, self.img.height));
       };
     }).subscribe((res: Dimension) => {
       if (res) {
@@ -67,7 +67,18 @@ export class ImagegameComponent implements OnInit, OnDestroy {
   }
 
   private setCanvas(imageW: number, imageH: number, row: number): void {
-    const th = Math.floor(imageH / row), tw = Math.floor(imageW / row);
+    // crop image if image is bigger than context Element
+    let iw = imageW, ih = imageH, sl = 0, st = 0;
+    if (imageW > this.contextRect.width - this.row) {
+      iw = this.contextRect.width - this.row;
+      sl = (imageW - iw) / 2;
+    }
+    if (imageH > this.contextRect.height - this.row) {
+      ih = this.contextRect.height - this.row;
+      st = (imageH - ih) / 2;
+    }
+   
+    this.th = Math.floor(ih / row), this.tw = Math.floor(iw / row);
 
     this.thumbs = this.el.nativeElement.querySelectorAll('.canvas-wrap');
     this.emptyThumb = this.el.nativeElement.querySelector('.empty-wrap');
@@ -75,25 +86,25 @@ export class ImagegameComponent implements OnInit, OnDestroy {
       this.setThumbStyle(this.thumbs[i], i);
       this.setThumbNumber(this.thumbs[i], i, i);
       const canvas = this.thumbs[i].querySelector('canvas');
-      canvas.width = tw;
-      canvas.height = th;
+      canvas.width = this.tw;
+      canvas.height = this.th;
       const context = canvas.getContext('2d');
-      context.drawImage(this.img, tw * (i % this.row), th * Math.floor(i / this.row),
-                                tw, th, 0, 0, tw, th);
+      context.drawImage(this.img, sl + this.tw * (i % this.row), st + this.th * Math.floor(i / this.row),
+                                this.tw, this.th, 0, 0, this.tw, this.th);
     }
     this.setThumbStyle(this.emptyThumb, this.row ** 2);
     this.setThumbNumber(this.emptyThumb, this.row ** 2);
-    this.renderer.setStyle(this.emptyThumb, 'width', tw + 'px');
-    this.renderer.setStyle(this.emptyThumb, 'height', th + 'px');
+    this.renderer.setStyle(this.emptyThumb, 'width', this.tw + 'px');
+    this.renderer.setStyle(this.emptyThumb, 'height', this.th + 'px');
     this.setArrowStyle(this.row ** 2);
   }
 
   private setThumbStyle(thumb: any, i: number): void {
-    const th = Math.floor(this.height / this.row), tw = Math.floor(this.width / this.row);
-    const marginLeft = i < this.row ** 2 ? (tw + 1) * (i % this.row) :
-      this.contextWidth < 400 ? (tw + 1) * (this.row - 1) : (tw + 1) * this.row;
-    const marginTop = i < this.row ** 2 ? (th + 1) * Math.floor(i / this.row) :
-    this.contextWidth < 400 ? (th + 1) * this.row : (th + 1) * (this.row - 1);
+    
+    const marginLeft = i < this.row ** 2 ? (this.tw + 1) * (i % this.row) :
+    this.contextRect.width < 400 ? (this.tw + 1) * (this.row - 1) : (this.tw + 1) * this.row;
+    const marginTop = i < this.row ** 2 ? (this.th + 1) * Math.floor(i / this.row) :
+    this.contextRect.width < 400 ? (this.th + 1) * this.row : (this.th + 1) * (this.row - 1);
     this.renderer.setStyle(thumb, 'margin-left', marginLeft + 'px');
     this.renderer.setStyle(thumb, 'margin-top', marginTop + 'px');
   }

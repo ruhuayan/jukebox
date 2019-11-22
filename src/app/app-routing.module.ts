@@ -36,9 +36,6 @@ export const routes: Routes = [
     path: 'automation',
     loadChildren: './pages/automate/automation.module#AutomationModule'
     // loadChildren: () => import('./pages/automate/automation.module').then(m => m.AutomationModule)
-  },{
-    path: 'pdf',
-    loadChildren: () => import('./pdf/pdf.module').then(m => m.PdfModule)
   }, {
 		path: '**',
 		redirectTo: '404',

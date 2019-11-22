@@ -14,6 +14,7 @@
   color: var(--main-blue-dark);
   @media (max-width: 480px) {
     font-size: 12px;
+    font-weight: 100;
   }
 }
 #myProgress {
@@ -199,3 +200,14 @@ app-uploader {
       div#controls div.volume input#volume {
         flex-grow: 1;
         padding-right: 10px; } }
+
+  @media (max-width: 480px) {
+
+    #conLeft {
+      height: var(--min-height);
+      overflow: hidden;
+      canvas {
+        height: 200px;
+      }
+    }
+  }
