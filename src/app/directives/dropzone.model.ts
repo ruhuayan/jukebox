@@ -13,6 +13,10 @@ export class Dropzone {
     const cardSuit = this.dropzone.getAttribute('data-suit');
 
     if (homogeneous) {
+      // only one card 
+      if (card['grouped']) {
+        return false;
+      }
       if (cardValue && cardSuit !== '0') {
         return cardSuit === <string>card.suit && card.value === cardValue + 1;
       } else if (card.value === 1) {

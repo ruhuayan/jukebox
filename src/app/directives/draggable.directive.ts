@@ -70,7 +70,7 @@ export class DraggableDirective {
           y: event.clientY - this.draggingStartPosition.y
         };
       }
-      this.droppableDropzone = this.getDroppableZone();
+      // this.droppableDropzone = this.getDroppableZone();
       this.dragMove.emit(this.position);
     } else {
       this.position = this.draggingCard['position'];
@@ -87,8 +87,8 @@ export class DraggableDirective {
       return;
     }
     event.preventDefault();
-    if (this.droppableDropzone && this.droppableDropzone.entreZone(this.el.nativeElement.getBoundingClientRect())
-      ) {
+    this.droppableDropzone = this.getDroppableZone();
+    if (this.droppableDropzone) {
       this.dropped.emit(this.droppableDropzone.getId());
     }
 
@@ -101,12 +101,13 @@ export class DraggableDirective {
     if (!this.dropzones) {
       this.dropzones = [].slice.call(document.querySelectorAll('.appDropzone'));
     }
+    const rect = this.el.nativeElement.getBoundingClientRect();
     for (let i = 0; i < this.dropzones.length; i++) {
       if (this.dropzones[i].contains(this.el.nativeElement)) {
         continue;
       }
       const dropzone = new Dropzone(this.dropzones[i]);
-      if (dropzone.entreZone(this.el.nativeElement.getBoundingClientRect()) &&
+      if (dropzone.entreZone(rect) &&
           dropzone.isDroppable(this.draggingCard)) {
           return dropzone;
       }
