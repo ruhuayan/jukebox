@@ -96,6 +96,7 @@ export class SolitaireComponent implements OnInit {
         this.groupedCards.push(this.cols[fromZoneId][i]);
       }
     }
+    console.log('start',this.groupedCards)
   }
 
   onDragMove(position: Position, fromZoneId: number, cardIndex: number) {
@@ -116,6 +117,12 @@ export class SolitaireComponent implements OnInit {
     //       this.groupedCards[i]['position'] = {x: 0, y: 0}; // cant remove
     //     }
     // }
+
+    if (toDropzoneId === -1) {
+      this.groupedCards = [];console.log('end',this.groupedCards)
+      return;
+    }
+
     let numOfCard = 1;
     const card = this.cols[fromZoneId][cardIndex];
     let action: Action;
@@ -127,7 +134,7 @@ export class SolitaireComponent implements OnInit {
           this.groupedCards[i]['position'] = {x: 0, y: 0}; // cant remove
           this.cols[toDropzoneId].push(this.groupedCards[i]);
         }
-      action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: [card].concat(this.groupedCards)/*[card, ...this.groupedCards]*/};
+      action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: [card, ...this.groupedCards]};
     } else {
       action = {from: this.cols[fromZoneId], to: this.cols[toDropzoneId], cards: [card]};
     }
@@ -138,7 +145,7 @@ export class SolitaireComponent implements OnInit {
       action.hover = true;
     }
     this.actions.push(action);
-    this.groupedCards = [];
+    this.groupedCards = [];console.log('end',this.groupedCards)
     // if (this.gameFinished()) {
     //   setTimeout(() => window.alert('You Won !'), 300);
     // }

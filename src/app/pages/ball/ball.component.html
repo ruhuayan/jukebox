@@ -18,7 +18,7 @@
 <div class="conText row">
   <div class="conLeft" id="conLeft">
     <div class="balls" #container>
-        <div class="ball" *ngFor="let ball of balls; let i = index;"
+        <div class="ball" *ngFor="let ball of balls;"
             [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0, 'margin-top': ball.marginTop, 'margin-left': ball.marginLeft+'px'}"
             [ngClass]="{'toLaunch': ball.status == 'toLaunch', 'stopped': ball.status == 'stopped'}"
                           (click)="ball.status =='toLaunch' && launch()">

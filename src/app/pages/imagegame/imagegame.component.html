@@ -2,14 +2,14 @@
 <div class="conSubTitle" id="conSubTitle">
     <div class="form-group">
       <select id="images" (change)="changeImage($event.target.value)">
-        <option *ngFor="let img of imgs; let i = index" [value]="i" [selected]="i==0">Picture-{{i+1}}</option>
+        <option *ngFor="let img of imgs; let x = index" [value]="x" [selected]="x==0">Picture-{{x+1}}</option>
       </select>
       <i class="bar"></i>
     </div>
     <div class="form-group">
         <!-- <label for="input" class="control-label">Format *</label> -->
       <select id="formats" (change)="changeFormat($event.target.value)">
-        <option *ngFor="let v of [3, 4, 5, 6, 7]; let i = index" [value]="v" [selected]="row===v">{{v +' x ' +v}}</option>
+        <option *ngFor="let v of [3, 4, 5, 6, 7];" [value]="v" [selected]="row===v">{{v +' x ' +v}}</option>
       </select>
       <i class="bar"></i>
     </div>
@@ -40,9 +40,9 @@
 </div>
 <div class="conText row">
   <div class="conLeft" id="conLeft" #conLeft>
-    <div class="canvas-wrap" *ngFor="let i of numOfCan; let i = index"
-        [attr.data-num]="i" [attr.data-ori]="i"
-        (click)="shift($event, i)">
+    <div class="canvas-wrap" *ngFor="let i of numOfCan; let x = index"
+        [attr.data-num]="x" [attr.data-ori]="i"
+        (click)="shift($event, x)">
       <canvas class="canvas"></canvas>
       <div class="canvas-num" *ngIf="numberShow">{{i+1}}</div>
     </div>

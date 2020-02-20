@@ -70,7 +70,7 @@ export class UploaderComponent implements OnInit, OnDestroy {
         const _this = this;
         reader.onload = (e) => {
           const img = new Image();
-          img.src = e.target['result'];
+          // img.src = e.target['result'];
 
           img.onload = () => {
             if (img.width < 300 || img.height < 538) {
