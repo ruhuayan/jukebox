@@ -96,6 +96,10 @@ export class SolitaireComponent implements OnInit {
         this.groupedCards.push(this.cols[fromZoneId][i]);
       }
     }
+    if (this.groupedCards.length) {
+      const card = this.cols[fromZoneId][cardIndex];
+      card.grouped = true;
+    }
     console.log('start',this.groupedCards)
   }
 
@@ -117,14 +121,16 @@ export class SolitaireComponent implements OnInit {
     //       this.groupedCards[i]['position'] = {x: 0, y: 0}; // cant remove
     //     }
     // }
-
+    const card = this.cols[fromZoneId][cardIndex];
     if (toDropzoneId === -1) {
+      // this.groupedCards.forEach(card => card['grouped'] = false);
+      card.grouped = false;
       this.groupedCards = [];console.log('end',this.groupedCards)
       return;
     }
 
     let numOfCard = 1;
-    const card = this.cols[fromZoneId][cardIndex];
+    
     let action: Action;
     this.cols[toDropzoneId].push(card);
     if (this.groupedCards.length) {

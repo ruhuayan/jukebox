@@ -14,7 +14,7 @@ export class Dropzone {
 
     if (homogeneous) {
       // only one card 
-      if (card['grouped']) { console.log('it is homo & grouped', card)
+      if (card['grouped']) {
         return false;
       }
       if (cardValue && cardSuit !== '0') {

@@ -79,17 +79,19 @@ export class DraggableDirective {
 
   @HostListener('document:mouseup', ['$event'])
   @HostListener('document:touchend', ['$event'])
-  onEnd(event: any) {
-
+  onEnd(event: any) { 
+    event.preventDefault();
     // document:touchend cause other buttons malfuntion
     // if $this not dragging, return to regular click event
     if (!this.dragging && !this.draggingCard['grouped']) {
       return;
     }
-    event.preventDefault();
+
     this.droppableDropzone = this.getDroppableZone();
     if (this.droppableDropzone) {
       this.dropped.emit(this.droppableDropzone.getId());
+    } else {
+      this.dropped.emit(-1);
     }
 
     this.position = {x: 0, y: 0};
