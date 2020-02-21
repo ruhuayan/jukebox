@@ -123,7 +123,6 @@ export class SolitaireComponent implements OnInit {
     // }
     const card = this.cols[fromZoneId][cardIndex];
     if (toDropzoneId === -1) {
-      // this.groupedCards.forEach(card => card['grouped'] = false);
       card.grouped = false;
       this.groupedCards = [];console.log('end',this.groupedCards)
       return;
