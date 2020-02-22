@@ -69,8 +69,8 @@ export class Deck {
                                             // document.body.classList.remove('loading');
                                             // document.body.classList.add('loaded');
                                             Deck.isLoaded = true;
-                                            callback();
                                             subscription.unsubscribe();
+                                            callback();
                                         });
     }
     /**
