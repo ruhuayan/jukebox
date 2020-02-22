@@ -100,7 +100,6 @@ export class SolitaireComponent implements OnInit {
       const card = this.cols[fromZoneId][cardIndex];
       card.grouped = true;
     }
-    console.log('start',this.groupedCards)
   }
 
   onDragMove(position: Position, fromZoneId: number, cardIndex: number) {
@@ -124,7 +123,7 @@ export class SolitaireComponent implements OnInit {
     const card = this.cols[fromZoneId][cardIndex];
     if (toDropzoneId === -1) {
       card.grouped = false;
-      this.groupedCards = [];console.log('end',this.groupedCards)
+      this.groupedCards = [];
       return;
     }
 
