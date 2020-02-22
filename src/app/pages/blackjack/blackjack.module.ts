@@ -6,16 +6,16 @@ import { AnimateModule } from '../../directives/animate.module';
 import { PanelRightModule } from '../panel-right.module';
 
 @NgModule({
-imports: [
-  CommonModule, AnimateModule, PanelRightModule,
-  RouterModule.forChild([
-    {
-      path: '',
-      component: BlackjackComponent
-    }
-  ])
-],
-providers: [],
-declarations: [BlackjackComponent]
+    imports: [
+        CommonModule, AnimateModule, PanelRightModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: BlackjackComponent
+            }
+        ])
+    ],
+    providers: [],
+    declarations: [BlackjackComponent]
 })
-export class BlackjackModule {}
+export class BlackjackModule { }

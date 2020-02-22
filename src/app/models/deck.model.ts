@@ -4,21 +4,39 @@ import { forkJoin, Subscription } from 'rxjs';
 export class Deck {
     private cards: Card[] = [];
     private numOfDeck: number;
+    // all card images loaded
+    static isLoaded: boolean;
     cardBackImg: string;
-    constructor(n: number = 1) {
-      this.numOfDeck = n;
-      this.createCards();
-      this.cardBackImg = 'assets/svg-cards/Card_back.svg';
-    }
 
+    /**
+     * Constructor
+     * @param n number of deck will be created
+     */
+    constructor(n: number = 1) {
+        this.numOfDeck = n;
+        this.createCards();
+        this.cardBackImg = 'assets/svg-cards/Card_back.svg';
+    }
+    /**
+     * @return Card[] array of card in deck
+     */
     public getCards(): Card[] {
         return this.cards;
     }
-    public reset(): void {
+
+    /**
+     * reset cards in deck
+     */
+    public reset(): Deck {
         this.cards = [];
         this.shuffle();
+        return this;
     }
-    public shuffle(): void {
+
+    /**
+     * shuffle cards in Deck
+     */
+    public shuffle(): Deck {
         if (this.cards.length === 0) {
             this.createCards();
         }
@@ -26,14 +44,18 @@ export class Deck {
             const j = Math.floor(Math.random() * (i + 1));
             [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
         }
+        return this;
     }
 
-    static isLoaded(): boolean {
-        return document.body.classList.contains('loaded');
-    }
-
+    // static isLoaded(): boolean {
+    //     return document.body.classList.contains('loaded');
+    // }
+    /**
+     * load card images in deck
+     * @param callback function after load image
+     */
     public loadCardImages(callback: any) : void {
-        document.body.classList.add('loading');
+        // document.body.classList.add('loading');
         const promises = []
         this.cards.forEach(card => {
             const promise = new Promise((resolve, reject) => {
@@ -44,27 +66,33 @@ export class Deck {
             promises.push(promise);
         });
         const subscription: Subscription = forkJoin(promises).subscribe(() => {
-                                            document.body.classList.remove('loading');
-                                            document.body.classList.add('loaded');
+                                            // document.body.classList.remove('loading');
+                                            // document.body.classList.add('loaded');
+                                            Deck.isLoaded = true;
                                             callback();
                                             subscription.unsubscribe();
                                         });
     }
-
+    /**
+     * Deal one card - pop one card in deck
+     */
     public dealOneCard(): Card {
         if (this.cards.length)
             return this.cards.pop();
         else return null;
     }
 
-    private createCards(): void {
-      for (let i = 0; i < this.numOfDeck; i++) {
-        for (const face in Face){
-          for (const suit in Suit){
-              if(!Number(face) && !Number(suit)) this.cards.push(new Card(Face[face], Suit[suit]));
-          }
+    /***
+     * created deck
+     */
+    private createCards(): Deck {
+        for (let i = 0; i < this.numOfDeck; i++) {
+                for (const face in Face){
+                    for (const suit in Suit){
+                        if(!Number(face) && !Number(suit)) this.cards.push(new Card(Face[face], Suit[suit]));
+                    }
+                }
         }
-      }
-
+        return this;
     }
 }

@@ -3,207 +3,207 @@
 }
 
 .deck{
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .deck__title{
-    font-size: 1rem;
-    padding-bottom: 15px;
-    font-weight: 600;
-  }
-  .deck__left{
-    height: 120px;
-    margin-bottom: 15px;
-    box-shadow: 2px 2px 5px #ddd;
-  }
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .deck__title{
+        font-size: 1rem;
+        padding-bottom: 15px;
+        font-weight: 600;
+    }
+    .deck__left{
+        height: 120px;
+        margin-bottom: 15px;
+        box-shadow: 2px 2px 5px #ddd;
+    }
 }
 .card--table{
-  display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     .deck__btns{
-      display: flex;
-      padding-top: 30px;
-      padding-bottom: 30px;
-      margin-left: var(--md-padding);
-      width: 100%;
-      .btn{
-        margin: 5px;
-        width: 130px;
-        margin-top: 15px;
-        padding: var(--sm-padding) var(--md-padding);
-        text-decoration: none;
-        font-size: 1rem;
+        display: flex;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        margin-left: var(--md-padding);
+        width: 100%;
+        .btn{
+            margin: 5px;
+            width: 130px;
+            margin-top: 15px;
+            padding: var(--sm-padding) var(--md-padding);
+            text-decoration: none;
+            font-size: 1rem;
 
-        &:disabled{
-            background: #999;
-            cursor: default;
+            &:disabled{
+                background: #999;
+                cursor: default;
+            }
         }
-      }
     }
     ul.cards{
-      list-style-type: none;
-      display: flex;
-      flex-wrap: wrap;
-      margin: var(--sm-padding) var(--md-padding);
-      padding: 0;
-      width: 300px;
-      z-index: 0;
-      min-height: 120px;
-      .toaster{
-        z-index: 1000;
-        position: absolute;
-        background: #28a745;  //blue #17a2b8 // red #dc3545
-        opacity: 0.8;
-        width: 100px;
-        height: 30px;
-        text-align: center;
-        line-height: 30px;
-        font-size: 20px;
-        color: #fff;
-        margin-top: 30px;
-        margin-left: 10px;
-        border-radius: 5px;
-        transition: all .8s ease-in-out;
-        &.three{
-            margin-left: 30px
-        }
-        &.four{
-            margin-left: 40px;
-        }
-        &.five{
-            margin-left: 50px;
-        }
-        &.busted{
-          background: #dc3545
-        }
-        &.blackjack{
-          background: #ffc107;
-        }
-      }
-
-      li{
-          width: 85px;
-          height: 120px;
-          position: relative;
-          // margin: var(--sm-padding) var(--md-padding);
-          box-sizing: border-box;
-          z-index: 1;
-          margin-left: -40px;
-          &:first-child {
-            margin-left: 0;
-          }
-          div.card{
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: all .3s linear;
-            cursor: pointer;
-          }
-
-          .card__face{
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              backface-visibility: hidden;
-
-          }
-          .card__face.card__front {
-              display: block;
-              transform: rotateY(180deg);
-              box-sizing: border-box;
-              color: white;
-              text-align: center;
-              background-color: #aaa;
-          }
-          .card__back.card__face{
-            transition: all .3s ease-in-out;
-            &.card__init{
-              position: absolute;
+        list-style-type: none;
+        display: flex;
+        flex-wrap: wrap;
+        margin: var(--sm-padding) var(--md-padding);
+        padding: 0;
+        width: 300px;
+        z-index: 0;
+        min-height: 120px;
+        .toaster{
+            z-index: 1000;
+            position: absolute;
+            background: #28a745;  //blue #17a2b8 // red #dc3545
+            opacity: 0.8;
+            width: 100px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            font-size: 20px;
+            color: #fff;
+            margin-top: 30px;
+            margin-left: 10px;
+            border-radius: 5px;
+            transition: all .8s ease-in-out;
+            &.three{
+                margin-left: 30px
             }
-          }
+            &.four{
+                margin-left: 40px;
+            }
+            &.five{
+                margin-left: 50px;
+            }
+            &.busted{
+                background: #dc3545
+            }
+            &.blackjack{
+                background: #ffc107;
+            }
+        }
 
-      }
-      li{
-          perspective: 1000;
-      }
-      &.cards--dealer{
-        li:nth-child(n+2).hover{
-          position: relative;
-          div.card{
-              transform: rotateY(180deg);
-          }
+        li{
+            width: 85px;
+            height: 120px;
+            position: relative;
+            // margin: var(--sm-padding) var(--md-padding);
+            box-sizing: border-box;
+            z-index: 1;
+            margin-left: -40px;
+            &:first-child {
+                margin-left: 0;
+            }
+            div.card{
+                width: 100%;
+                height: 100%;
+                transform-style: preserve-3d;
+                transition: all .3s linear;
+                cursor: pointer;
+            }
+
+            .card__face{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                backface-visibility: hidden;
+
+            }
+            .card__face.card__front {
+                display: block;
+                transform: rotateY(180deg);
+                box-sizing: border-box;
+                color: white;
+                text-align: center;
+                background-color: #aaa;
+            }
+            .card__back.card__face{
+                transition: all .3s ease-in-out;
+                &.card__init{
+                position: absolute;
+                }
+            }
+
         }
-      }
-      &.cards--dealer.cards--stand{
-        li.hover{
-          position: relative;
-          div.card{
-              transform: rotateY(180deg);
-          }
+        li{
+            perspective: 1000;
         }
-      }
-      &.cards--player{
-        li.hover{
-          position: relative;
-          div.card{
-              transform: rotateY(180deg);
-          }
+        &.cards--dealer{
+            li:nth-child(n+2).hover{
+            position: relative;
+            div.card{
+                transform: rotateY(180deg);
+            }
+            }
         }
-      }
+        &.cards--dealer.cards--stand{
+            li.hover{
+                position: relative;
+                div.card{
+                    transform: rotateY(180deg);
+                }
+            }
+        }
+        &.cards--player{
+            li.hover{
+                position: relative;
+                div.card{
+                    transform: rotateY(180deg);
+                }
+            }
+        }
     }
 
     .hints{
-      min-height: 75px;
-      text-align: left;
-      margin: var(--sm-padding) var(--md-padding);
-      width: 300px;
+        min-height: 75px;
+        text-align: left;
+        margin: var(--sm-padding) var(--md-padding);
+        width: 300px;
 
-      a.btn--hint{
-        color: red;
-        font-size: 14px;
-        cursor: pointer;
-      }
+        a.btn--hint{
+            color: red;
+            font-size: 14px;
+            cursor: pointer;
+        }
     }
     .hints.show {
-      background: rgba(41,43,44,1);
-      transition: all .8s ease-in-out;
-      a.btn--hint{
-        color: #fff;
-        margin-left: 280px;
-        position: absolute;
-        margin-top: 5px;
-        transition: all .3s ease-in-out;
-      }
-      .probabilities{
-        color: #fff;
-        padding: var(--sm-padding);
-      }
+        background: rgba(41,43,44,1);
+        transition: all .8s ease-in-out;
+        a.btn--hint{
+            color: #fff;
+            margin-left: 280px;
+            position: absolute;
+            margin-top: 5px;
+            transition: all .3s ease-in-out;
+        }
+        .probabilities{
+            color: #fff;
+            padding: var(--sm-padding);
+        }
     }
 }
 
 @media (max-width: 480px) {
-  .card--table{
-    .deck__btns{
-      flex-direction: column;
-      margin: 0 auto;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      .btn {
-        margin-top: 8px;
-        margin-bottom: 8px;
-      }
+    .card--table{
+        .deck__btns{
+            flex-direction: column;
+            margin: 0 auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            .btn {
+                margin-top: 8px;
+                margin-bottom: 8px;
+            }
+        }
+        ul.cards li{
+            margin-left: -55px;
+        }
     }
-    ul.cards li{
-      margin-left: -55px;
+    .deck{
+        margin-left: -100px;
     }
-  }
-  .deck{
-    margin-left: -100px;
-  }
 
 }
 

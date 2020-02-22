@@ -24,7 +24,7 @@ export class SolitaireComponent implements OnInit {
     }
    }
   ngOnInit() {
-    if (!Deck.isLoaded()) {
+    if (!Deck.isLoaded) {
       this.deck.loadCardImages(() => {
         this.deck.shuffle();
         this.refresh();
