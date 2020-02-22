@@ -7,13 +7,13 @@ import { DraggableDirective } from './draggable.directive';
 @NgModule({
     imports: [CommonModule],
     declarations: [
-      DraggableDirective,
-      CardAnimateDirective,
+        DraggableDirective,
+        CardAnimateDirective,
     ],
     exports: [
-      DraggableDirective,
-      CardAnimateDirective,
+        DraggableDirective,
+        CardAnimateDirective,
     ],
     providers: []
 })
-export class AnimateModule {}
+export class AnimateModule { }

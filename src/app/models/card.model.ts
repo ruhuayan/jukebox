@@ -4,16 +4,14 @@ export class Card {
     suit: string;
     imgUrl: string;
     show: boolean;
-    value: number;
 
     constructor(face: string, suit: string) {
-      this.face = face;
-      this.suit = suit;
-      this.show = false;
-      this.imgUrl = `assets/svg-cards/${this.getValue()}${this.suit}.svg`;
-      this.value = this.getValue();
+        this.face = face;
+        this.suit = suit;
+        this.show = false;
+        this.imgUrl = `assets/svg-cards/${this.value}${this.suit}.svg`;
     }
-    private getValue(): number {
+    get value(): number {
         switch (this.face) {
             case Face.ACE:
                 return 1;
