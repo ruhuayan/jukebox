@@ -5,16 +5,16 @@ import { RouterModule } from '@angular/router';
 import { AnimateModule } from '../../directives/animate.module';
 
 @NgModule({
-imports: [
-  CommonModule, AnimateModule, 
-  RouterModule.forChild([
-    {
-      path: '',
-      component: SolitaireComponent
-    }
-  ])
-],
-providers: [],
-declarations: [SolitaireComponent]
+    imports: [
+        CommonModule, AnimateModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: SolitaireComponent
+            }
+        ])
+    ],
+    providers: [],
+    declarations: [SolitaireComponent]
 })
-export class SolitaireModule {}
+export class SolitaireModule { }

@@ -17,236 +17,236 @@
 
 .deck,
 .card-table {
-  display: grid;
-  padding: var(--sm-padding) var(--md-padding);
-  grid-template-columns: repeat(7, 1fr);
+    display: grid;
+    padding: var(--sm-padding) var(--md-padding);
+    grid-template-columns: repeat(7, 1fr);
 }
 
 .deck .deck_cards-left,
 ul.cards {
-  width: 75px;
+    width: 75px;
 
-  &::before{
-    content: "";
-    position: absolute;
-    margin-top: 2px;
-    width: 71px;
-    height: 106px;
-    border-radius: 5px;
-    border: 2px solid #999;
-  }
+    &::before{
+        content: "";
+        position: absolute;
+        margin-top: 2px;
+        width: 71px;
+        height: 106px;
+        border-radius: 5px;
+        border: 2px solid #999;
+    }
 }
 
 .deck{
-  > div {
-    height: 115px;
-  }
-  .deck_cards-left {
-    cursor: pointer;
-    outline:none;
-    &::before {
-      background: url(https://www.richyan.com/angular/assets/imgs/autorenew-24px.svg) center center no-repeat;
-      z-index: -1;
-      user-select: none; /* supported by Chrome and Opera */
-      -webkit-user-select: none; /* Safari */
-      -khtml-user-select: none; /* Konqueror HTML */
-      -moz-user-select: none; /* Firefox */
-      -ms-user-select: none; /* Internet Explorer/Edge */
+    > div {
+        height: 115px;
     }
-    img {
-      user-select: none; /* supported by Chrome and Opera */
-      -webkit-user-select: none; /* Safari */
-      -khtml-user-select: none; /* Konqueror HTML */
-      -moz-user-select: none; /* Firefox */
-      -ms-user-select: none; /* Internet Explorer/Edge */
+    .deck_cards-left {
+        cursor: pointer;
+        outline:none;
+        &::before {
+            background: url(https://www.richyan.com/angular/assets/imgs/autorenew-24px.svg) center center no-repeat;
+            z-index: -1;
+            user-select: none; /* supported by Chrome and Opera */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+        }
+        img {
+            user-select: none; /* supported by Chrome and Opera */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+        }
     }
-  }
 
-  ul{
-    padding:0;
-    margin:0;
-    list-style-type:none;
-    display: flex;
-    li{
-      height: 0px;
+    ul{
+        padding:0;
+        margin:0;
+        list-style-type:none;
+        display: flex;
+        li{
+            height: 0px;
+        }
     }
-  }
 }
 
 ul.cards{
-      list-style-type: none;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 0;
 
-      &.empty {
+    &.empty {
         height: 115px;
-      }
+    }
 
-      li{
-          height: 35px;
-          position: relative;
-          box-sizing: border-box;
+    li{
+        height: 35px;
+        position: relative;
+        box-sizing: border-box;
 
-          cursor: move;
-          user-select: none;
-          touch-action: none; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; user-select: none;
+        cursor: move;
+        user-select: none;
+        touch-action: none; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; user-select: none;
 
-          &.grouped, &.dragging {
+        &.grouped, &.dragging {
             z-index: 100;
             box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
                         0 8px 10px 1px rgba(0, 0, 0, 0.14),
                         0 3px 14px 2px rgba(0, 0, 0, 0.12);
-          }
+        }
 
-          &.dragging:last-child{
+        &.dragging:last-child{
             height: 112px;
-          }
-          &:last-child {
+        }
+        &:last-child {
             height: 115px;
-          }
-          div.card{
+        }
+        div.card{
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
             transition: all .3s linear;
             cursor: pointer;
-          }
+        }
 
-          .card__face{
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              backface-visibility: hidden;
+        .card__face{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
 
-          }
-          .card__face.card__front {
-              display: block;
-              transform: rotateY(180deg);
-              box-sizing: border-box;
-              color: white;
-              text-align: center;
-              background-color: #aaa;
-          }
-          .card__back.card__face{
+        }
+        .card__face.card__front {
+            display: block;
+            transform: rotateY(180deg);
+            box-sizing: border-box;
+            color: white;
+            text-align: center;
+            background-color: #aaa;
+        }
+        .card__back.card__face{
             transition: all .3s ease-in-out;
             &.card__init{
-              position: absolute;
+                position: absolute;
             }
-          }
+        }
 
-      }
-      li{
-          perspective: 1000;
-      }
-      li.hover{
+    }
+    li{
+        perspective: 1000;
+    }
+    li.hover{
         position: relative;
         div.card{
             transform: rotateY(180deg);
             // box-shadow: 2px 2px 5px #ddd;
         }
-      }
+    }
 }
 
 .card img {
-  width: 75px;
-  height: 115px;
+    width: 75px;
+    height: 115px;
 }
 @media(max-width: 878px){
-  .deck > div {
-    height: 100px;
-  }
-
-  .card img, div.card {
-    width: 65px;
-    height: 100px;
-  }
-
-  .deck .deck_cards-left,
-  ul.cards {
-    width: 65px;
-    &::before{
-      width: 61px;
-      height: 92px;
-      border-radius: 3px;
-    }
-  }
-  ul.cards {
-    &.empty {
-      height: 100px;
-    }
-    li:last-child {
-      height: 100px;
-    }
-    li.dragging:last-child{
-      height: 98px;
-    }
-  }
-}
-
-@media(max-width: 640px){
-  .card img, div.card {
-    width: 55px;
-    height: 85px;
-  }
-
-  .deck .deck_cards-left,
-  ul.cards {
-    width: 55px;
-    &::before{
-      width: 52px;
-      height: 80px;
-    }
-  }
-  ul.cards {
-    &.empty {
-      height: 85px;
-    }
-    li:last-child {
-      height: 85px;
-    }
-    li.dragging:last-child{
-      height: 83px;
-    }
-  }
-}
-@media(max-width: 480px){
-  .conTitle .subtitle-btns .btn{
-      width: 100px;
-    }
-
     .deck > div {
-      height: 60px;
+        height: 100px;
     }
+
     .card img, div.card {
-      width: 40px;
-      height: 61px;
+        width: 65px;
+        height: 100px;
     }
 
     .deck .deck_cards-left,
     ul.cards {
-      width: 40px;
-      &::before{
-        width: 39px;
-        height: 57px;
-        border-radius: 3px;
-        border: 1px solid #999;
-      }
+        width: 65px;
+        &::before{
+            width: 61px;
+            height: 92px;
+            border-radius: 3px;
+        }
+    }
+    ul.cards {
+        &.empty {
+            height: 100px;
+        }
+        li:last-child {
+            height: 100px;
+        }
+        li.dragging:last-child{
+            height: 98px;
+        }
+    }
+}
+
+@media(max-width: 640px){
+    .card img, div.card {
+        width: 55px;
+        height: 85px;
+    }
+
+    .deck .deck_cards-left,
+    ul.cards {
+        width: 55px;
+        &::before{
+        width: 52px;
+        height: 80px;
+        }
+    }
+    ul.cards {
+        &.empty {
+            height: 85px;
+        }
+        li:last-child {
+            height: 85px;
+        }
+        li.dragging:last-child{
+            height: 83px;
+        }
+    }
+}
+@media(max-width: 480px){
+    .conTitle .subtitle-btns .btn{
+        width: 100px;
+    }
+
+    .deck > div {
+        height: 60px;
+    }
+    .card img, div.card {
+        width: 40px;
+        height: 61px;
+    }
+
+    .deck .deck_cards-left,
+        ul.cards {
+        width: 40px;
+        &::before{
+            width: 39px;
+            height: 57px;
+            border-radius: 3px;
+            border: 1px solid #999;
+        }
     }
 
     ul.cards {
-      &.empty {
-        height: 61px;
-      }
-      li {
-        height: 25px;
-      }
-      li:last-child {
-        height: 61px;
-      }
-      li.dragging:last-child{
-        height: 59px;
-      }
+        &.empty {
+            height: 61px;
+        }
+        li {
+            height: 25px;
+        }
+        li:last-child {
+            height: 61px;
+        }
+        li.dragging:last-child{
+            height: 59px;
+        }
     }
 }
