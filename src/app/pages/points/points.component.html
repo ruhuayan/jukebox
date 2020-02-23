@@ -5,7 +5,7 @@
     <div class="conLeft" id="conLeft">
         <div class="deck">
             <div class="deck__left" id="deckLeft">
-                <img class="svg-card" [src]="deck.cardBackImg" alt="card back">
+                <img class="svg-card" src="assets/svg-cards/Card_back.svg" alt="card back">
             </div>
             <div class="deck__right">
                 <div class="deck__title">Card(s) Left: <span
@@ -24,19 +24,10 @@
                 </div>
             </div>
         </div>
-        <ul class="cards">
-            <li *ngFor="let card of dealedCards" appCanimate="#deckLeft">
-                <div class="card">
-                    <div class="card__back card__face">
-                        <img class="svg-card" [src]="deck.cardBackImg" alt="cardback">
-                    </div>
-                    <div class="card__front card__face">
-                        <img class="svg-card" [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" />
-                    </div>
-
-                </div>
-            </li>
-        </ul>
+        <div class="cards">
+            <app-card *ngFor="let card of dealedCards" appCanimate="#deckLeft" [appCard]="card">
+            </app-card>
+        </div>
         <div class="solution" *ngIf="solution">
             <div class="solutiion-title">Solution: </div>
             <div class="solution-text">{{solution}}</div>

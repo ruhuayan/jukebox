@@ -41,58 +41,20 @@
     }
 }
 
-ul.cards{
+.cards{
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
     margin: 0;
     padding: 0;
     margin-top: 20px;
-    li{
+    app-card{
         width: 85px;
         height: 120px;
-        position: relative;
+    }
+    app-card.show ::ng-deep {
         margin: var(--sm-padding) var(--md-padding);
-        box-sizing: border-box;
-
-        div.card{
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: all .3s linear;
-            cursor: pointer;
-        }
-
-        .card__face{
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-
-        }
-        .card__face.card__front {
-            display: block;
-            transform: rotateY(180deg);
-            box-sizing: border-box;
-            color: white;
-            text-align: center;
-            background-color: #aaa;
-        }
-        .card__back.card__face{
-            transition: all .3s ease-in-out;
-            &.card__init{
-            position: absolute;
-            }
-        }
-
-    }
-    li{
-        perspective: 1000;
-    }
-    li.hover{
-        position: relative;
-        div.card{
-            transform: rotateY(180deg);
+        .card{
             box-shadow: 2px 2px 5px #ddd;
         }
     }
@@ -119,7 +81,7 @@ img.svg-card{
             margin-top: 1rem;
         }
     }
-    ul.cards li{
+    .cards app-card{
         margin-right: 2rem;
     }
     .solution{

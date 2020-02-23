@@ -1,4 +1,5 @@
-import { Card, Suit } from '../models/card.model';
+import { Card, Suit } from './card.model';
+
 const suitArr = [[<string>Suit.CLUBS, <string>Suit.SPADES], [<string>Suit.DIAMONDS, <string>Suit.HEARTS]];
 
 export class Dropzone {

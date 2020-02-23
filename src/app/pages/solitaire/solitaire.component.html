@@ -18,69 +18,62 @@
     <div class="conLeft" id="conLeft">
         <div class="deck">
 
-            <div class="deck_cards-left card" (click)="open()" id="deckLeft">
-                <img [src]="deck.cardBackImg" alt="card back" *ngIf="leftCards.length > 0">
+            <div class="deck_cards-left deck_td" (click)="open()" id="deckLeft">
+                <img src="assets/svg-cards/Card_back.svg" alt="card back" *ngIf="leftCards.length > 0">
             </div>
 
             <div class="deck_cards deck_td">
-                <ul class="cards cards-dealer">
-                    <li *ngFor="let card of cols[11]; let j = index" appCanimate="#deckLeft" appDraggable
-                        [appDraggingCard]="card" (dropped)="onDropped($event, 11, j)">
-                        <div class="card">
-                            <div class="card__back card__face">
-                                <img [src]="deck.cardBackImg" alt="cardback">
-                            </div>
-                            <div class="card__front card__face">
-                                <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" />
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                <div class="cards">
+                    <app-card 
+                        *ngFor="let card of cols[11]; let j = index" 
+                        appCanimate="#deckLeft" 
+                        appDraggable
+                        [appCard]="card"
+                        (dropped)="onDropped($event, 11, j)"
+                    >
+                    </app-card>
+                </div>
             </div>
             <div class="deck_td deck_td-empty">
             </div>
 
             <div class="deck_td" *ngFor="let i of [7,8,9,10];">
-                <ul class="cards appDropzone homogeneous"
+                <div class="cards appDropzone homogeneous"
                     [attr.data-value]="cols[i].length ? cols[i][cols[i].length-1].value : 0"
                     [attr.data-suit]="cols[i].length ? cols[i][cols[i].length-1].suit : 0" [attr.data-index]="i"
                     [ngClass]="{'empty': cols[i]['length']===0}">
-                    <li class="hover" *ngFor="let card of cols[i]; let j = index" [attr.data-index]="i + '|' +j"
-                        [ngClass]="{'hover': card['show'] }" appDraggable [appDraggingCard]="card"
-                        (dragStart)="onDragStart(i, j)" (dragMove)="onDragMove($event, i, j)"
-                        (dropped)="onDropped($event, i, j)">
-                        <div class="card">
-                            <div class="card__back card__face">
-                                <img [src]="deck.cardBackImg" alt="cardback" />
-                            </div>
-                            <div class="card__front card__face">
-                                <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" />
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                    <app-card class="show"
+                        *ngFor="let card of cols[i]; let j = index" 
+                        [attr.data-index]="i + '|' +j"
+                        appDraggable 
+                        [appCard]="card"
+                        (dragStart)="onDragStart(i, j)" 
+                        (dragMove)="onDragMove($event, i, j)"
+                        (dropped)="onDropped($event, i, j)"
+                    >
+                    </app-card>
+                </div>
             </div>
 
         </div>
         <div class="card-table">
             <div class="cards-wrapper" *ngFor="let cards of cols.slice(0, 7); let i = index">
-                <ul class="cards appDropzone" [attr.data-value]="cards.length ? cards[cards.length-1].value : 0"
+                <div class="cards appDropzone" [attr.data-value]="cards.length ? cards[cards.length-1].value : 0"
                     [attr.data-suit]="cards.length ? cards[cards.length-1].suit : 0" [attr.data-index]="i"
                     [ngClass]="{'empty': cards['length']===0}">
-                    <li *ngFor="let card of cards; let j = index" [attr.data-index]="i + '|' +j"
-                        [ngClass]="{'hover': card['show'], 'grouped': card['grouped']}" appDraggable
-                        [appDraggingCard]="card" (dragStart)="onDragStart(i, j)" (dragMove)="onDragMove($event, i, j)"
-                        (dropped)="onDropped($event, i, j)">
-                        <div class="card">
-                            <div class="card__back card__face">
-                                <img [src]="deck.cardBackImg" alt="cardback" />
-                            </div>
-                            <div class="card__front card__face" *ngIf="card.show">
-                                <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" />
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+
+                    <app-card 
+                        *ngFor="let card of cards; let j = index" 
+                        [attr.data-index]="i + '|' +j"
+                        [ngClass]="{'show': card['show'], 'grouped': card['grouped']}" 
+                        appDraggable
+                        [appCard]="card"
+                        (dragStart)="onDragStart(i, j)" 
+                        (dragMove)="onDragMove($event, i, j)"
+                        (dropped)="onDropped($event, i, j)"
+                    >
+                    </app-card>
+                </div>
             </div>
         </div>
     </div>

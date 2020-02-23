@@ -2,50 +2,44 @@
 <div class="conSubTitle"> Blackjack online game</div>
 <div class="conText row">
     <div class="conLeft" id="conLeft">
-        <div class="card--table">
-            <ul class="cards cards--dealer" [ngClass]="{'cards--stand': showStand}">
-                <li *ngFor="let card of dealer.cards" appCanimate="#deckLeft" class="dealer-card">
-                    <div class="card">
-                        <div class="card__back card__face">
-                            <img [src]="deck.cardBackImg" alt="cardback" width="85" height="120">
-                        </div>
-                        <div class="card__front card__face">
-                            <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="85" height="120"
-                                *ngIf="card.show" />
-                        </div>
-                    </div>
-                </li>
+        <div class="card_table">
+            <div class="cards cards_dealer" [ngClass]="{'five': dealer.cards.length==5, 'six': dealer.cards.length>=6}">
+                <app-card class="dealer-card" 
+                    *ngFor="let card of dealer.cards; let j = index" 
+                    appCanimate="#deckLeft" [appCard]="card" 
+                    [ngClass]="{'show': j===0 && card.show}"
+                >
+                </app-card>
                 <div class="toaster" *ngIf="dealer.status"
                     [ngClass]="{'three': dealer.cards.length===3, 'four': dealer.cards.length>=4, 'busted': status===4, 'blackjack': status===6}">
-                    {{dealer.status}}</div>
-            </ul>
+                    {{dealer.status}}
+                </div>
+            </div>
             <div class="deck__btns">
-                <button class="btn btn--deal button" (click)="stand(0)" [disabled]="status !== 2">
+                <button class="btn btn_deal button" (click)="stand(0)" [disabled]="status !== 2">
                     <span class="text">Stand</span>
                     <span class="bg"></span>
                 </button>
-                <button class="btn btn--deal button" (click)="hit()" [disabled]="status !== 2">
+                <button class="btn btn_deal button" (click)="hit()" [disabled]="status !== 2">
                     <span class="text">Hit</span>
                     <span class="bg"></span>
                 </button>
             </div>
-            <ul class="cards cards--player">
-                <li *ngFor="let card of player.cards" appCanimate="#deckLeft" class="player-card">
-                    <div class="card">
-                        <div class="card__back card__face">
-                            <img [src]="deck.cardBackImg" alt="cardback" width="85" height="120">
-                        </div>
-                        <div class="card__front card__face">
-                            <img [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" width="85" height="120" />
-                        </div>
-                    </div>
-                </li>
+            <div class="cards cards_player" [ngClass]="{'five': dealer.cards.length==5, 'six': dealer.cards.length>=6}">
+                <app-card 
+                    class="player-card"
+                    *ngFor="let card of player.cards" 
+                    appCanimate="#deckLeft" 
+                    [appCard]="card" 
+                >
+                </app-card>
                 <div class="toaster" *ngIf="player.status"
                     [ngClass]="{'three': player.cards.length===3, 'four': player.cards.length===4, 'five': player.cards.length>=5, 'busted': status===3, 'blackjack': player.status==='Blackjack'}">
-                    {{player.status}}</div>
-            </ul>
+                    {{player.status}}
+                </div>
+            </div>
             <div class="hints" [ngClass]="{'show': showHint}">
-                <a class="btn--hint" (click)="hint()" *ngIf="status===2">{{ showHint? 'X' : 'Hint'}}</a>
+                <a class="btn_hint" (click)="hint()" *ngIf="status===2">{{ showHint? 'X' : 'Hint'}}</a>
                 <div class="probabilities" *ngIf="showHint">
                     Probabilities: <br />
                     Player goes busted: {{ probabilities['player_busted'] + '%'}}<br />
@@ -58,7 +52,7 @@
         <div class="deck">
             <div class="deck__title">Cards: {{deck.getCards().length}}</div>
             <div class="deck__left" id="deckLeft">
-                <img [src]="deck.cardBackImg" alt="card back" with="85" height="120">
+                <img src="assets/svg-cards/Card_back.svg" alt="card back" with="85" height="120">
             </div>
             <div class="deck__title">Scores: {{scores}}</div>
         </div>

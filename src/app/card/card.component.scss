@@ -1,0 +1,41 @@
+:host {
+    position: relative;
+    box-sizing: border-box;
+}
+
+:host-context(.show) .card{
+    transform: rotateY(180deg);
+}
+:host-context(.card_init) .card_back.card_face{
+    position: absolute;
+}
+.card{
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: all .3s linear;
+    cursor: pointer;
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.card_face{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+
+}
+.card_face.card_front {
+    display: block;
+    transform: rotateY(180deg);
+    box-sizing: border-box;
+    color: white;
+    text-align: center;
+    background-color: #aaa;
+}
+.card_back.card_face{
+    transition: all .3s ease-in-out;
+}

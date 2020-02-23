@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SolitaireComponent } from './solitaire.component';
 import { RouterModule } from '@angular/router';
-import { AnimateModule } from '../../directives/animate.module';
+import { CardModule } from 'src/app/card/card.module';
 
 @NgModule({
     imports: [
-        CommonModule, AnimateModule,
+        CommonModule, CardModule,
         RouterModule.forChild([
             {
                 path: '',

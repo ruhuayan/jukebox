@@ -1,4 +1,4 @@
-import { Card } from '../../models/card.model';
+import { Card } from '../../card/models/card.model';
 
 export enum Status {
     ONDEALING = 0,

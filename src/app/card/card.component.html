@@ -1,0 +1,8 @@
+<div class="card">
+    <div class="card_back card_face">
+        <img class="svg-card" src="assets/svg-cards/Card_back.svg" alt="cardback">
+    </div>
+    <div class="card_front card_face">
+        <img class="svg-card" [src]="card.imgUrl" [alt]="card.face + ' ' + card.suit" *ngIf="card.show" />
+    </div>
+</div>

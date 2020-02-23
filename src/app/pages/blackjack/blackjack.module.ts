@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlackjackComponent } from './blackjack.component';
 import { RouterModule } from '@angular/router';
-import { AnimateModule } from '../../directives/animate.module';
 import { PanelRightModule } from '../panel-right.module';
+import { CardModule } from 'src/app/card/card.module';
 
 @NgModule({
     imports: [
-        CommonModule, AnimateModule, PanelRightModule,
+        CommonModule, CardModule, PanelRightModule,
         RouterModule.forChild([
             {
                 path: '',

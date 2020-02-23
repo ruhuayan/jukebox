@@ -1,32 +1,40 @@
-import { Directive, ElementRef, OnInit, Renderer2, Attribute } from '@angular/core';
-import { Position } from './position.model';
+import { Directive, ElementRef, OnInit, Attribute, Input, HostBinding } from '@angular/core';
+import { Position } from './models/position.model';
+import { Card } from './models/card.model';
 @Directive({
     selector: '[appCanimate]',
 })
 export class CardAnimateDirective implements OnInit {
-
+    @Input('appCard') card: Card;
+    @HostBinding('class.show') show = false;
+    @HostBinding('class.card_init') card_init = true;
     constructor(
         private el: ElementRef,
-        private renderer: Renderer2,
+        // private renderer: Renderer2,
         @Attribute('appCanimate') public fromId: string
     ) { }
     ngOnInit() {
 
-        const cardBack = this.el.nativeElement.querySelector('.card__back');
-        const cardFront = this.el.nativeElement.querySelector('.card__front');
+        const cardBack = this.el.nativeElement.querySelector('.card_back');
+        const cardFront = this.el.nativeElement.querySelector('.card_front');
         const initCard = document.querySelector(this.fromId);
         const initPos: Position = initCard ? this.getPosition(initCard) : { x: 0, y: 0 };
         const destPos: Position = this.getPosition(cardFront);
-        this.renderer.addClass(cardBack, 'card__init');
+
         cardBack.style.left = (initPos.x - destPos.x) + 'px';
         cardBack.style.top = (initPos.y - destPos.y) + 'px';
+
+        // animation - move card
         setTimeout(() => {
-            this.renderer.removeClass(cardBack, 'card__init');
+            this.card_init = false;
             cardBack.style.left = '0px';
             cardBack.style.top = '0px';
-            setTimeout(() => {
-                this.renderer.addClass(this.el.nativeElement, 'hover');
-            }, 100);
+            if (this.card.show) {
+                // animation - turn card face up 
+                setTimeout(() => {
+                    this.show = true;
+                }, 100);
+            }
         }, 50);
     }
 

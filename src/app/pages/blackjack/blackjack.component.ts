@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Card } from '../../models/card.model';
-import { Deck } from '../../models/deck.model';
+import { Component, OnInit } from '@angular/core';
+import { Card } from '../../card/models/card.model';
+import { Deck } from '../../card/models/deck.model';
 import { Title } from '@angular/platform-browser';
 import { Status, Role, Player } from './player.model';
 @Component({
@@ -19,7 +19,6 @@ export class BlackjackComponent implements OnInit {
     probabilities: object = { player_busted: 0, player_win: 0, dealer_busted: 0 };
     prob_player = 0;
     prob_dealer: number = null;
-    showStand = false;
 
     constructor(private titleService: Title) {
         this.titleService.setTitle('Blackjack - richyan.com');
@@ -138,12 +137,12 @@ export class BlackjackComponent implements OnInit {
 
     stand(replay = 0): void {
         this.status = Status.STAND;
-        this.showStand = true;
+        this.dealer.cards[0].show = true;
         if (replay) {
             this.dealOneCard(Role.DEALER);
         }
         this.updateStatus(Role.DEALER);
-        if (this.status === Status.STAND) {
+        if (this.status === Status.STAND && this.dealer.cards.length <=5) {
             setTimeout(() => {
                 this.stand(1);
             }, 700);
@@ -188,7 +187,6 @@ export class BlackjackComponent implements OnInit {
         this.showHint = false;
         setTimeout(() => {
             this.status = Status.ONDEALING;
-            this.showStand = false;
             this.player.empty();
             this.dealer.empty();
             this.refresh();

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Card } from '../../models/card.model';
-import { Deck } from '../../models/deck.model';
+import { Card } from '../../card/models/card.model';
+import { Deck } from '../../card/models/deck.model';
 import { Title } from '@angular/platform-browser';
 
 @Component({

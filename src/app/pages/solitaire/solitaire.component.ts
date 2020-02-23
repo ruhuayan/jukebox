@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Card } from '../../models/card.model';
-import { Deck } from '../../models/deck.model';
-import { Position } from '../../directives/position.model';
+import { Card } from '../../card/models/card.model';
+import { Deck } from '../../card/models/deck.model';
+import { Position } from '../../card/models/position.model';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -53,13 +53,14 @@ export class SolitaireComponent implements OnInit {
                 }
             }
             for (let i = 0; i < action.cards.length; i++) {
+                action.cards[i]['grouped'] = false;
                 action.to.pop();
                 action.from.push(action.cards[i]);
             }
         }
     }
     private refresh(): void {
-
+        this.deck.getCards().forEach(card => card.show = false);
         for (let i = 0; i < 7; i++) {
             this.cols[i] = this.cols[i] ? new Array(i + 1) : [];
             for (let j = 0; j < i + 1; j++) {
@@ -112,14 +113,7 @@ export class SolitaireComponent implements OnInit {
     }
 
     onDropped(toDropzoneId: number, fromZoneId: number, cardIndex: number) {
-        // const toDropzoneId = $event['dropzoneId'];
-        // can not drop multiple card on cols 7 - 10
-        // if (toDropzoneId >= 7 && toDropzoneId <= 10 && this.groupedCards.length) {
-        //     for (let i = 0; i < this.groupedCards.length; i++) {
-        //       this.groupedCards[i]['grouped'] = false;
-        //       this.groupedCards[i]['position'] = {x: 0, y: 0}; // cant remove
-        //     }
-        // }
+
         const card = this.cols[fromZoneId][cardIndex];
         if (toDropzoneId === -1) {
             card.grouped = false;
@@ -149,7 +143,7 @@ export class SolitaireComponent implements OnInit {
             action.hover = true;
         }
         this.actions.push(action);
-        this.groupedCards = []; console.log('end', this.groupedCards)
+        this.groupedCards = [];
         // if (this.gameFinished()) {
         //   setTimeout(() => window.alert('You Won !'), 300);
         // }
