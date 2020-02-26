@@ -54,6 +54,9 @@
     }
     app-card.show ::ng-deep {
         margin: var(--sm-padding) var(--md-padding);
+        @media (max-width: 480px) {
+            margin-right: 2rem;
+        }
         .card{
             box-shadow: 2px 2px 5px #ddd;
         }
@@ -80,9 +83,6 @@ img.svg-card{
         .btn{
             margin-top: 1rem;
         }
-    }
-    .cards app-card{
-        margin-right: 2rem;
     }
     .solution{
         font-size: 1rem;

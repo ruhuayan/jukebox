@@ -37,7 +37,7 @@
     }
     app-card ::ng-deep{
         img {
-            height: 115px;
+            height: 114px;
             @media(max-width: 878px) {
                 height: 100px;
             }
@@ -135,7 +135,7 @@
             height: 112px;
         }
         &:last-child {
-            height: 115px;
+            height: 114px;
         }
     }
 }
@@ -216,8 +216,8 @@
     .cards {
         width: 40px;
         &::before{
-            width: 39px;
-            height: 57px;
+            width: 38px;
+            height: 56px;
             border-radius: 3px;
             border: 1px solid #999;
         }
@@ -231,7 +231,7 @@
             height: 25px;
         }
         app-card:last-child {
-            height: 61px;
+            height: 60px;
         }
         app-card.dragging:last-child{
             height: 59px;
