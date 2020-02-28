@@ -62,26 +62,57 @@ export class PointsComponent implements OnInit {
     }
     calculateExp(): string {
         const operations = ['+', '-', '*', '/'];
-        const numbers = this.dealedCards.map((card) => card.value); // console.log(numbers);
-
-        for (let i = 0; i < 4; i++) {
-            const a = numbers[i];
-            for (let j = 0; j < 4; j++) {
-                if (i === j) continue;
-                const b = numbers[j];
-                for (let x = 0; x < 4; x++) {
-                    if (x === j || x === i) continue;
-                    const c = numbers[x];
-                    for (let y = 0; y < 4; y++) {
-                        if (y === x || y === j || y === i) continue;
-                        const d = numbers[y];
-                        for (let ta = 0; ta < 4; ta++) {
-                            const m1 = operations[ta];
-                            for (let tb = 0; tb < 4; tb++) {
-                                const m2 = operations[tb];
-                                for (let tc = 0; tc < 4; tc++) {
+        const numbers = this.dealedCards.map((card) => card.value);
+        // try{
+        //     numbers.forEach((n, i) => {
+        //         numbers.forEach((n1, i1) => {
+        //             (i !== i1) &&
+        //             numbers.forEach((n2, i2) => {
+        //                 (i !== i2 && i1 !== i2) &&
+        //                 numbers.forEach((n3, i3) => {
+        //                     (i!== i3 && i1 !== i3 && i2 !== i3) &&
+        //                     operations.forEach(op =>
+        //                         operations.forEach(op1 =>
+        //                             operations.forEach(
+        //                                 op2 => {
+        //                                     Array.from((Array(11)).keys()).forEach(t => {
+        //                                         const result = this.getExp([n, n1, n2, n3], [op, op1, op2], t);
+                                                
+        //                                         if (result[0] > 23.9 && result[0] < 24.1) {
+                                                    
+        //                                             console.log([n, n1, n2, n3], [op, op1, op2])
+        //                                             throw new Error('error');
+        //                                         }
+        //                                     });
+        //                                 }
+        //                             )   
+        //                         ) 
+        //                     );
+        //                 })
+        //             });
+        //         });
+        //     }); 
+        // } catch(e) {
+        //     console.log(e)
+        // }
+        for (let n = 0; n < 11; n++) { // 11 expressions
+            for (let i = 0; i < 4; i++) {
+                const a = numbers[i];
+                for (let j = 0; j < 4; j++) {
+                    if (i === j) continue;
+                    const b = numbers[j];
+                    for (let x = 0; x < 4; x++) {
+                        if (x === j || x === i) continue;
+                        const c = numbers[x];
+                        for (let y = 0; y < 4; y++) {
+                            if (y === x || y === j || y === i) continue;
+                            const d = numbers[y];
+                            for (let ta = 0; ta < 4; ta++) {
+                                const m1 = operations[ta];
+                                for (let tb = 0; tb < 4; tb++) {
+                                    const m2 = operations[tb];
+                                    for (let tc = 0; tc < 4; tc++) {
                                     const m3 = operations[tc];
-                                    for (let n = 0; n < 11; n++) {
                                         const exp = this.getExp([a, b, c, d], [m1, m2, m3], n);
 
                                         if (exp[0] > 23.9 && exp[0] < 24.1) {
@@ -106,7 +137,7 @@ export class PointsComponent implements OnInit {
             // express 0----------------------am1bm2cm3d
             case 0:
                 equation = nums[0] + op[0] + nums[1] + op[1] + nums[2] + op[2] + nums[3];
-                result = this.calculate(nums, op);
+                result = this.calculate(nums, op); console.log(result)
                 return [result, equation];
 
             // express 1-----------------------'(am1b)m2cm3d'
@@ -178,8 +209,6 @@ export class PointsComponent implements OnInit {
 
         if (op.length === 1) {
             return this.cal(nums[0], nums[1], op[0]);
-        } else if (op.length === 0) {
-            return null;
         } else {
             for (let i = 0; i < op.length; i++) {
                 if (op[i] === '*') {
