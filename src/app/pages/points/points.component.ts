@@ -14,6 +14,7 @@ export class PointsComponent implements OnInit {
     deck = new Deck();
     ondealing = false;
     solution: string;
+    cardNumber = 4;
     constructor(private titleService: Title) {
     }
     ngOnInit() {
@@ -36,17 +37,22 @@ export class PointsComponent implements OnInit {
         if (this.deck.getCards().length === 0) {
             // this.deck.shuffle();
         }
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < this.cardNumber; i++) {
             setTimeout(() => {
                 this.dealOneCard();
-                if (this.dealedCards.length === 4) {
+                if (i === this.cardNumber - 1) {
                     this.ondealing = false;
                 }
             }, 200 * i);
         }
     }
-    findSolutions(): void {
-        if (this.dealedCards.length !== 4) {
+
+    setCardNumber(num: number): void {
+        this.cardNumber = +num;
+        this.refresh();
+    }
+    findSolutions(): void { 
+        if (this.dealedCards.length !== this.cardNumber) {
             return;
         }
         if (this.solution === null) {
@@ -63,6 +69,25 @@ export class PointsComponent implements OnInit {
     calculateExp(): string {
         const operations = ['+', '-', '*', '/'];
         const numbers = this.dealedCards.map((card) => card.value);
+        // const verifyResult = (result, exp) => {
+        //     if (result > 23.9 && result < 24.1) {
+        //         return `${exp} = 24`;
+        //     }
+        // }
+
+        // const ops = operations.slice(0, 3);
+        // for (let i = 0; i < ops.length; i++) {
+        //     console.log([...numbers.slice(0, i), this.cal(numbers[i], numbers[i + 1], ops[i]), ...numbers.slice(i + 2)], [...ops.slice(0, i), ...ops.slice(i + 1)])
+        // }
+        
+        // for (let i = 0; i < numbers.length; i++) {
+        //     Array.from(Array.from(numbers.slice(i).keys())).forEach(j => {
+        //         const nums = [...numbers];
+        //         [nums[i], nums[j]] = [nums[j], nums[i]];
+        //         console.log(nums);
+        //     });
+        // }
+
         // try{
         //     numbers.forEach((n, i) => {
         //         numbers.forEach((n1, i1) => {
@@ -70,20 +95,37 @@ export class PointsComponent implements OnInit {
         //             numbers.forEach((n2, i2) => {
         //                 (i !== i2 && i1 !== i2) &&
         //                 numbers.forEach((n3, i3) => {
-        //                     (i!== i3 && i1 !== i3 && i2 !== i3) &&
+        //                     (i!== i3 && i1 !== i3 && i2 !== i3)
         //                     operations.forEach(op =>
         //                         operations.forEach(op1 =>
         //                             operations.forEach(
         //                                 op2 => {
-        //                                     Array.from((Array(11)).keys()).forEach(t => {
-        //                                         const result = this.getExp([n, n1, n2, n3], [op, op1, op2], t);
+        //                                     const nums = [n, n1, n2, n3];
+        //                                     const ops = [op, op1, op2];
+        //                                     let exp = `${n} ${op} ${n1} ${op1} ${n2} ${op2} ${n3}`;
+        //                                     let result = this.calculate(nums, ops);
+        //                                     verifyResult(result, exp);
+
+        //                                     // ops.forEach((op, i) => {
+        //                                     //     result = this.calculate([...nums.slice(0, i), this.cal(nums[i], nums[i + 1], ops[i]), ...nums.slice(i + 2)], 
+        //                                     //                             [...ops.slice(0, i), ...ops.slice(i + 1)]);
+        //                                     //     exp = nums.reduce((acc, curr, index) => {
+        //                                     //             return (i === index) ? `${acc} ( ${curr} ${op}` : i === index - 1 ? `${acc} ${curr} ) ${ops[index]}` : `${acc} ${curr} ${ops[index]}`;
+        //                                     //         }, '');
                                                 
-        //                                         if (result[0] > 23.9 && result[0] < 24.1) {
-                                                    
-        //                                             console.log([n, n1, n2, n3], [op, op1, op2])
-        //                                             throw new Error('error');
-        //                                         }
-        //                                     });
+        //                                     //     verifyResult(result, exp);
+        //                                     // })
+        //                                     exp = `(${n} ${op} ${n1}) ${op1} ${n2} ${op2} ${n3}`; // console.log(exp)
+        //                                     result = this.calculate([this.cal(n, n1, op), n2], [op1, op2]);
+        //                                     verifyResult(result, exp);
+
+        //                                     exp = `((${n} ${op} ${n1}) ${op1} ${n2}) ${op2} ${n3}`; // console.log(exp)
+        //                                     result = this.cal(this.cal(this.cal(n, n1, op), n2, op1), n3, op2)
+        //                                     verifyResult(result, exp);
+
+        //                                     exp = `(${n} ${op} ${n1}) ${op1} (${n2} ${op2} ${n3})`; // console.log(exp)
+        //                                     result = this.cal(this.cal(n, n1, op), this.cal(n2, n3, op2), op1);
+        //                                     verifyResult(result, exp);
         //                                 }
         //                             )   
         //                         ) 
@@ -93,7 +135,7 @@ export class PointsComponent implements OnInit {
         //         });
         //     }); 
         // } catch(e) {
-        //     console.log(e)
+        //     return e;
         // }
         for (let n = 0; n < 11; n++) { // 11 expressions
             for (let i = 0; i < 4; i++) {
@@ -137,7 +179,7 @@ export class PointsComponent implements OnInit {
             // express 0----------------------am1bm2cm3d
             case 0:
                 equation = nums[0] + op[0] + nums[1] + op[1] + nums[2] + op[2] + nums[3];
-                result = this.calculate(nums, op); console.log(result)
+                result = this.calculate(nums, op);
                 return [result, equation];
 
             // express 1-----------------------'(am1b)m2cm3d'
@@ -205,39 +247,26 @@ export class PointsComponent implements OnInit {
                 return [result, equation];
         }
     }
-    private calculate(nums: number[], op: string[]): number {
 
-        if (op.length === 1) {
-            return this.cal(nums[0], nums[1], op[0]);
+    private calculate(nums: number[], ops: string[]): number {
+        if (ops.length === 1) {
+            return this.cal(nums[0], nums[1], ops[0]);
         } else {
-            for (let i = 0; i < op.length; i++) {
-                if (op[i] === '*') {
-                    const temp = nums[i] * nums[i + 1];
-                    nums[i] = temp;
-                    delete nums[i + 1];
-                    delete op[i];
-                    return this.calculate(nums, op);
-                } else if (op[i] === '/') {
-                    const temp = nums[i] / nums[i + 1];
-                    nums[i] = temp;
-                    delete nums[i + 1];
-                    delete op[i];
-                    return this.calculate(nums, op);
+            for (let i = 0; i < ops.length; i++) {
+                if (ops[i] === '*' || ops[i] === '/') {
+                    nums[i] = this.cal(nums[i], nums[i + 1], ops[i]);
+                    if (isNaN(nums[i])) return 0;
+                    nums.splice(i + 1, 1);
+                    ops.splice(i, 1);
+                    return this.calculate(nums, ops);
                 }
             }
-            for (let i = 0; i < op.length; i++) {
-                if (op[i] === '+') {
-                    const temp = nums[i] + nums[i + 1];
-                    nums[i] = temp;
-                    delete nums[i + 1];
-                    delete op[i];
-                    return this.calculate(nums, op);
-                } else if (op[i] === '-') {
-                    const temp = nums[i] - nums[i + 1];
-                    nums[i] = temp;
-                    delete nums[i + 1];
-                    delete op[i];
-                    return this.calculate(nums, op);
+            for (let i = 0; i < ops.length; i++) {
+                if (ops[i] === '+' || ops[i] === '-') {
+                    nums[i] = this.cal(nums[i], nums[i + 1], ops[i]);
+                    nums.splice(i + 1, 1);
+                    ops.splice(i, 1);
+                    return this.calculate(nums, ops);
                 }
             }
         }

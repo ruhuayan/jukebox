@@ -8,8 +8,16 @@
                 <img class="svg-card" src="assets/svg-cards/Card_back.svg" alt="card back">
             </div>
             <div class="deck__right">
-                <div class="deck__title">Card(s) Left: <span
+                <div class="deck__title">
+                    <div>Card(s) Left: <span
                         class="deck__title--emphasize">{{deck.getCards().length}}</span>
+                    </div>
+                    <div class="form-group">
+                      <select id="formats" (change)="setCardNumber($event.target.value)">
+                        <option *ngFor="let v of [4, 5, 6, 7, 8];" [value]="v" [selected]="cardNumber===v">{{v +' Cards '}}</option>
+                      </select>
+                      <i class="bar"></i>
+                    </div>
                 </div>
                 <div class="deck__btns">
                     <button class="btn btn--shuffle button" (click)="refresh()"
@@ -24,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <div class="cards">
+        <div class="cards" [ngClass]="{'five': cardNumber>=5}">
             <app-card *ngFor="let card of dealedCards" appCanimate="#deckLeft" [appCard]="card">
             </app-card>
         </div>
