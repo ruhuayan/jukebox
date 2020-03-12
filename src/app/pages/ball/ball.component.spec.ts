@@ -37,7 +37,7 @@ describe('BallComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have init state of 41 balls  10 dots', () => { console.log(initState);
+  it('should have init state of 41 balls  10 dots', () => {
     expect(initState.balls.length).toBe(41);
     expect(initState.dots.length).toBe(10);
     expect(initState.numberShow).toBe(false);
