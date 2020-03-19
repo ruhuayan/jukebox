@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Card } from '../../card/models/card.model';
 import { Deck } from '../../card/models/deck.model';
 import { Title } from '@angular/platform-browser';
+import './array.extensions';
 
 @Component({
     selector: 'app-points',
@@ -34,8 +35,8 @@ export class PointsComponent implements OnInit {
         this.solution = null;
         this.ondealing = true;
         this.dealedCards = [];
-        if (this.deck.getCards().length === 0) {
-            // this.deck.shuffle();
+        if (this.deck.getCards().length <= 4) {
+            this.deck.shuffle();
         }
         for (let i = 0; i < this.cardNumber; i++) {
             setTimeout(() => {
@@ -52,7 +53,7 @@ export class PointsComponent implements OnInit {
         this.refresh();
     }
     findSolutions(): void { 
-        if (this.dealedCards.length !== this.cardNumber) {
+        if (this.dealedCards.length < 2) {
             return;
         }
         if (this.solution === null) {
@@ -69,204 +70,119 @@ export class PointsComponent implements OnInit {
     calculateExp(): string {
         const operations = ['+', '-', '*', '/'];
         const numbers = this.dealedCards.map((card) => card.value);
-        // const verifyResult = (result, exp) => {
-        //     if (result > 23.9 && result < 24.1) {
-        //         return `${exp} = 24`;
-        //     }
-        // }
+        const verify = result => result > 23.99 && result < 24.01;
 
-        // const ops = operations.slice(0, 3);
-        // for (let i = 0; i < ops.length; i++) {
-        //     console.log([...numbers.slice(0, i), this.cal(numbers[i], numbers[i + 1], ops[i]), ...numbers.slice(i + 2)], [...ops.slice(0, i), ...ops.slice(i + 1)])
-        // }
+        // console.log(numbers.combination());
+        // console.log(operations.propabilities(numbers.length - 1))
+        const combinationes = numbers.combination(); 
+        const probabilities = operations.propabilities(numbers.length - 1);
         
-        // for (let i = 0; i < numbers.length; i++) {
-        //     Array.from(Array.from(numbers.slice(i).keys())).forEach(j => {
-        //         const nums = [...numbers];
-        //         [nums[i], nums[j]] = [nums[j], nums[i]];
-        //         console.log(nums);
-        //     });
-        // }
+        for (let nums of combinationes) {
+            for (let ops of probabilities) {
+                let result = this.calculate(nums, ops), exp = '';
+                if (verify(result)) {
+                    exp = nums.reduce((acc, curr, i) => i > 0 ? `${acc}${ops[i - 1]}${curr}` : `${curr}`, '');
+                    return exp + '=24';
+                }
 
-        // try{
-        //     numbers.forEach((n, i) => {
-        //         numbers.forEach((n1, i1) => {
-        //             (i !== i1) &&
-        //             numbers.forEach((n2, i2) => {
-        //                 (i !== i2 && i1 !== i2) &&
-        //                 numbers.forEach((n3, i3) => {
-        //                     (i!== i3 && i1 !== i3 && i2 !== i3)
-        //                     operations.forEach(op =>
-        //                         operations.forEach(op1 =>
-        //                             operations.forEach(
-        //                                 op2 => {
-        //                                     const nums = [n, n1, n2, n3];
-        //                                     const ops = [op, op1, op2];
-        //                                     let exp = `${n} ${op} ${n1} ${op1} ${n2} ${op2} ${n3}`;
-        //                                     let result = this.calculate(nums, ops);
-        //                                     verifyResult(result, exp);
+                // (a + b) from left to right
+                for (let i = 0; i < ops.length; i++) {
+                    result = this.calculate([...nums.slice(0, i), this.cal(nums[i], nums[i + 1], ops[i]), ...nums.slice(i + 2)], [...ops.slice(0, i), ...ops.slice(i + 1)]);
 
-        //                                     // ops.forEach((op, i) => {
-        //                                     //     result = this.calculate([...nums.slice(0, i), this.cal(nums[i], nums[i + 1], ops[i]), ...nums.slice(i + 2)], 
-        //                                     //                             [...ops.slice(0, i), ...ops.slice(i + 1)]);
-        //                                     //     exp = nums.reduce((acc, curr, index) => {
-        //                                     //             return (i === index) ? `${acc} ( ${curr} ${op}` : i === index - 1 ? `${acc} ${curr} ) ${ops[index]}` : `${acc} ${curr} ${ops[index]}`;
-        //                                     //         }, '');
-                                                
-        //                                     //     verifyResult(result, exp);
-        //                                     // })
-        //                                     exp = `(${n} ${op} ${n1}) ${op1} ${n2} ${op2} ${n3}`; // console.log(exp)
-        //                                     result = this.calculate([this.cal(n, n1, op), n2], [op1, op2]);
-        //                                     verifyResult(result, exp);
-
-        //                                     exp = `((${n} ${op} ${n1}) ${op1} ${n2}) ${op2} ${n3}`; // console.log(exp)
-        //                                     result = this.cal(this.cal(this.cal(n, n1, op), n2, op1), n3, op2)
-        //                                     verifyResult(result, exp);
-
-        //                                     exp = `(${n} ${op} ${n1}) ${op1} (${n2} ${op2} ${n3})`; // console.log(exp)
-        //                                     result = this.cal(this.cal(n, n1, op), this.cal(n2, n3, op2), op1);
-        //                                     verifyResult(result, exp);
-        //                                 }
-        //                             )   
-        //                         ) 
-        //                     );
-        //                 })
-        //             });
-        //         });
-        //     }); 
-        // } catch(e) {
-        //     return e;
-        // }
-        for (let n = 0; n < 11; n++) { // 11 expressions
-            for (let i = 0; i < 4; i++) {
-                const a = numbers[i];
-                for (let j = 0; j < 4; j++) {
-                    if (i === j) continue;
-                    const b = numbers[j];
-                    for (let x = 0; x < 4; x++) {
-                        if (x === j || x === i) continue;
-                        const c = numbers[x];
-                        for (let y = 0; y < 4; y++) {
-                            if (y === x || y === j || y === i) continue;
-                            const d = numbers[y];
-                            for (let ta = 0; ta < 4; ta++) {
-                                const m1 = operations[ta];
-                                for (let tb = 0; tb < 4; tb++) {
-                                    const m2 = operations[tb];
-                                    for (let tc = 0; tc < 4; tc++) {
-                                    const m3 = operations[tc];
-                                        const exp = this.getExp([a, b, c, d], [m1, m2, m3], n);
-
-                                        if (exp[0] > 23.9 && exp[0] < 24.1) {
-                                            return exp[1] + '=24';
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
+                    if (verify(result)) {
+                        exp = nums.reduce((acc, curr, j) => {
+                            if (j === i) return [...acc, '(', curr, ops[i]];
+                            else if (i === j - 1 && j <= ops.length - 1) return [...acc, curr, ')', ops[j]];
+                            else if (i === j - 1 && j > ops.length - 1) return [...acc, curr, ')'];
+                            else if (j <= ops.length - 1) return [...acc, curr, ops[j]];
+                            else if (j > ops.length - 1) return [...acc, curr];
+                        }, []).join('');
+                        return exp + '=24';
                     }
                 }
-            }
 
+                // ((a + b) + c) from left to right
+                result = this.calculate(nums, ops, 'left');
+                if (verify(result)) { console.log('order left', nums, ops)
+                    exp = ops.reduce((acc, curr, j) => {
+                        if (curr === '*' || curr === '/' || j === ops.length - 1) return [...acc, curr, nums[j + 1]];
+                        else return ['(', ...acc, curr, nums[j + 1], ')'];
+                    }, [nums[0]]).join('');
+                    return exp + '=24';
+                }
+
+                // (a + b) + (c + d) from both end to middle 
+                result = this.calculate(nums, ops, 'both');
+                if (verify(result)) { console.log('both end', nums, ops)
+                    
+                    const halfLen = Math.floor(nums.length / 2);
+                    const fullLen = nums.length;
+                    
+                    exp = ops.slice(0, halfLen - 1).reduce((acc, curr, j) => {
+                        if (curr === '*' || curr === '/' || j === ops.length - 1) return [...acc, curr, nums[j + 1]];
+                        else return ['(', ...acc, curr, nums[j + 1], ')'];
+                    }, [nums[0]]).join('');
+
+                    exp += ops.slice(halfLen - 1, fullLen - halfLen).reduce((acc, curr, j) => {
+                        if (halfLen + j >= fullLen - halfLen) return [...acc, curr];
+                        else return [...acc, curr, nums[halfLen + j]]
+                    }, []).join('');
+
+                    exp += ops.slice(fullLen - halfLen).reverse().reduce((acc, curr, j) => {
+                        if (curr === '*' || curr === '/' || j === ops.length - 1) return [nums[fullLen - 2 - j], curr,  ...acc];
+                        else return ['(', nums[fullLen - 2 - j], curr, ...acc, ')'];
+                    }, [nums[fullLen - 1]]).join('');
+
+                    return exp + '=24';
+                }
+
+                // a + (b + (c + d)) from right to left
+                result = this.calculate(nums, ops, 'right');
+                if (verify(result)) { console.log('order right', nums, ops)
+                    const len = nums.length;
+                    exp = ops.reverse().reduce((acc, curr, j) => {
+                        if (curr === '*' || curr === '/' || j === ops.length - 1) return [nums[len - 2 - j], curr,  ...acc];
+                        else return ['(', nums[len - 2 - j], curr, ...acc, ')'];
+                    }, [nums[len - 1]]).join('');
+                    return exp + '=24';
+                }
+            }
         }
         return 'No solution';
     }
-    private getExp(nums: number[], op: string[], patternId: number): [number, string] {
-        let equation = '';
-        let result;
-        switch (patternId) {
-            // express 0----------------------am1bm2cm3d
-            case 0:
-                equation = nums[0] + op[0] + nums[1] + op[1] + nums[2] + op[2] + nums[3];
-                result = this.calculate(nums, op);
-                return [result, equation];
 
-            // express 1-----------------------'(am1b)m2cm3d'
-            case 1:
-                result = this.cal(nums[0], nums[1], op[0]);
-                result = this.calculate([result, nums[2], nums[3]], [op[1], op[2]]);
-                equation = '(' + nums[0] + op[0] + nums[1] + ')' + op[1] + nums[2] + op[2] + nums[3];
-                return [result, equation];
-            // express 2--------------------------'(am1bm2c)m3d'
-            case 2:
-                result = this.calculate(nums.slice(0, 3), op.slice(0, 2));
-                result = this.cal(result, nums[3], op[2]);
-                equation = '(' + nums[0] + op[0] + nums[1] + op[1] + nums[2] + ')' + op[2] + nums[3];
-                return [result, equation];
-            // express 3 -----------------------'((am1b)m2c)m3d'
-            case 3:
-                result = this.cal(nums[0], nums[1], op[0]);
-                result = this.cal(result, nums[2], op[1]);
-                result = this.cal(result, nums[3], op[2]);
-                equation = '((' + nums[0] + op[0] + nums[1] + ')' + op[1] + nums[2] + ')' + op[2] + nums[3];
-                return [result, equation];
-            // express 4---------------------------'(am1(bm2c))m3d'
-            case 4:
-                result = this.cal(nums[1], nums[2], op[1]);
-                result = this.cal(nums[0], result, op[0]);
-                result = this.cal(result, nums[3], op[2]);
-                equation = '(' + nums[0] + op[0] + '(' + nums[1] + op[1] + nums[2] + '))' + op[2] + nums[3];
-                return [result, equation];
-            // express 5******************************'am1(bm2c)m3d'
-            case 5:
-                result = this.cal(nums[1], nums[2], op[1]);
-                result = this.calculate([nums[0], result, nums[3]], [op[0], op[2]]);
-                equation = nums[0] + op[0] + '(' + nums[1] + op[1] + nums[2] + ')' + op[2] + nums[3];
-                return [result, equation];
-            // express 6*****************************'am1(bm2cm3d)'
-            case 6:
-                result = this.calculate(nums.slice(1, 4), op.slice(1, 3));
-                result = this.cal(nums[0], result, op[0]);
-                equation = nums[0] + op[0] + '(' + nums[1] + op[1] + nums[2] + op[2] + nums[3] + ')';
-                return [result, equation];
-            // express 7------------------------------'am1((bm2c)m3d)'
-            case 7:
-                result = this.cal(nums[1], nums[2], op[1]);
-                result = this.cal(result, nums[3], op[2]);
-                result = this.cal(nums[0], result, op[0]);
-                equation = nums[0] + op[0] + '((' + nums[1] + op[1] + nums[2] + ')' + op[2] + nums[3] + ')';
-                return [result, equation];
-            // express 8-------------------------------'am1(bm2(cm3d))'
-            case 8:
-                result = this.cal(nums[2], nums[3], op[2]);
-                result = this.cal(nums[1], result, op[1]);
-                result = this.cal(nums[0], result, op[0]);
-                equation = nums[0] + op[0] + '(' + nums[1] + op[1] + '(' + nums[2] + op[2] + nums[3] + '))';
-                return [result, equation];
-            // express 9-------------------------------'am1bm2(cm3d)'
-            case 9:
-                result = this.cal(nums[2], nums[3], op[2]);
-                result = this.calculate([nums.slice(0, 2), result], op.slice(0, 2));
-                equation = nums[0] + op[0] + nums[1] + op[1] + '(' + nums[2] + op[2] + nums[3] + ')';
-                return [result, equation];
-            // express 10------------------------------'(am1b)m2(cm3d)'
-            default:
-                result = this.cal(this.cal(nums[0], nums[1], op[0]), this.cal(nums[2], nums[3], op[2]), op[1]);
-                equation = '(' + nums[0] + op[0] + nums[1] + ')' + op[1] + '(' + nums[2] + op[2] + nums[3] + ')';
-                return [result, equation];
-        }
-    }
-
-    private calculate(nums: number[], ops: string[]): number {
+    private calculate(nums: number[], ops: string[], order: string = ''): number {
         if (ops.length === 1) {
             return this.cal(nums[0], nums[1], ops[0]);
         } else {
+            if (order === 'left') {
+                const temp = this.cal(nums[0], nums[1], ops[0]);
+                if (isNaN(temp)) return -1;
+                return this.calculate([temp, ...nums.slice(2)], [...ops.slice(1)], order);
+            } else if (order === 'right') {
+                const len = nums.length;
+                const temp = this.cal(nums[len - 2], nums[len - 1], ops[len -2]);
+                if (isNaN(temp)) return -1;
+                return this.calculate([...nums.slice(0, len - 2), temp], [...ops.slice(0, len - 2)], order);
+            } else if (order === 'both' && ops.length >= 3) {
+                const len = ops.length;
+                const startTemp = this.cal(nums[0], nums[1], ops[0]);
+                const endTemp = this.cal(nums[len - 1], nums[len], ops[len -1]);
+                if (isNaN(startTemp) || isNaN(endTemp)) return -1;
+                return this.calculate([startTemp, ...nums.slice(2, len - 1), endTemp], [...ops.slice(1, len - 1)], order);
+            }
+            // regular order
             for (let i = 0; i < ops.length; i++) {
                 if (ops[i] === '*' || ops[i] === '/') {
-                    nums[i] = this.cal(nums[i], nums[i + 1], ops[i]);
-                    if (isNaN(nums[i])) return 0;
-                    nums.splice(i + 1, 1);
-                    ops.splice(i, 1);
-                    return this.calculate(nums, ops);
+                    const temp = this.cal(nums[i], nums[i + 1], ops[i]);
+                    if (isNaN(temp)) return -1;
+                    return this.calculate([...nums.slice(0, i), temp, ...nums.slice(i + 2)], [...ops.slice(0, i), ...ops.slice(i + 1)]);
                 }
             }
             for (let i = 0; i < ops.length; i++) {
                 if (ops[i] === '+' || ops[i] === '-') {
-                    nums[i] = this.cal(nums[i], nums[i + 1], ops[i]);
-                    nums.splice(i + 1, 1);
-                    ops.splice(i, 1);
-                    return this.calculate(nums, ops);
+                    const temp = this.cal(nums[i], nums[i + 1], ops[i]);
+                    return this.calculate([...nums.slice(0, i), temp, ...nums.slice(i + 2)], [...ops.slice(0, i), ...ops.slice(i + 1)]);
                 }
             }
         }
@@ -284,4 +200,22 @@ export class PointsComponent implements OnInit {
         }
     }
 
+    // private combination(arr: number[]) : number[][] {
+        
+    //     if (arr.length === 1) return [[...arr]];
+    //     else if (arr.length === 2) return [[...arr], [arr[1], arr[0]]];
+    //     else return arr.reduce((acc, curr, i) => {
+    //             return [...acc, ...this.combination([...arr.slice(0, i), ...arr.slice(i + 1)]).map(a => [arr[i], ...a])];
+    //         }, []);
+        
+    // }
+
+    // private propabilities(len: number, arr: string[] = ['+', '-', '*', '/']): string[][] {
+
+    //     if (len === 1) return arr.map(op => [op]);
+    //     else if (len === 2) return arr.map(op1 => arr.map(op2 => [op1, op2])).reduce((acc, cur) => [...acc, ...cur], []);
+    //     else {
+    //         return arr.map(op => this.propabilities(len - 1, arr).map(a => [op, ...a])).reduce((acc, cur) => [...acc, ...cur], [])
+    //     }
+    // }
 }
