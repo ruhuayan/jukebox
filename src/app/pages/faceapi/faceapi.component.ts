@@ -85,15 +85,15 @@ export class FaceapiComponent implements OnInit, OnDestroy {
     });
   }
 
-  private detections(): any{
-    if (typeof Worker !== 'undefined') {
-      const worker = new Worker('./faceapi.worker', {type: 'module'});
-      worker.onmessage = ({data}) => {
-        console.log(`page got message: ${data}`);
-      }
-      worker.postMessage('hello');
-    }
-  }
+  // private detections(): any{
+  //   if (typeof Worker !== 'undefined') {
+  //     const worker = new Worker('./faceapi.worker', {type: 'module'});
+  //     worker.onmessage = ({data}) => {
+  //       console.log(`page got message: ${data}`);
+  //     }
+  //     worker.postMessage('hello');
+  //   }
+  // }
 
   public end(): void {
     console.log('ended');
