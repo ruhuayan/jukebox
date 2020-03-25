@@ -4,7 +4,7 @@ import { ImagegameComponent } from './imagegame.component';
 import { Title } from '@angular/platform-browser';
 import { UploaderModule } from 'src/app/uploader/uploader.module';
 import { PanelRightModule } from '../panel-right.module';
-import { HttpClientModule } from '@angular/common/http';
+// import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 // import { Subscription } from 'rxjs/internal/Subscription';
 // import { Observable } from 'rxjs/internal/Observable';
@@ -21,16 +21,15 @@ describe('ImagegameComponent', () => {
     }
     function onload2promise<T extends OnLoadAble>(obj: T): Promise<T> {
         return new Promise(resolve => {
-        obj.onload = () => resolve(obj);
+            obj.onload = () => resolve(obj);
         });
     }
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-        imports: [UploaderModule, PanelRightModule, HttpClientModule, RouterTestingModule],
-        declarations: [ ImagegameComponent ],
-        providers: [Title]
-        })
-        .compileComponents();
+            imports: [UploaderModule, PanelRightModule, RouterTestingModule],
+            declarations: [ ImagegameComponent ],
+            providers: [Title]
+        }).compileComponents();
     }));
 
     beforeEach(async() => {
@@ -63,8 +62,8 @@ describe('ImagegameComponent', () => {
 
     it('should have title "Image Game"', () => {
         fixture.whenStable().then(() => {
-        titleService = TestBed.get(Title);
-        expect(titleService.getTitle()).toBe('Image Game - richyan.com');
+            titleService = TestBed.get(Title);
+            expect(titleService.getTitle()).toBe('Image Game - richyan.com');
         });
         
     });
@@ -78,22 +77,22 @@ describe('ImagegameComponent', () => {
         thumbs = fixture.nativeElement.querySelectorAll('.canvas-wrap');
         let shuffled = false;
         for (let i = 0; i < thumbs.length; i++) {
-        if (thumbs[i].getAttribute('data-ori') !== thumbs[i].getAttribute('data-num')) {
-            shuffled = true;
-            break;
-        }
+            if (thumbs[i].getAttribute('data-ori') !== thumbs[i].getAttribute('data-num')) {
+                shuffled = true;
+                break;
+            }
         }
         expect(shuffled).toBe(true);
         expect(thumbs.length).toBe(component.row **2);
     });
 
     it(`should change format / rows`, () => {
-        
-        component.changeFormat(3);
+        const row = 3;
+        component.changeFormat(row);
         expect(component.numOfCan.length).toBe(0);
         setTimeout(() => {
-        expect(component.numOfCan.length).toBe(9);
-        expect(component.row).toBe(3);
+            expect(component.numOfCan.length).toBe(row ** 2);
+            expect(component.row).toBe(row);
         }, 0);
 
     });
@@ -104,7 +103,7 @@ describe('ImagegameComponent', () => {
         let numberShowed = true;
         for (let i = 0; i < thumbs.length; i++) {
             if (thumbs[i].querySelector('.canvas-num')) {
-            numberShowed = false;
+                numberShowed = false;
             }
         }
         expect(numberShowed).toBe(true);
@@ -117,16 +116,16 @@ describe('ImagegameComponent', () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        thumbs.forEach(thumb => {
+        thumbs.forEach(thumb => { console.log(thumbs)
         // getComputedStyle(thumb, null).getPropertyValue('marginLeft') - does not work 
-        const marginLeft = thumb.style.marginLeft; 
-        const marginTop = thumb.style.marginTop;
-        const num = +thumb.getAttribute('data-num'); 
-        const marginLeftExpected = num < row ** 2 ? (tw + 1) * (num % row) : (tw + 1) * row;
-        const marginTopExpected = num < row ** 2 ? (th + 1) * Math.floor(num / row) : (th + 1) * (row - 1);
+            const marginLeft = thumb.style.marginLeft; 
+            const marginTop = thumb.style.marginTop;
+            const num = +thumb.getAttribute('data-ori'); 
+            const marginLeftExpected = num < row ** 2 ? (tw + 1) * (num % row) : (tw + 1) * row;
+            const marginTopExpected = num < row ** 2 ? (th + 1) * Math.floor(num / row) : (th + 1) * (row - 1);
 
-        expect(marginLeft).toBe(marginLeftExpected + 'px');
-        expect(marginTop).toBe(marginTopExpected + 'px');
+            expect(marginLeft).toBe(marginLeftExpected + 'px');
+            expect(marginTop).toBe(marginTopExpected + 'px');
         });
     });
 

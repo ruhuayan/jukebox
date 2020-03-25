@@ -9,291 +9,291 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-ball',
-  templateUrl: './ball.component.html',
-  styleUrls: ['./ball.component.scss']
+    selector: 'app-ball',
+    templateUrl: './ball.component.html',
+    styleUrls: ['./ball.component.scss']
 })
 export class BallComponent implements OnInit, OnDestroy {
-  @ViewChild('container', {static: true}) container: ElementRef<HTMLElement>;
-  balls: Ball[];
-  dots: Dot[];
-  numberShow = false;
-  launching = false;
-  private angle = RA;
-  private speed = 10;
+    @ViewChild('container', {static: true}) container: ElementRef<HTMLElement>;
+    balls: Ball[];
+    dots: Dot[];
+    numberShow = false;
+    launching = false;
+    private angle = RA;
+    private speed = 10;
 
-  // container width
-  private cw: number;
-  // ball width
-  private bw: number;
-  private subscription: Subscription;
-  private isTouchStart = false;
+    // container width
+    private cw: number;
+    // ball width
+    private bw: number;
+    private subscription: Subscription;
+    private isTouchStart = false;
 
-  constructor(private store: Store<IBallState>, private titleService: Title) {
-    this.titleService.setTitle('Ball - richyan.com');
-    // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
-    // this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
-    // this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
-  }
-
-  ngOnInit() {
-    const keydown = fromEvent(document, 'keydown');
-    keydown.pipe(map(ev => ev['which'])).subscribe(keycode => {
-      if (this.launching) return;
-      switch (keycode) {
-        case KEY.LEFT:
-        case KEY.RIGHT:
-          this.moveArrows(keycode);
-          break;
-        case KEY.UP:
-          this.launch();
-          break;
-
-        default:
-          return;
-      }
-    });
-    this.cw = this.container.nativeElement.offsetWidth;
-    if (this.cw !== conleft.width) {
-      if (this.cw < 480) {
-        conleft.height = 480;
-      }
-      const con: Square = {width: this.cw, height: conleft.height};
-      this.store.dispatch(new ballActions.UpdateConleft(con));
+    constructor(private store: Store<IBallState>, private titleService: Title) {
+        this.titleService.setTitle('Ball - richyan.com');
+        // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
+        // this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
+        // this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
     }
-    
-    this.bw = this.cw / COL;
-    this.subscription = this.store.pipe(select('iStates')).subscribe(state => {
-      this.balls = state.balls.map((ball: Ball) => {
-        if (this.cw !== conleft.width && ball.index < 40) {
-          ball.setDist(this.cw, conleft.height);
-        }
-        return ball;
-      });
-      this.dots = state.dots;
-      this.numberShow = state.numberShow;
-    });
-  }
 
-  touchEvent(e: TouchEvent, direction: number): void {
-    e.preventDefault();
-    this.isTouchStart = true;
-    setTimeout(() => this.moveArrows(direction), 200);
-  }
-  endTouch(): void {
-    this.isTouchStart = false;
-  }
+    ngOnInit() {
+        const keydown = fromEvent(document, 'keydown');
+        keydown.pipe(map(ev => ev['which'])).subscribe(keycode => {
+            if (this.launching) return;
+            switch (keycode) {
+                case KEY.LEFT:
+                case KEY.RIGHT:
+                this.moveArrows(keycode);
+                break;
+                case KEY.UP:
+                this.launch();
+                break;
 
-  private moveArrows(direction: KEY): void {
-    if (direction === KEY.LEFT) {
-      if (this.angle > ANG) {
-        this.angle -= ANG;
-        this.store.dispatch(new ballActions.Angle(RA - this.angle));
-      }
-    } else if (direction === KEY.RIGHT) {
-      if (this.angle < Math.PI - ANG) {
-        this.angle += ANG;
-        this.store.dispatch(new ballActions.Angle(RA - this.angle));
-      }
-    }
-    if (this.isTouchStart) {
-      setTimeout(() => {this.moveArrows(direction);}, 100);
-    }
-  }
-  ngOnDestroy() {
-    if (this.subscription) this.subscription.unsubscribe();
-  }
-
-  launch(): void {
-    this.launching = true;
-    // move (x, y)
-    const margin = this.calculateMargin(this.speed);
-    // Distance of launching ball to left, right wall
-    const distanceToWall = Math.abs((this.cw / 2 - this.bw / 2) / Math.cos(this.angle));
-    const distanceToTop = Math.abs((conleft.height - this.bw / 2) / Math.sin(this.angle));
-    const targetBalls = this.getTargetBalls(distanceToWall);
-    const launchedBall = this.getLaunchBall();
-    if (launchedBall) {
-      launchedBall.angle = this.angle;
-      if (targetBalls.length) {
-        launchedBall.dist = targetBalls[0].launchDist;
-        targetBalls.forEach((ball: Ball) => {
-          ball.linkBall(launchedBall);
-          if (ball.colorId === launchedBall.colorId) {
-            ball.unionBall(launchedBall, this.balls);
-          }
+                default:
+                return;
+            }
         });
-
-        if (Math.abs(distanceToWall - targetBalls[0].launchDist) <= 1) {
-          launchedBall.link.push(-1);
+        this.cw = this.container.nativeElement.offsetWidth;
+        if (this.cw !== conleft.width) {
+            if (this.cw < 480) {
+                conleft.height = 480;
+            }
+            const con: Square = {width: this.cw, height: conleft.height};
+            this.store.dispatch(new ballActions.UpdateConleft(con));
         }
-      } else {
-        launchedBall.dist = distanceToWall < distanceToTop ? distanceToWall : distanceToTop;
-        launchedBall.link = [-1];
-      }
-      // console.log(targetBalls, launchedBall, distanceToWall, distanceToTop);
-      this.checkCollusion(targetBalls, launchedBall, margin);
+        
+        this.bw = this.cw / COL;
+        this.subscription = this.store.pipe(select('iStates')).subscribe(state => {
+            this.balls = state.balls.map((ball: Ball) => {
+                if (this.cw !== conleft.width && ball.index < 40) {
+                    ball.setDist(this.cw, conleft.height);
+                }
+                return ball;
+            });
+            this.dots = state.dots;
+            this.numberShow = state.numberShow;
+        });
     }
-  }
 
-  /**
-   *   Calculate distance between ball and lauching ball
-   *   b2 = a2 + c2 + 2ac * cos(<b)
-   *   D = (2a cos(<b))**2 - 4 (a2 - b2)
-   *   if D > 0, ball collide with launching ball
-   *   return the top 2 balls will collide
-   *   if their launchDist(s) are close to 1px;
-   **/
-  private getTargetBalls(distanceToWall: number): Ball[] {
-    let shortestDist = conleft.height;
-    return this.balls.filter((ball: Ball) => ball.status !== 'toLaunch' && ball.show)
-      .filter((ball: Ball) => {
-        const ang = Math.abs(ball.angle - this.angle);
-        const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - this.bw ** 2);
+    touchEvent(e: TouchEvent, direction: number): void {
+        e.preventDefault();
+        this.isTouchStart = true;
+        setTimeout(() => this.moveArrows(direction), 200);
+    }
+    endTouch(): void {
+        this.isTouchStart = false;
+    }
 
-        if (D <= 0) return false;
-
-        ball.launchDist = (Math.abs(2 * ball.dist * Math.cos(ang)) - Math.sqrt(D)) / 2;
-        shortestDist = shortestDist > ball.launchDist ? ball.launchDist : shortestDist;
-        // launchDist should be short than distanceToWall, or it will hit the wall
-        return distanceToWall >= ball.launchDist - 1;
-
-      }).filter((ball: Ball) => ball.launchDist - shortestDist <= 1);
-  }
-
-  private getLaunchBall(): Ball {
-    return this.balls.filter((ball) => ball.status === 'toLaunch')[0];
-  }
-
-  private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
-
-    if (targetBalls.length) {
-      for (let ball of targetBalls) {
-        if (ball.launchDist <= this.speed) {
-          const lastMargin: Margin = this.calculateMargin(ball.launchDist);
-
-          this.stopLaunchedBall(launchedBall, lastMargin);
-          const removed = this.removeUnion(launchedBall);
-          this.resetLauchedBall(launchedBall, removed);
-          return;
-        } else {
-          ball.launchDist -= this.speed;
+    private moveArrows(direction: KEY): void {
+        if (direction === KEY.LEFT) {
+            if (this.angle > ANG) {
+                this.angle -= ANG;
+                this.store.dispatch(new ballActions.Angle(RA - this.angle));
+            }
+        } else if (direction === KEY.RIGHT) {
+            if (this.angle < Math.PI - ANG) {
+                this.angle += ANG;
+                this.store.dispatch(new ballActions.Angle(RA - this.angle));
+            }
         }
-      }
-    } else {
-      const w = this.cw / 2 - this.bw / 2;
-      if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
-        const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
-        const lastMargin: Margin = {left: left, top: margin.top * left / margin.left}; // error
-        this.stopLaunchedBall(launchedBall, lastMargin);
-        this.resetLauchedBall(launchedBall);
-        return;
-      } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
-        const top = launchedBall.margin.top - this.bw / 2;
-        const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
-        this.stopLaunchedBall(launchedBall, lastMargin);
-        this.resetLauchedBall(launchedBall);
-        return;
-      }
+        if (this.isTouchStart) {
+            setTimeout(() => {this.moveArrows(direction);}, 100);
+        }
     }
-    this.store.dispatch(new ballActions.Move(margin)); // console.log(launchedBall.margin, margin);
-
-    setTimeout(() => {
-      this.checkCollusion(targetBalls, launchedBall, margin);
-    }, 100);
-  }
-
-  private stopLaunchedBall(launchedBall: Ball, lastMargin: Margin): void {
-    this.store.dispatch(new ballActions.Move(lastMargin));
-    this.launching = false;
-    launchedBall.status = 'stopped';
-  }
-  private resetLauchedBall(launchedBall, removed: boolean = false): void {
-    if (removed) {
-      navigator.vibrate(300);
-    } else {
-      navigator.vibrate(100);
+    ngOnDestroy() {
+        if (this.subscription) this.subscription.unsubscribe();
     }
-    if (launchedBall.dist < this.bw && launchedBall.show) {
-      setTimeout(() => window.alert('You lost !!!'), 100);
-    } else {
-      this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
-    }
-  }
 
-  private removeUnion(ball: Ball): boolean {
-
-    if (ball.union.length > 2) {
-
-      const affects = this.balls.filter(b => b.show && b.status !== 'toLaunch')
-                .filter((b: Ball) => {
-
-                  let affected = false;
-                  ball.union.forEach(n => {
-
-                    this.balls[n].show = false;
-                    if (b.link.indexOf(n) >= 0) {
-                      b.link.splice(b.link.indexOf(n), 1);
-                      affected = true;
+    launch(): void {
+        this.launching = true;
+        // move (x, y)
+        const margin = this.calculateMargin(this.speed);
+        // Distance of launching ball to left, right wall
+        const distanceToWall = Math.abs((this.cw / 2 - this.bw / 2) / Math.cos(this.angle));
+        const distanceToTop = Math.abs((conleft.height - this.bw / 2) / Math.sin(this.angle));
+        const targetBalls = this.getTargetBalls(distanceToWall);
+        const launchedBall = this.getLaunchBall();
+        if (launchedBall) {
+            launchedBall.angle = this.angle;
+            if (targetBalls.length) {
+                launchedBall.dist = targetBalls[0].launchDist;
+                targetBalls.forEach((ball: Ball) => {
+                    ball.linkBall(launchedBall);
+                    if (ball.colorId === launchedBall.colorId) {
+                        ball.unionBall(launchedBall, this.balls);
                     }
-                  });
-                  if (b.link.length === 0) {
-                    b.show = false;
-                  }
-                  return affected && b.show;
                 });
 
-      //affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
-      affects.forEach((b: Ball) => {
-                const brokenLinks = this.getBrokenLinks(b, []);
-                if (b.show && brokenLinks.length) {
-                  b.show = false;
-                  brokenLinks.forEach(n => this.balls[n].show = false);
+                if (Math.abs(distanceToWall - targetBalls[0].launchDist) <= 1) {
+                    launchedBall.link.push(-1);
                 }
-      });
-      return true;
-    }
-    return false;
-  }
-
-  private getBrokenLinks(ball: Ball, arr: number[]): number[] {
-    if (ball.link.indexOf(-1) >= 0) {
-      return [];
-    }
-
-    if (arr.indexOf(ball.index) < 0) {
-      arr.push(ball.index);
-      for (let n of ball.link) {
-        if (arr.indexOf(n) < 0) {
-          return this.getBrokenLinks(this.balls[n], arr);
+            } else {
+                launchedBall.dist = distanceToWall < distanceToTop ? distanceToWall : distanceToTop;
+                launchedBall.link = [-1];
+            }
+            // console.log(targetBalls, launchedBall, distanceToWall, distanceToTop);
+            this.checkCollusion(targetBalls, launchedBall, margin);
         }
-      }
-      return arr;
     }
-  }
 
-  private calculateMargin(speed: number): Margin {
-    return {left: Math.cos(this.angle) * speed, top: Math.sin(this.angle) * speed};
-  }
+    /**
+     *   Calculate distance between ball and lauching ball
+     *   b2 = a2 + c2 + 2ac * cos(<b)
+     *   D = (2a cos(<b))**2 - 4 (a2 - b2)
+     *   if D > 0, ball collide with launching ball
+     *   return the top 2 balls will collide
+     *   if their launchDist(s) are close to 1px;
+     **/
+    private getTargetBalls(distanceToWall: number): Ball[] {
+        let shortestDist = conleft.height;
+        return this.balls.filter((ball: Ball) => ball.status !== 'toLaunch' && ball.show)
+        .filter((ball: Ball) => {
+            const ang = Math.abs(ball.angle - this.angle);
+            const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - this.bw ** 2);
 
-  // add() {
-  //   const ball = new Ball();
-  //   if (Ball.count <= 48) {
-  //     this.store.dispatch(new ballActions.Add(ball));
-  //   }
-  // }
+            if (D <= 0) return false;
 
-  remove(ball: Ball, i: number): void {
-    ball.show = false;
-    this.store.dispatch(new ballActions.Remove(ball));
-  }
+            ball.launchDist = (Math.abs(2 * ball.dist * Math.cos(ang)) - Math.sqrt(D)) / 2;
+            shortestDist = shortestDist > ball.launchDist ? ball.launchDist : shortestDist;
+            // launchDist should be short than distanceToWall, or it will hit the wall
+            return distanceToWall >= ball.launchDist - 1;
 
-  reset() {
-    Ball.reset();
-    this.store.dispatch(new ballActions.Reset());
-  }
+        }).filter((ball: Ball) => ball.launchDist - shortestDist <= 1);
+    }
 
-  showNumber(): void {
-    this.store.dispatch(new ballActions.ToggleNumber());
-  }
+    private getLaunchBall(): Ball {
+        return this.balls.filter((ball) => ball.status === 'toLaunch')[0];
+    }
+
+    private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
+
+        if (targetBalls.length) {
+        for (let ball of targetBalls) {
+            if (ball.launchDist <= this.speed) {
+                const lastMargin: Margin = this.calculateMargin(ball.launchDist);
+
+                this.stopLaunchedBall(launchedBall, lastMargin);
+                const removed = this.removeUnion(launchedBall);
+                this.resetLauchedBall(launchedBall, removed);
+                return;
+            } else {
+                ball.launchDist -= this.speed;
+            }
+        }
+        } else {
+            const w = this.cw / 2 - this.bw / 2;
+            if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
+                const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
+                const lastMargin: Margin = {left: left, top: margin.top * left / margin.left}; // error
+                this.stopLaunchedBall(launchedBall, lastMargin);
+                this.resetLauchedBall(launchedBall);
+                return;
+            } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
+                const top = launchedBall.margin.top - this.bw / 2;
+                const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
+                this.stopLaunchedBall(launchedBall, lastMargin);
+                this.resetLauchedBall(launchedBall);
+                return;
+            }
+        }
+        this.store.dispatch(new ballActions.Move(margin)); // console.log(launchedBall.margin, margin);
+
+        setTimeout(() => {
+        this.checkCollusion(targetBalls, launchedBall, margin);
+        }, 100);
+    }
+
+    private stopLaunchedBall(launchedBall: Ball, lastMargin: Margin): void {
+        this.store.dispatch(new ballActions.Move(lastMargin));
+        this.launching = false;
+        launchedBall.status = 'stopped';
+    }
+    private resetLauchedBall(launchedBall, removed: boolean = false): void {
+        if (removed) {
+            navigator.vibrate(300);
+        } else {
+            navigator.vibrate(100);
+        }
+        if (launchedBall.dist < this.bw && launchedBall.show) {
+            setTimeout(() => window.alert('You lost !!!'), 100);
+        } else {
+            this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
+        }
+    }
+
+    private removeUnion(ball: Ball): boolean {
+
+        if (ball.union.length > 2) {
+
+        const affects = this.balls.filter(b => b.show && b.status !== 'toLaunch')
+                    .filter((b: Ball) => {
+
+                    let affected = false;
+                    ball.union.forEach(n => {
+
+                        this.balls[n].show = false;
+                        if (b.link.indexOf(n) >= 0) {
+                        b.link.splice(b.link.indexOf(n), 1);
+                        affected = true;
+                        }
+                    });
+                    if (b.link.length === 0) {
+                        b.show = false;
+                    }
+                    return affected && b.show;
+                    });
+
+        //affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
+        affects.forEach((b: Ball) => {
+                    const brokenLinks = this.getBrokenLinks(b, []);
+                    if (b.show && brokenLinks.length) {
+                    b.show = false;
+                    brokenLinks.forEach(n => this.balls[n].show = false);
+                    }
+        });
+        return true;
+        }
+        return false;
+    }
+
+    private getBrokenLinks(ball: Ball, arr: number[]): number[] {
+        if (ball.link.indexOf(-1) >= 0) {
+            return [];
+        }
+
+        if (arr.indexOf(ball.index) < 0) {
+            arr.push(ball.index);
+            for (let n of ball.link) {
+                if (arr.indexOf(n) < 0) {
+                    return this.getBrokenLinks(this.balls[n], arr);
+                }
+            }
+            return arr;
+        }
+    }
+
+    private calculateMargin(speed: number): Margin {
+        return {left: Math.cos(this.angle) * speed, top: Math.sin(this.angle) * speed};
+    }
+
+    // add() {
+    //   const ball = new Ball();
+    //   if (Ball.count <= 48) {
+    //     this.store.dispatch(new ballActions.Add(ball));
+    //   }
+    // }
+
+    remove(ball: Ball, i: number): void {
+        ball.show = false;
+        this.store.dispatch(new ballActions.Remove(ball));
+    }
+
+    reset() {
+        Ball.reset();
+        this.store.dispatch(new ballActions.Reset());
+    }
+
+    showNumber(): void {
+        this.store.dispatch(new ballActions.ToggleNumber());
+    }
 }

@@ -27,17 +27,17 @@ describe('Deck', () => {
 
     it('should contain cards with image source', ()=>{
         for(let card of deck.getCards()){
-            expect(card.imgUrl.indexOf('png')).toBeTruthy();
+            expect(card.imgUrl).toContain(`${card.value}${card.suit}.svg`);
         }
     });
 
-    it('should be able to shuffle and return no value', ()=>{
+    it('should be able to shuffle and return new Deck', ()=>{
         const i = Math.floor(Math.random() * deck.getCards().length)
         const card1: Card= deck.getCards()[i];
-        const novalue = deck.shuffle();
+        const newDeck = deck.shuffle();
         const card2: Card = deck.getCards()[i];
         expect(card1).not.toEqual(card2);
-        // expect(novalue).toBeFalsy();
+        expect(newDeck instanceof Deck).toBeTruthy();
     });
 
     it('should be able to deal one card from deck', ()=>{
@@ -62,4 +62,11 @@ describe('Deck', () => {
         deck.shuffle();
         expect(deck.getCards().length).toBe(52);
     }); 
-  });
+
+    it('should be able to load all cards\' images', () => {
+        expect(Deck.isLoaded).toBeFalsy();
+        deck.loadCardImages(() => {
+            expect(Deck.isLoaded).toBeTruthy();
+        });
+    });
+});

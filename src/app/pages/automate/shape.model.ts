@@ -161,7 +161,7 @@ export class RoundedRect extends Shape {
     const sideY = this.y - HEIGHT / 2 + this.width;
     const hypotenuse = Math.hypot(sideX, sideY); 
     const angX = Math.asin(sideX / hypotenuse);
-    const angY = Math.PI - this.speed - angX; console.log(this.x, this.y - HEIGHT / 2, hypotenuse, angX, angY, this.speed)
+    const angY = Math.PI - this.speed - angX;
     this.y -= Math.sin(this.speed) / Math.sin(angY) * hypotenuse;
     this.draw();
   }
