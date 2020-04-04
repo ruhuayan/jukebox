@@ -14,7 +14,7 @@
                     </div>
                     <div class="form-group">
                       <select id="formats" (change)="setCardNumber($event.target.value)">
-                        <option *ngFor="let v of [4, 5, 6, 7, 8, 9, 10];" [value]="v" [selected]="cardNumber===v">{{v +' Cards '}}</option>
+                        <option *ngFor="let v of [4, 5, 6, 7, 8];" [value]="v" [selected]="cardNumber===v">{{v +' Cards '}}</option>
                       </select>
                       <i class="bar"></i>
                     </div>

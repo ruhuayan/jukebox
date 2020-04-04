@@ -27,16 +27,18 @@ describe('BallComponent', () => {
     }));
 
     beforeEach(() => {
-        // store = (TestBed.inject(Store) as unknown) as MockStore<IBallState>;
-        // spyOn(store, 'dispatch').and.callThrough();
+        const action = { type: 'NOOP' } as any;
+        const result = ballReducer(undefined, action);
+        store = (TestBed.inject(Store) as unknown) as MockStore<IBallState>;
+        spyOn(store, 'dispatch').and.callThrough();
 
-        // fixture = TestBed.createComponent(BallComponent);
-        // component = fixture.componentInstance;
-        // fixture.detectChanges();
+        fixture = TestBed.createComponent(BallComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
 
     it('should create', () => {
-        // expect(component).toBeTruthy();
+        expect(component).toBeTruthy();
     });
 
     // it('should have init state of 41 balls  10 dots', () => {

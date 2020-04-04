@@ -43,14 +43,14 @@ export class BallComponent implements OnInit, OnDestroy {
             switch (keycode) {
                 case KEY.LEFT:
                 case KEY.RIGHT:
-                this.moveArrows(keycode);
-                break;
+                    this.moveArrows(keycode);
+                    break;
                 case KEY.UP:
-                this.launch();
-                break;
+                    this.launch();
+                    break;
 
                 default:
-                return;
+                    return;
             }
         });
         this.cw = this.container.nativeElement.offsetWidth;
