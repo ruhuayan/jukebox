@@ -1,11 +1,13 @@
+@import './../../../mixin.scss';
 .conTitle {
     display: flex;
     justify-content: space-between;
     .subtitle-btns {
         padding-right: 10px;
+        display: flex;
         .btn{
-            width: 150px;
-            padding: var(--sm-padding) var(--md-padding);
+            width: 120px;
+            // padding: var(--sm-padding) var(--md-padding);
             text-decoration: none;
         }
     }
@@ -30,8 +32,8 @@
         content: "";
         position: absolute;
         margin-top: 2px;
-        width: 71px;
-        height: 106px;
+        @include dimension(71px, 106px);
+        
         border-radius: 5px;
         border: 2px solid #999;
     }
@@ -61,38 +63,14 @@
         &::before {
             background: url(https://www.richyan.com/angular/assets/imgs/autorenew-24px.svg) center center no-repeat;
             z-index: -1;
-            user-select: none; /* supported by Chrome and Opera */
-            -webkit-user-select: none; /* Safari */
-            -khtml-user-select: none; /* Konqueror HTML */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
+            @include disableUserSelect;
         }
         img {
-            user-select: none; /* supported by Chrome and Opera */
-            -webkit-user-select: none; /* Safari */
-            -khtml-user-select: none; /* Konqueror HTML */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
-            width: 75px;
-            height: 115px;
+            @include disableUserSelect;
+            @include dimension(75px, 115px);
         }
     }
-    .deck_td .cards.homogeneous {
-        width: 75px;
-        height: 115px;
-        @media(max-width: 878px) {
-            width: 65px;
-            height: 100px;
-        }
-        @media(max-width: 640px) {
-            width: 55px;
-            height: 85px;
-        }
-        @media(max-width: 480px) {
-            width: 40px;
-            height: 60px;
-        }
-    }
+    
     .cards{
         padding:0;
         margin:0;
@@ -103,7 +81,20 @@
         }
     }
 }
-
+.deck-hard .deck_cards.deck_td .cards app-card,
+.deck .deck_td .cards.homogeneous {
+        width: 75px;
+        height: 115px;
+        @media(max-width: 878px) {
+            @include dimension(65px, 100px);
+        }
+        @media(max-width: 640px) {
+            @include dimension(55px, 85px);
+        }
+        @media(max-width: 480px) {
+            @include dimension(40px, 60px);
+        }
+    }
 .cards{
     list-style-type: none;
     display: flex;
@@ -121,14 +112,17 @@
         box-sizing: border-box;
 
         cursor: move;
-        user-select: none;
-        touch-action: none; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; user-select: none;
+
+        @include disableUserSelect;
+        touch-action: none; 
+        -webkit-user-drag: none; 
+        -webkit-tap-highlight-color: transparent; 
 
         &.grouped, &.dragging {
             z-index: 100;
-            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+            @include boxShadow((0 5px 5px -3px rgba(0, 0, 0, 0.2),
                         0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+                        0 3px 14px 2px rgba(0, 0, 0, 0.12)));
         }
 
         &.dragging:last-child{
@@ -140,6 +134,26 @@
     }
 }
 
+.deck.deck-hard {
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+    .deck_td.deck_td-empty {
+        display: none;
+    }
+    .deck_cards.deck_td .cards {
+        width: 90%;
+        app-card{
+            height: 0;
+            &.card-2 {
+                margin-left: 25px;
+            }
+            &.card-3 {
+                margin-left: 50px;
+            }
+        }
+    }
+    
+}
+
 @media(max-width: 878px){
     .deck > div {
         height: 100px;
@@ -149,15 +163,13 @@
     .cards {
         width: 65px;
         &::before{
-            width: 61px;
-            height: 92px;
+            @include dimension(61px, 92px);
             border-radius: 3px;
         }
     }
     .deck_td .cards.homogeneous,
     .deck .deck_cards-left img {
-        width: 65px;
-        height: 100px;
+        @include dimension(65px, 100px);
     }
     .cards {
         &.empty {
@@ -200,7 +212,8 @@
 }
 @media(max-width: 480px){
     .conTitle .subtitle-btns .btn{
-        width: 100px;
+        width: 80px;
+        padding: 2px;
     }
 
     .deck > div {
@@ -208,16 +221,14 @@
     }
     .deck_td .cards.homogeneous,
     .deck .deck_cards-left img {
-        width: 40px;
-        height: 61px;
+        @include dimension(40px, 61px);
     }
 
     .deck .deck_cards-left,
     .cards {
         width: 40px;
         &::before{
-            width: 38px;
-            height: 56px;
+            @include dimension(38px, 56px);
             border-radius: 3px;
             border: 1px solid #999;
         }
@@ -235,6 +246,19 @@
         }
         app-card.dragging:last-child{
             height: 59px;
+        }
+    }
+
+    .deck.deck-hard {
+        .deck_cards.deck_td .cards {
+            app-card{
+                &.card-2 {
+                    margin-left: 20px;
+                }
+                &.card-3 {
+                    margin-left: 40px;
+                }
+            }
         }
     }
 }

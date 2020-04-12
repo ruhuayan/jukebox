@@ -1,3 +1,5 @@
+@import './../../../mixin.scss';
+
 .deck{
     padding-left: var(--md-padding);
     padding-top: 10px;
@@ -52,8 +54,7 @@
     padding: 0;
     margin-top: 20px;
     app-card{
-        width: 85px;
-        height: 120px;
+        @include dimension(85px, 120px);
     }
     app-card.show ::ng-deep {
         margin: var(--sm-padding) var(--md-padding);
@@ -61,7 +62,8 @@
             margin-right: 2rem;
         }
         .card{
-            box-shadow: 2px 2px 5px #ddd;
+            @include boxShadow(2px 2px 5px #ddd);
+            // box-shadow: 2px 2px 5px #ddd;
         }
     }
 }
@@ -78,8 +80,7 @@
     }
 }
 img.svg-card{
-    width: 85px;
-    height: 120px;
+    @include dimension(85px, 120px);
 }
 
 .form-group {
@@ -87,11 +88,12 @@ img.svg-card{
     margin-right: 10px;
 }
 .form-group select {
-    width: 100%;
-    height: 1.2rem;
+    @include dimension(100%, 1.2rem);
+    
     background: none;
     border: none;
-    box-shadow: none;
+
+    @include boxShadow(none);
     color: #999;
 }
 .form-group select:focus {
@@ -114,8 +116,7 @@ img.svg-card{
     bottom: -0.0625rem;
     position: absolute;
     background: #337ab7;
-    -webkit-transition: left 0.28s ease, width 0.28s ease;
-    transition: left 0.28s ease, width 0.28s ease;
+    @include transition((left 0.28s ease, width 0.28s ease));
     z-index: 2;
 }
 
@@ -131,5 +132,9 @@ img.svg-card{
     }
     .solution{
         font-size: 1rem;
+    }
+    .form-group {
+        margin-right: 5px;
+        margin-left: 5px;
     }
 }

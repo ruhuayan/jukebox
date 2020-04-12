@@ -1,0 +1,28 @@
+@mixin boxShadow($style) {
+    -webkit-box-shadow: $style;
+       -moz-box-shadow: $style;
+            box-shadow: $style;
+}
+
+@mixin transition($transition) {
+    -webkit-transition: $transition;
+            transition: $transition;
+}
+
+@mixin transform ($transform) {
+    -webkit-transform: $transform;
+            transform: $transform;
+}
+
+@mixin dimension($w, $h) {
+    width: $w;
+    height: $h;
+}
+
+@mixin disableUserSelect {
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* supported by Chrome and Opera */
+}

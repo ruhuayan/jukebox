@@ -16,7 +16,7 @@ export class DraggableDirective {
 
     @HostBinding('class.dragging') dragging = false;
     @Input('appCard') draggingCard: Card;
-
+    @Input('appDragDisabled') dragDisabled = false;
     @Output() dragStart = new EventEmitter();
     @Output() dragMove = new EventEmitter<Position>();
     @Output() dropped = new EventEmitter<number>();
@@ -33,7 +33,7 @@ export class DraggableDirective {
     @HostListener('touchstart', ['$event'])
     onStart(event: any) {
         event.preventDefault();
-        if (!this.draggingCard.show) {
+        if (!this.draggingCard.show || this.dragDisabled) {
             return;
         }
         this.dragging = true;
