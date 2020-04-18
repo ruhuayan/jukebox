@@ -61,7 +61,7 @@
         cursor: pointer;
         outline:none;
         &::before {
-            background: url(https://www.richyan.com/angular/assets/imgs/autorenew-24px.svg) center center no-repeat;
+            background: url(/assets/imgs/autorenew-24px.svg) center center no-repeat;
             z-index: -1;
             @include disableUserSelect;
         }
@@ -83,8 +83,8 @@
 }
 .deck-hard .deck_cards.deck_td .cards app-card,
 .deck .deck_td .cards.homogeneous {
-        width: 75px;
-        height: 115px;
+        @include dimension(75px, 115px);
+
         @media(max-width: 878px) {
             @include dimension(65px, 100px);
         }
@@ -95,6 +95,29 @@
             @include dimension(40px, 60px);
         }
     }
+
+.deck.deck-hard {
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+    .deck_td.deck_td-empty {
+        display: none;
+    }
+    .deck_cards.deck_td .cards {
+        width: 90%;
+        app-card {
+            &.card-2 {
+                margin-left: 25px;
+            }
+            &.card-3 {
+                margin-left: 50px;
+            }
+        }
+        app-card:not(.dragging) {
+            height: 0;
+        }
+    }
+    
+}
+
 .cards{
     list-style-type: none;
     display: flex;
@@ -134,25 +157,6 @@
     }
 }
 
-.deck.deck-hard {
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
-    .deck_td.deck_td-empty {
-        display: none;
-    }
-    .deck_cards.deck_td .cards {
-        width: 90%;
-        app-card{
-            height: 0;
-            &.card-2 {
-                margin-left: 25px;
-            }
-            &.card-3 {
-                margin-left: 50px;
-            }
-        }
-    }
-    
-}
 
 @media(max-width: 878px){
     .deck > div {
