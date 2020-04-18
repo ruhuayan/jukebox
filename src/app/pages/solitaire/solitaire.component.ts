@@ -41,7 +41,9 @@ export class SolitaireComponent implements OnInit {
 
     changeFormat(): void {
         this.format = this.format === 1 ? 3 : 1;
-        this.newGame();
+        if (this.actions.length > 0) {
+            this.newGame();
+        }
     }
     
     newGame() {
