@@ -26,9 +26,6 @@ export const routes: Routes = [
         path: 'faceapi',
         loadChildren: () => import('./pages/faceapi/faceapi.module').then(m => m.FaceapiModule)
     }, {
-        path: 'automation',
-        loadChildren: () => import('./pages/automate/automation.module').then(m => m.AutomationModule)
-    }, {
         path: '**',
         redirectTo: '404',
         pathMatch: 'full'
