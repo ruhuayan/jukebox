@@ -1,3 +1,26 @@
+export enum Face {
+    ACE = 'ace',
+    TWO = 'two',
+    THREE = 'three',
+    FOUR = 'four',
+    FIVE = 'five',
+    SIX = 'six',
+    SEVEN = 'seven',
+    EIGHT = 'eight',
+    NINE = 'nine',
+    TEN = 'ten',
+    JACK = 'jack',
+    QUEEN = 'queen',
+    KING = 'king'
+}
+
+export enum Suit {
+    CLUBS = 'C',
+    DIAMONDS = 'D',
+    HEARTS = 'H',
+    SPADES = 'S'
+}
+
 export class Card {
 
     face: string;
@@ -43,25 +66,3 @@ export class Card {
     }
 }
 
-export enum Face {
-    ACE = 'ace',
-    TWO = 'two',
-    THREE = 'three',
-    FOUR = 'four',
-    FIVE = 'five',
-    SIX = 'six',
-    SEVEN = 'seven',
-    EIGHT = 'eight',
-    NINE = 'nine',
-    TEN = 'ten',
-    JACK = 'jack',
-    QUEEN = 'queen',
-    KING = 'king'
-}
-
-export enum Suit {
-    CLUBS = 'C',
-    DIAMONDS = 'D',
-    HEARTS = 'H',
-    SPADES = 'S'
-}

@@ -5,7 +5,7 @@ import { Card } from './models/card.model';
     selector: '[appCanimate]',
 })
 export class CardAnimateDirective implements OnInit {
-    @Input('appCard') card: Card;
+    @Input('appCard') appCard: Card;
     @HostBinding('class.show') show = false;
     @HostBinding('class.card_init') card_init = true;
     constructor(
@@ -29,8 +29,8 @@ export class CardAnimateDirective implements OnInit {
             this.card_init = false;
             cardBack.style.left = '0px';
             cardBack.style.top = '0px';
-            if (this.card.show) {
-                // animation - turn card face up 
+            if (this.appCard.show) {
+                // animation - turn card face up
                 setTimeout(() => {
                     this.show = true;
                 }, 100);

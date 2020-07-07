@@ -15,7 +15,7 @@ export class DraggableDirective {
     }
 
     @HostBinding('class.dragging') dragging = false;
-    @Input('appCard') draggingCard: Card;
+    @Input('appCard') appCard: Card;
     @Input('appDragDisabled') dragDisabled = false;
     @Output() dragStart = new EventEmitter();
     @Output() dragMove = new EventEmitter<Position>();
@@ -33,7 +33,7 @@ export class DraggableDirective {
     @HostListener('touchstart', ['$event'])
     onStart(event: any) {
         event.preventDefault();
-        if (!this.draggingCard.show || this.dragDisabled) {
+        if (!this.appCard.show || this.dragDisabled) {
             return;
         }
         this.dragging = true;
@@ -54,8 +54,8 @@ export class DraggableDirective {
     @HostListener('document:mousemove', ['$event'])
     @HostListener('document:touchmove', ['$event'])
     onMove(event: any) {
-        
-        if (!this.dragging && !this.draggingCard['grouped']) {
+
+        if (!this.dragging && !this.appCard['grouped']) {
             return;
         }
         event.preventDefault();
@@ -74,7 +74,7 @@ export class DraggableDirective {
             // this.droppableDropzone = this.getDroppableZone();
             this.dragMove.emit(this.position);
         } else {
-            this.position = this.draggingCard['position'];
+            this.position = this.appCard['position'];
         }
     }
 
@@ -84,7 +84,7 @@ export class DraggableDirective {
         
         // document:touchend cause other buttons malfuntion
         // if $this not dragging, return to regular click event
-        if (!this.dragging && !this.draggingCard['grouped']) {
+        if (!this.dragging && !this.appCard['grouped']) {
             return;
         }
         event.preventDefault();
@@ -96,7 +96,7 @@ export class DraggableDirective {
         }
 
         this.position = { x: 0, y: 0 };
-        this.draggingCard['grouped'] = false;
+        this.appCard['grouped'] = false;
         this.dragging = false;
     }
 
@@ -111,7 +111,7 @@ export class DraggableDirective {
             }
             const dropzone = new Dropzone(this.dropzones[i]);
             if (dropzone.entreZone(rect) &&
-                dropzone.isDroppable(this.draggingCard)) {
+                dropzone.isDroppable(this.appCard)) {
                 return dropzone;
             }
         }

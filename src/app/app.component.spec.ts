@@ -1,7 +1,7 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component'
+import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 // import { ChatbotComponent } from './chatbot/chatbot.component';
 // import { FormsModule } from '@angular/forms';

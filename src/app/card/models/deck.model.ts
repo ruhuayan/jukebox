@@ -54,9 +54,9 @@ export class Deck {
      * load card images in deck
      * @param callback function after load image
      */
-    public loadCardImages(callback: any) : void {
+    public loadCardImages(callback: any): void {
         // document.body.classList.add('loading');
-        const promises = []
+        const promises = [];
         this.cards.forEach(card => {
             const promise = new Promise((resolve, reject) => {
                 const img = new Image();
@@ -87,8 +87,8 @@ export class Deck {
      */
     private createCards(): Deck {
         for (let i = 0; i < this.numOfDeck; i++) {
-                for (const face in Face){
-                    for (const suit in Suit){
+                for (const face in Face) {
+                    for (const suit in Suit) {
                         if(!Number(face) && !Number(suit)) this.cards.push(new Card(Face[face], Suit[suit]));
                     }
                 }
