@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions, ofType } from '@ngrx/effects';
-import { fromEvent, EMPTY } from 'rxjs';
-import { tap, filter, map } from 'rxjs/operators';
+import { Effect, Actions } from '@ngrx/effects';
+import { fromEvent } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import {
   ActionUnion, ActionTypes
 } from './ball.actions';

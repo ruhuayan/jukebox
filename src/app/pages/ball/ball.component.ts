@@ -4,8 +4,7 @@ import { Store, select } from '@ngrx/store';
 import { Ball, Dot, KEY, RA, ANG, conleft, Margin, COL, Square } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState} from './ball.reducer';
-import { fromEvent } from 'rxjs';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { fromEvent, Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 
 @Component({

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { BeatService } from './beat.service';
 import './string.extensions';
 declare let require: any;

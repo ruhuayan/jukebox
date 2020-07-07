@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, HostListener, Output, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-uploader',

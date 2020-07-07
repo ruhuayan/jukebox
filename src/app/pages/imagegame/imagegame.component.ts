@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { Observable, Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';

@@ -1,9 +1,9 @@
 import { Component, OnInit, ElementRef, Renderer2, OnDestroy, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Jukebox, Metadata, Beat } from './jukebox.model';
+import { Jukebox, Metadata } from './jukebox.model';
 import { BeatService } from './beat.service';
 import { JukeService } from './jukebox.service';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { Subscription } from 'rxjs';
 declare let window: any;
 
 @Component({

@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { from } from 'rxjs/internal/observable/from';
 import * as faceapi from 'face-api.js';
-import { forkJoin, interval } from 'rxjs';
+import { forkJoin, interval, Subscription, from } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 
 @Component({

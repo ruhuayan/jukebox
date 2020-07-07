@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
-import { Observable } from 'rxjs/internal/Observable'
-import { Subject } from 'rxjs/internal/Subject';
+import { Observable, Subject, BehaviorSubject } from 'rxjs'
 import { Beat, Metadata } from './jukebox.model';
 
 @Injectable()
