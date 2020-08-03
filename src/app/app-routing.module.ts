@@ -11,6 +11,9 @@ export const routes: Routes = [
         path: 'igame',
         loadChildren: () => import('./pages/imagegame/imagegame.module').then(m => m.ImagegameModule)
     }, {
+        path: 'hanzi',
+        loadChildren: () => import('./pages/hanzi/hanzi.module').then(m => m.HanziModule)
+    }, {
         path: 'points',
         loadChildren: () => import('./pages/points/points.module').then(m => m.PointsModule)
     }, {

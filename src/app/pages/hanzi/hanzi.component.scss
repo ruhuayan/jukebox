@@ -1,0 +1,77 @@
+.conLeft.animation {
+    app-writing-pad {
+        display: none;
+    }
+    .pane {
+        display: block;
+    }
+}
+app-writing-pad {
+    display: flex;
+}
+::ng-deep .wrapper {
+    canvas {
+        border: 1px solid #ccc;
+    }
+}
+
+::ng-deep .controls {
+    &.disabled button {
+        opacity: 0;
+        cursor: default;
+        &.close-btn {
+            opacity: 1;
+            cursor: pointer;
+        }
+    }
+
+    button {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        cursor: pointer;
+        img{
+            width: 20px;
+            height: auto;
+        }
+    }
+}
+
+.pane {
+    display: none;
+    border: 1px solid #ccc;
+    width: 512px;
+    height: 512px;
+}
+.output {
+    margin-left: 1px;
+    .candidate {
+        box-sizing: border-box;
+        color: #2c3e50;
+        float: left;
+        height: 64px;
+        line-height: 60px;
+        margin: 0;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        border: 2px dotted lightgray;
+        font-size: 40px;
+        width: 64px;
+    }
+}
+
+path {
+    fill: lightgray;
+    &.complete {
+        fill: black;
+    }
+
+    &.animation.partial {
+        stroke: blue;
+        stroke-linecap: round;
+        stroke-width: 128;
+    }
+}

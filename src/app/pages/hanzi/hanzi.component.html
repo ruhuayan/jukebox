@@ -1,0 +1,36 @@
+<div class="conTitle" id="conTitle" >Hanzi</div>
+<div class="conSubTitle" id="conSubTitle">
+    
+</div>
+<div class="conText row">
+    <div class="conLeft" id="conLeft" [ngClass]="{'animation': animation}">
+        <app-writing-pad (matched)="onMatch($event)" [loader]="loader"></app-writing-pad>
+        <div class="pane">
+            <svg viewBox="0 0 1024 1024">
+                <g stroke="lightgray" stroke-dasharray="1,1" stroke-width="1" transform="scale(4, 4)">
+                    <line x1="0" y1="0" x2="256" y2="256"></line>
+                    <line x1="256" y1="0" x2="0" y2="256"></line>
+                    <line x1="128" y1="0" x2="128" y2="256"></line>
+                    <line x1="0" y1="128" x2="256" y2="128"></line>
+                </g>
+                <g transform="scale(1, -1) translate(0, -900)">
+                    <path *ngFor="let stroke of strokes" [attr.d]="stroke"></path>
+                    <g *ngIf="clip">
+                        <clipPath id="animation1">
+                            <path [attr.d]="clip['stroke']"></path>
+                        </clipPath>
+                        <path class="animation partial" clip-path="url(#animation1)" [attr.d]="clip['median']" 
+                            [attr.stroke-dasharray]="clip['dasharray']" [attr.stroke-dashoffset]="clip['advance']"></path>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        
+        <div class="output">
+            <a class="candidate" *ngFor="let hanzi of hanzis" (click)="find(hanzi)">{{hanzi}}</a>
+        </div>
+    </div>
+    <div class="conRight" id="conRight">
+        <app-panel-right></app-panel-right>
+    </div>
+</div>
