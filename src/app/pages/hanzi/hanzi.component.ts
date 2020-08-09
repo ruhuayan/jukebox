@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Animation, Loader, Record } from './lib';
-import { Subscription } from 'rxjs';
+import { Animation, Loader, Record, Clip } from './lib';
+import { Subscription, Observable } from 'rxjs';
 import { IndexedDbService } from './lib/indexedDb.service';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-hanzi',
@@ -15,8 +16,8 @@ export class HanziComponent implements OnInit, OnDestroy {
     hanzis = [];
     animation = false;
     loader: Loader;
-    strokes: string[];
-    clip = null;
+    paths: any[];
+    clip$: Observable<Clip>;
     constructor(private indexedDbService: IndexedDbService) {}
 
     ngOnInit(): void {
@@ -26,9 +27,13 @@ export class HanziComponent implements OnInit, OnDestroy {
                 this.dictSubscription = this.loader.loadDictionary().subscribe((res: Record[]) => {
                     for (let v in res) {
                         const record: Record = {hanzi: v, ...res[v]};
-                        this.indexedDbService.put(record).subscribe(res => console.log(res));
+                        this.indexedDbService.put(record).subscribe();
                     }
                 });
+
+                // this.dictSubscription = this.loader.loadDictionary().pipe(
+                //     map((res: Record[]) => res)
+                // );
             }
         })
     }
@@ -38,22 +43,11 @@ export class HanziComponent implements OnInit, OnDestroy {
     }
 
     find(hanzi: string): void {
-        const code = hanzi.charCodeAt(0); console.log(hanzi, code);
+        const code = hanzi.charCodeAt(0);
         this.indexedDbService.get(hanzi).subscribe(res => {
-            this.strokes = res.strokes;
-            var animation = new Animation(this.strokes, res.medians);
-            const animate = () => {
-                const step = animation.step();
-                const len = step.animations.length - (step.complete ? 0 : 1);
-                console.log(step.animations.slice(len)[0]);
-                this.clip = step.animations.slice(len)[0]
-                if (!step.complete) {
-                    // animation.requestAnimationFrame(animate)
-                    setTimeout(animate, 1e3 / 60);
-                } 
-            }
-            animate();
-            // console.log(this.strokes)
+            this.paths = res.strokes.map((v, i)=> { return {d: v, class: 'incomplete'}});
+            var animation = new Animation(this.paths, res.medians);
+            this.clip$ = animation.animate();
         });
         this.animation = true;
     }

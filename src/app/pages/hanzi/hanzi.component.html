@@ -14,13 +14,13 @@
                     <line x1="0" y1="128" x2="256" y2="128"></line>
                 </g>
                 <g transform="scale(1, -1) translate(0, -900)">
-                    <path *ngFor="let stroke of strokes" [attr.d]="stroke"></path>
-                    <g *ngIf="clip">
+                    <path *ngFor="let v of paths" [attr.d]="v.d" [attr.class]="v.class"></path>
+                    <g *ngIf="clip$ | async as clip" [attr.class]="paths[clip.id].class">
                         <clipPath id="animation1">
                             <path [attr.d]="clip['stroke']"></path>
                         </clipPath>
-                        <path class="animation partial" clip-path="url(#animation1)" [attr.d]="clip['median']" 
-                            [attr.stroke-dasharray]="clip['dasharray']" [attr.stroke-dashoffset]="clip['advance']"></path>
+                        <path class="animation partial" clip-path="url(#animation1)" [attr.d]="clip['path']" 
+                            [attr.stroke-dasharray]="clip['dasharray']" [attr.stroke-dashoffset]="clip['offset']"></path>
                     </g>
                 </g>
             </svg>
