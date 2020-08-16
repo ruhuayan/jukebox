@@ -26,6 +26,7 @@ export class BallComponent implements OnInit, OnDestroy {
     // ball width
     private bw: number;
     private subscription: Subscription;
+    private evtSubscription: Subscription;
     private isTouchStart = false;
 
     constructor(private store: Store<IBallState>, private titleService: Title) {
@@ -37,7 +38,7 @@ export class BallComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const keydown = fromEvent(document, 'keydown');
-        keydown.pipe(map(ev => ev['which'])).subscribe(keycode => {
+        this.evtSubscription = keydown.pipe(map(ev => ev['which'])).subscribe(keycode => {
             if (this.launching) return;
             switch (keycode) {
                 case KEY.LEFT:
@@ -101,6 +102,7 @@ export class BallComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() {
         if (this.subscription) this.subscription.unsubscribe();
+        if (this.evtSubscription) this.evtSubscription.unsubscribe();
     }
 
     launch(): void {
@@ -167,18 +169,18 @@ export class BallComponent implements OnInit, OnDestroy {
     private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
 
         if (targetBalls.length) {
-        for (let ball of targetBalls) {
-            if (ball.launchDist <= this.speed) {
-                const lastMargin: Margin = this.calculateMargin(ball.launchDist);
+            for (let ball of targetBalls) {
+                if (ball.launchDist <= this.speed) {
+                    const lastMargin: Margin = this.calculateMargin(ball.launchDist);
 
-                this.stopLaunchedBall(launchedBall, lastMargin);
-                const removed = this.removeUnion(launchedBall);
-                this.resetLauchedBall(launchedBall, removed);
-                return;
-            } else {
-                ball.launchDist -= this.speed;
+                    this.stopLaunchedBall(launchedBall, lastMargin);
+                    const removed = this.removeUnion(launchedBall);
+                    this.resetLauchedBall(launchedBall, removed);
+                    return;
+                } else {
+                    ball.launchDist -= this.speed;
+                }
             }
-        }
         } else {
             const w = this.cw / 2 - this.bw / 2;
             if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
@@ -198,7 +200,7 @@ export class BallComponent implements OnInit, OnDestroy {
         this.store.dispatch(new ballActions.Move(margin)); // console.log(launchedBall.margin, margin);
 
         setTimeout(() => {
-        this.checkCollusion(targetBalls, launchedBall, margin);
+            this.checkCollusion(targetBalls, launchedBall, margin);
         }, 100);
     }
 
