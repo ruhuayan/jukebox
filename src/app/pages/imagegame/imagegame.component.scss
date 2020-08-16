@@ -317,7 +317,7 @@ body *::before {
   line-height: 2rem;
   font-weight: 500;
   z-index: -1;
-  // transition: margin .3s ease-in-out;
+  opacity: 0;
   img.arrow {
     width: 25px;
     height: 25px;
@@ -343,6 +343,11 @@ body *::before {
       top: 50%;
     }
   }
+}
+.loaded .empty-wrap {
+  opacity: 1;
+  transition: opacity .1s ease-in-out;
+  transition-delay: .4s;
 }
 .image-wrap {
   z-index: 100;

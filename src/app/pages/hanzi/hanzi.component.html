@@ -14,7 +14,7 @@
                     <line x1="0" y1="128" x2="256" y2="128"></line>
                 </g>
                 <g transform="scale(1, -1) translate(0, -900)">
-                    <path *ngFor="let v of paths" [attr.d]="v.d" [attr.class]="v.class"></path>
+                    <path *ngFor="let v of paths?.slice().reverse(); let i = index;" [attr.d]="v.d" [attr.class]="v.class"></path>
                     <g *ngIf="clip$ | async as clip" [attr.class]="paths[clip.id].class">
                         <clipPath id="animation1">
                             <path [attr.d]="clip['stroke']"></path>

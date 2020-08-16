@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
+import { tap, delay, take } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
@@ -20,9 +21,9 @@ class Dimension {
 })
 export class ImagegameComponent implements OnInit, OnDestroy {
 
-    @ViewChild('conLeft', {static: true}) context: ElementRef;
+    @ViewChild('conLeft', {static: true}) conLeft: ElementRef;
     img: HTMLImageElement;
-    public imgSubscription: Subscription;
+    private imgSubscription: Subscription;
     private thumbs: any[];
     private arrows: any[];
     private emptyThumb: any;
@@ -35,6 +36,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     private contextRect: ClientRect;
     numberShow = false;
     numOfCan = Array.from(new Array(this.row * this.row).keys());
+    loaded = false;
     imgs = ['assets/igame/picture_1.jpg', 'assets/igame/picture_2.jpg', 'assets/igame/picture_3.jpg'];
     constructor(private titleService: Title,
                 private el: ElementRef,
@@ -44,7 +46,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
         this.titleService.setTitle('Image Game - richyan.com');
         this.arrows = this.el.nativeElement.querySelectorAll('.arrow');
         this.loadImage(this.imgs[0]);
-        this.contextRect = this.context.nativeElement.getBoundingClientRect();
+        this.contextRect = this.conLeft.nativeElement.getBoundingClientRect();
     }
 
     private loadImage(imageSrc: string): void {
@@ -61,6 +63,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
                 this.height = res.height;
                 this.setCanvas(this.width, this.height, this.row);
                 this.shuffle();
+                this.loaded = true;
             }
         });
     }
@@ -124,19 +127,27 @@ export class ImagegameComponent implements OnInit, OnDestroy {
 
     changeImage(index: number): void {
         this.thumbs = [];
+        this.loaded = false;
         this.loadImage(this.imgs[+index]);
     }
 
     changeFormat(num: number): void {
-        this.numOfCan = [];
-        setTimeout(() => {
-            this.row = +num;
-            this.numOfCan = Array.from(new Array(this.row * this.row).keys());
-            setTimeout(() => {
+        this.loaded = false;
+        of(true).pipe(
+            take(1),
+            delay(0),
+            tap(_ => {
+                this.row = +num;
+                this.numOfCan = Array.from(new Array(this.row * this.row).keys());
+            }),
+            delay(100),
+            tap(_ => {
                 this.setCanvas(this.width, this.height, this.row);
                 this.shuffle();
-            } , 100);
-        }, 0);
+            })
+        ).subscribe(_ => {
+            this.loaded = true;
+        });
     }
     showNumber(): void {
         this.numberShow = !this.numberShow;
@@ -147,12 +158,18 @@ export class ImagegameComponent implements OnInit, OnDestroy {
             this.setThumbStyle(thumb, +thumb.getAttribute('data-ori'));
         });
         this.paused = true;
-        setTimeout(() => {
-            this.thumbs.forEach(thumb => {
-                this.setThumbStyle(thumb, +thumb.getAttribute('data-num'));
-            });
-            this.paused = false;
-        }, 1300);
+        this.loaded = false;
+        of(true).pipe(
+            take(1),
+            delay(1000),
+            tap(_ => {
+                this.thumbs.forEach(thumb => {
+                    this.setThumbStyle(thumb, +thumb.getAttribute('data-num'));
+                });
+                this.paused = false;
+                this.loaded = true;
+            }),
+        ).subscribe();
     }
 
     shuffle(): void {
@@ -236,6 +253,6 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.imgSubscription) this.imgSubscription.unsubscribe();
+        if (this.imgSubscription) this.imgSubscription.unsubscribe(); console.log(this.imgSubscription)
     }
 }

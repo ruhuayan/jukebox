@@ -1,6 +1,9 @@
 import { Directive, ElementRef, OnInit, Attribute, Input, HostBinding } from '@angular/core';
 import { Position } from './models/position.model';
 import { Card } from './models/card.model';
+import { of, iif } from 'rxjs';
+import { tap, delay, take, switchMap } from 'rxjs/operators';
+
 @Directive({
     selector: '[appCanimate]',
 })
@@ -10,7 +13,6 @@ export class CardAnimateDirective implements OnInit {
     @HostBinding('class.card_init') card_init = true;
     constructor(
         private el: ElementRef,
-        // private renderer: Renderer2,
         @Attribute('appCanimate') public fromId: string
     ) { }
     ngOnInit() {
@@ -25,17 +27,37 @@ export class CardAnimateDirective implements OnInit {
         cardBack.style.top = (initPos.y - destPos.y) + 'px';
 
         // animation - move card
-        setTimeout(() => {
-            this.card_init = false;
-            cardBack.style.left = '0px';
-            cardBack.style.top = '0px';
-            if (this.appCard.show) {
-                // animation - turn card face up
-                setTimeout(() => {
-                    this.show = true;
-                }, 100);
-            }
-        }, 50);
+        // setTimeout(() => {
+        //     this.card_init = false;
+        //     cardBack.style.left = '0px';
+        //     cardBack.style.top = '0px';
+        //     if (this.appCard.show) {
+        //         // animation - turn card face up
+        //         setTimeout(() => {
+        //             this.show = true;
+        //         }, 100);
+        //     }
+        // }, 50);
+        of(true).pipe(
+            take(1),
+            delay(50),
+            tap(_ => {
+                this.card_init = false;
+                cardBack.style.left = '0px';
+                cardBack.style.top = '0px';
+            }),
+            switchMap(_ => 
+                iif(() => !!this.appCard.show, 
+                    of(true).pipe(
+                        take(1),
+                        delay(100),
+                        tap(_ => {
+                            this.show = true;
+                        })
+                    )
+                ),
+            )
+        ).subscribe();
     }
 
     getPosition(el): Position {
