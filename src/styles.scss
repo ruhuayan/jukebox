@@ -96,13 +96,13 @@ body {
     font-size: 12px;
     background-color: #ffffff;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        @include dimension(100%, 100%);
+    // &::before {
+    //     content: "";
+    //     position: absolute;
+    //     top: 0;
+    //     left: 0;
+    //     z-index: -1;
+    //     @include dimension(100%, 100%);
         // @include transform(rotate(180deg));
         // background-image: url(./assets/imgs/error-bg1.jpg);
         // -webkit-background-size: cover;
@@ -111,10 +111,10 @@ body {
         // background-size: cover;
         // opacity: .3;
         // animation: infinite-fadeInOut 3s infinite;
-        }
-    &.loading::before {
-        z-index: 10000;
-    }
+    //     }
+    // &.loading::before {
+    //     z-index: 10000;
+    // }
     .content{
         font-family: Roboto, "Helvetica Neue", sans-serif;
         @include transition(opacity .3s ease-in);

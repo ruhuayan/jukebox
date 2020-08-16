@@ -1,13 +1,11 @@
+@import '../../../mixin.scss';
+
 .conLeft{
   display: flex;
+  align-items: center;
 }
 
 .deck{
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     .deck__title{
         font-size: 1rem;
         padding-bottom: 15px;
@@ -16,19 +14,16 @@
     .deck__left{
         height: 120px;
         margin-bottom: 15px;
-        box-shadow: 2px 2px 5px #ddd;
+        @include boxShadow(2px 2px 5px #ddd);
     }
 }
 .card_table{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    
     .deck__btns{
         display: flex;
         padding-top: 30px;
         padding-bottom: 30px;
-        margin-left: var(--md-padding);
+        margin-left: var(--sm-padding);
         width: 100%;
         .btn{
             margin: 5px;
@@ -58,8 +53,7 @@
             position: absolute;
             background: #28a745;  //blue #17a2b8 // red #dc3545
             opacity: 0.8;
-            width: 100px;
-            height: 30px;
+            @include dimension(100px, 30px);
             text-align: center;
             line-height: 30px;
             font-size: 20px;
@@ -67,7 +61,8 @@
             margin-top: 30px;
             margin-left: 10px;
             border-radius: 5px;
-            transition: all .8s ease-in-out;
+            @include transition(all .8s ease-in-out);
+
             &.three{
                 margin-left: 30px
             }
@@ -116,13 +111,13 @@
     }
     .hints.show {
         background: rgba(41,43,44,1);
-        transition: all .8s ease-in-out;
+        @include transition(all .8s ease-in-out);
         a.btn_hint{
             color: #fff;
             margin-left: 280px;
             position: absolute;
             margin-top: 5px;
-            transition: all .3s ease-in-out;
+            @include transition(all .3s ease-in-out);
         }
         .probabilities{
             color: #fff;

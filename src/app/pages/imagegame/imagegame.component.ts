@@ -240,7 +240,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
             img.file(`thumb_${i + 1}.png`, base64_img, {base64: true});
         });
         zip.generateAsync({type: 'blob'})
-                .then(function(content) { console.log(content)
+                .then(function(content) {
                     FileSaver.saveAs(content, 'download_from_richyan_com.zip');
                 });
     }

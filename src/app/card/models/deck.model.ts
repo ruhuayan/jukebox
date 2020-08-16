@@ -1,5 +1,6 @@
 import { Card, Face, Suit } from './card.model';
-import { forkJoin, Subscription } from 'rxjs';
+import { forkJoin } from 'rxjs';
+import { take } from 'rxjs/operators'
 
 export class Deck {
     private cards: Card[] = [];
@@ -47,15 +48,11 @@ export class Deck {
         return this;
     }
 
-    // static isLoaded(): boolean {
-    //     return document.body.classList.contains('loaded');
-    // }
     /**
      * load card images in deck
      * @param callback function after load image
      */
     public loadCardImages(callback: any): void {
-        // document.body.classList.add('loading');
         const promises = [];
         this.cards.forEach(card => {
             const promise = new Promise((resolve, reject) => {
@@ -65,13 +62,13 @@ export class Deck {
             });
             promises.push(promise);
         });
-        const subscription: Subscription = forkJoin(promises).subscribe(() => {
-                                            // document.body.classList.remove('loading');
-                                            // document.body.classList.add('loaded');
-                                            Deck.isLoaded = true;
-                                            subscription.unsubscribe();
-                                            callback();
-                                        });
+        forkJoin(promises).pipe(
+            take(1)
+        ).subscribe(() => {
+            Deck.isLoaded = true;
+            // subscription.unsubscribe();
+            callback();
+        });
     }
     /**
      * Deal one card - pop one card in deck
