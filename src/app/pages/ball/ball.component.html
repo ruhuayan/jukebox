@@ -1,33 +1,32 @@
-<div class="conTitle" id="conTitle" >Ball </div>
+<div class="conTitle" id="conTitle">Ball </div>
 <div class="conSubTitle" id="conSubTitle">
 
-    <!-- <a class="button" (click)="add()">
-      <span class="text">Add</span>
-      <span class="bg"></span>
-    </a> -->
-    <a class="button" (click)="reset()">
-      <span class="text">Reset</span>
-      <span class="bg"></span>
-    </a>
-    <a class="button" (click)="showNumber()">
-      <span class="text">Number</span>
-      <span class="bg"></span>
-    </a>
+  <a class="button" (click)="reset()">
+    <span class="text">Reset</span>
+    <span class="bg"></span>
+  </a>
+  <a class="button" (click)="showNumber()">
+    <span class="text">Number</span>
+    <span class="bg"></span>
+  </a>
 
 </div>
 <div class="conText row">
   <div class="conLeft" id="conLeft">
     <div class="balls" #container>
-        <div class="ball" *ngFor="let ball of balls;"
-            [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0, 'margin-top': ball.marginTop, 'margin-left': ball.marginLeft+'px'}"
-            [ngClass]="{'toLaunch': ball.status == 'toLaunch', 'stopped': ball.status == 'stopped'}"
-                          (click)="ball.status =='toLaunch' && launch()">
-            <div class="number" *ngIf="numberShow"> {{ball.index + 1}} </div>
-          </div>
-        <div class="dot" *ngFor="let dot of dots" [ngStyle]="{'margin-top': dot.y + 'px', 'margin-left': dot.x + 'px', 'color': balls[balls.length - 1].color }">.
-        </div>
-        <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-left" (touchstart)="touchEvent($event, 37)" (touchend)="endTouch()">
-        <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-right" (touchstart)="touchEvent($event, 39)" (touchend)="endTouch()">
+      <div class="ball" *ngFor="let ball of balls;"
+        [ngStyle]="{'color': ball.color, 'opacity': ball.show?1:0, 'margin-top': ball.marginTop, 'margin-left': ball.marginLeft+'px'}"
+        [ngClass]="{'toLaunch': ball.status == 'toLaunch', 'stopped': ball.status == 'stopped'}"
+        (click)="ball.status =='toLaunch' && launch()">
+        <div class="number" *ngIf="numberShow$ | async"> {{ball.index + 1}} </div>
+      </div>
+      <div class="dot" *ngFor="let dot of dots$ | async"
+        [ngStyle]="{'margin-top': dot.y + 'px', 'margin-left': dot.x + 'px', 'color': balls[balls.length - 1].color }">.
+      </div>
+      <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-left" (touchstart)="touchEvent($event, 37)"
+        (touchend)="endTouch()">
+      <img src="assets/imgs/arrow-down.svg" alt="arrow" class="arrow arrow-right" (touchstart)="touchEvent($event, 39)"
+        (touchend)="endTouch()">
     </div>
   </div>
   <div class="conRight" id="conRight">

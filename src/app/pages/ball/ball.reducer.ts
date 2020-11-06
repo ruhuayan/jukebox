@@ -43,12 +43,12 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
     let newState: IBallState;
     switch (action.type) {
         case ActionTypes.Move:
-              newState =  {
+            newState = {
                 ...state,
                 balls: state.balls.map(ball => {
                     if (ball.status === 'toLaunch') {
-                        const margin = ball.margin || {left: 0, top: conleft.height};
-                        ball.margin = {left: margin.left - action.payload.left, top: margin.top - action.payload.top };
+                        const margin = ball.margin || { left: 0, top: conleft.height };
+                        ball.margin = { left: margin.left - action.payload.left, top: margin.top - action.payload.top };
                         ball.marginTop = `calc(${ball.margin.top}px - 100% / 16)`;
                         ball.marginLeft = margin.left - action.payload.left;
                     }
@@ -60,27 +60,27 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
 
         case ActionTypes.Update:
             console.log(action.payload);
-            return {...action.payload};
+            return { ...action.payload };
 
         case ActionTypes.Add:
             return saveState({
-              ...state,
-              balls: [...state.balls, action.payload]
+                ...state,
+                balls: [...state.balls, action.payload]
             });
 
         case ActionTypes.Remove:
             action.payload.show = false;
-            newState =  {
+            newState = {
                 ...state,
-                    // balls: state.balls.filter(ball => ball.id !== action.payload.id)
+                // balls: state.balls.filter(ball => ball.id !== action.payload.id)
                 balls: state.balls.map(ball =>
                     ball.index === action.payload.index ? action.payload : ball
-                    )
+                )
             };
             return saveState(newState);
 
         case ActionTypes.Reset:
-            return saveState({...state, balls: createBalls()});
+            return saveState({ ...state, balls: createBalls() });
 
         case ActionTypes.Angle:
             return saveState({
@@ -104,9 +104,10 @@ export function ballReducer(state: IBallState = initState, action: ActionUnion) 
                 //     return ball;
                 // }),
                 dots: Array.from(new Array(10).keys()).map(i => new Dot(0, action.payload.height - 12 * (i + 1))),
-          })
+            })
         default:
             return state;
     }
 }
+
 

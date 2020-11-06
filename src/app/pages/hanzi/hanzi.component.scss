@@ -3,7 +3,7 @@
         display: none;
     }
     .pane {
-        display: block;
+        display: flex;
     }
 }
 app-writing-pad {
@@ -38,9 +38,12 @@ app-writing-pad {
 
 .pane {
     display: none;
-    border: 1px solid #ccc;
-    width: 512px;
     height: 512px;
+    svg {
+        border: 1px solid #ccc;
+        width: 250px;
+        height: 250px;
+    }
 }
 .output {
     margin-left: 1px;
@@ -64,12 +67,15 @@ app-writing-pad {
 }
 
 path {
-    fill: lightgray;
+    &.incomplete {
+        fill: lightgray;
+    }
     &.complete {
         fill: black;
     }
 
     &.animation.partial {
+        fill: none;
         stroke: blue;
         stroke-linecap: round;
         stroke-width: 128;

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Animation, Loader, Record, Clip } from './lib';
 import { Subscription, Observable } from 'rxjs';
 import { IndexedDbService } from './lib/indexedDb.service';
-import { map } from 'rxjs/operators';
+// import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-hanzi',
@@ -18,7 +18,7 @@ export class HanziComponent implements OnInit, OnDestroy {
     loader: Loader;
     paths: any[];
     clip$: Observable<Clip>;
-    constructor(private indexedDbService: IndexedDbService) {}
+    constructor(private indexedDbService: IndexedDbService) { }
 
     ngOnInit(): void {
         this.loader = new Loader();
@@ -26,7 +26,7 @@ export class HanziComponent implements OnInit, OnDestroy {
             if (!existed) {
                 this.dictSubscription = this.loader.loadDictionary().subscribe((res: Record[]) => {
                     for (let v in res) {
-                        const record: Record = {hanzi: v, ...res[v]};
+                        const record: Record = { hanzi: v, ...res[v] };
                         this.indexedDbService.put(record).subscribe();
                     }
                 });
@@ -37,7 +37,7 @@ export class HanziComponent implements OnInit, OnDestroy {
             }
         })
     }
-    
+
     onMatch(hanzis: string[]): void {
         this.hanzis = hanzis;
     }
@@ -45,11 +45,16 @@ export class HanziComponent implements OnInit, OnDestroy {
     find(hanzi: string): void {
         const code = hanzi.charCodeAt(0);
         this.indexedDbService.get(hanzi).subscribe(res => {
-            this.paths = res.strokes.map((v, i)=> { return {d: v, class: 'incomplete'}});
+            console.log(res)
+            this.paths = res.strokes.map((v) => { return { d: v, class: 'incomplete' } });//.reverse();
             var animation = new Animation(this.paths, res.medians);
             this.clip$ = animation.animate();
         });
         this.animation = true;
+    }
+
+    clear(): void {
+        this.animation = false;
     }
 
     ngOnDestroy() {

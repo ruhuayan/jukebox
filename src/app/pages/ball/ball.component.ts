@@ -3,8 +3,8 @@ import { map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { Ball, Dot, KEY, RA, ANG, conleft, Margin, COL, Square } from './ball.model';
 import * as ballActions from './ball.actions';
-import { IBallState} from './ball.reducer';
-import { fromEvent, Subscription } from 'rxjs';
+import { IBallState } from './ball.reducer';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -13,10 +13,10 @@ import { Title } from '@angular/platform-browser';
     styleUrls: ['./ball.component.scss']
 })
 export class BallComponent implements OnInit, OnDestroy {
-    @ViewChild('container', {static: true}) container: ElementRef<HTMLElement>;
+    @ViewChild('container', { static: true }) container: ElementRef<HTMLElement>;
     balls: Ball[];
-    dots: Dot[];
-    numberShow = false;
+    dots$: Observable<Dot[]>;
+    numberShow$: Observable<boolean>;
     launching = false;
     private angle = RA;
     private speed = 10;
@@ -32,13 +32,14 @@ export class BallComponent implements OnInit, OnDestroy {
     constructor(private store: Store<IBallState>, private titleService: Title) {
         this.titleService.setTitle('Ball - richyan.com');
         // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
-        // this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
-        // this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
+        this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
+        this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
     }
 
     ngOnInit() {
         const keydown = fromEvent(document, 'keydown');
-        this.evtSubscription = keydown.pipe(map(ev => ev['which'])).subscribe(keycode => {
+        const keydownOb = keydown.pipe(map(ev => ev['which']));
+        this.evtSubscription = keydownOb.subscribe(keycode => {
             if (this.launching) return;
             switch (keycode) {
                 case KEY.LEFT:
@@ -58,10 +59,10 @@ export class BallComponent implements OnInit, OnDestroy {
             if (this.cw < 480) {
                 conleft.height = 480;
             }
-            const con: Square = {width: this.cw, height: conleft.height};
+            const con: Square = { width: this.cw, height: conleft.height };
             this.store.dispatch(new ballActions.UpdateConleft(con));
         }
-        
+
         this.bw = this.cw / COL;
         this.subscription = this.store.pipe(select('iStates')).subscribe(state => {
             this.balls = state.balls.map((ball: Ball) => {
@@ -70,15 +71,15 @@ export class BallComponent implements OnInit, OnDestroy {
                 }
                 return ball;
             });
-            this.dots = state.dots;
-            this.numberShow = state.numberShow;
+            // this.dots = state.dots;
+            // this.numberShow = state.numberShow;
         });
     }
 
     touchEvent(e: TouchEvent, direction: number): void {
         e.preventDefault();
         this.isTouchStart = true;
-        setTimeout(() => this.moveArrows(direction), 200);
+        setTimeout(this.moveArrows, 200, direction);
     }
     endTouch(): void {
         this.isTouchStart = false;
@@ -97,7 +98,7 @@ export class BallComponent implements OnInit, OnDestroy {
             }
         }
         if (this.isTouchStart) {
-            setTimeout(() => {this.moveArrows(direction);}, 100);
+            setTimeout(this.moveArrows, 100, direction);
         }
     }
     ngOnDestroy() {
@@ -148,18 +149,18 @@ export class BallComponent implements OnInit, OnDestroy {
     private getTargetBalls(distanceToWall: number): Ball[] {
         let shortestDist = conleft.height;
         return this.balls.filter((ball: Ball) => ball.status !== 'toLaunch' && ball.show)
-        .filter((ball: Ball) => {
-            const ang = Math.abs(ball.angle - this.angle);
-            const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - this.bw ** 2);
+            .filter((ball: Ball) => {
+                const ang = Math.abs(ball.angle - this.angle);
+                const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - this.bw ** 2);
 
-            if (D <= 0) return false;
+                if (D <= 0) return false;
 
-            ball.launchDist = (Math.abs(2 * ball.dist * Math.cos(ang)) - Math.sqrt(D)) / 2;
-            shortestDist = shortestDist > ball.launchDist ? ball.launchDist : shortestDist;
-            // launchDist should be short than distanceToWall, or it will hit the wall
-            return distanceToWall >= ball.launchDist - 1;
+                ball.launchDist = (Math.abs(2 * ball.dist * Math.cos(ang)) - Math.sqrt(D)) / 2;
+                shortestDist = shortestDist > ball.launchDist ? ball.launchDist : shortestDist;
+                // launchDist should be short than distanceToWall, or it will hit the wall
+                return distanceToWall >= ball.launchDist - 1;
 
-        }).filter((ball: Ball) => ball.launchDist - shortestDist <= 1);
+            }).filter((ball: Ball) => ball.launchDist - shortestDist <= 1);
     }
 
     private getLaunchBall(): Ball {
@@ -185,13 +186,13 @@ export class BallComponent implements OnInit, OnDestroy {
             const w = this.cw / 2 - this.bw / 2;
             if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
                 const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
-                const lastMargin: Margin = {left: left, top: margin.top * left / margin.left}; // error
+                const lastMargin: Margin = { left: left, top: margin.top * left / margin.left }; // error
                 this.stopLaunchedBall(launchedBall, lastMargin);
                 this.resetLauchedBall(launchedBall);
                 return;
-            } else if  (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
+            } else if (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
                 const top = launchedBall.margin.top - this.bw / 2;
-                const lastMargin: Margin = {left: top / margin.top * margin.left, top: top};
+                const lastMargin: Margin = { left: top / margin.top * margin.left, top: top };
                 this.stopLaunchedBall(launchedBall, lastMargin);
                 this.resetLauchedBall(launchedBall);
                 return;
@@ -226,33 +227,33 @@ export class BallComponent implements OnInit, OnDestroy {
 
         if (ball.union.length > 2) {
 
-        const affects = this.balls.filter(b => b.show && b.status !== 'toLaunch')
-                    .filter((b: Ball) => {
+            const affects = this.balls.filter(b => b.show && b.status !== 'toLaunch')
+                .filter((b: Ball) => {
 
                     let affected = false;
                     ball.union.forEach(n => {
 
                         this.balls[n].show = false;
                         if (b.link.indexOf(n) >= 0) {
-                        b.link.splice(b.link.indexOf(n), 1);
-                        affected = true;
+                            b.link.splice(b.link.indexOf(n), 1);
+                            affected = true;
                         }
                     });
                     if (b.link.length === 0) {
                         b.show = false;
                     }
                     return affected && b.show;
-                    });
+                });
 
-        //affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
-        affects.forEach((b: Ball) => {
-                    const brokenLinks = this.getBrokenLinks(b, []);
-                    if (b.show && brokenLinks.length) {
+            //affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
+            affects.forEach((b: Ball) => {
+                const brokenLinks = this.getBrokenLinks(b, []);
+                if (b.show && brokenLinks.length) {
                     b.show = false;
                     brokenLinks.forEach(n => this.balls[n].show = false);
-                    }
-        });
-        return true;
+                }
+            });
+            return true;
         }
         return false;
     }
@@ -274,7 +275,7 @@ export class BallComponent implements OnInit, OnDestroy {
     }
 
     private calculateMargin(speed: number): Margin {
-        return {left: Math.cos(this.angle) * speed, top: Math.sin(this.angle) * speed};
+        return { left: Math.cos(this.angle) * speed, top: Math.sin(this.angle) * speed };
     }
 
     // add() {

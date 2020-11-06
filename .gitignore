@@ -40,3 +40,7 @@ testem.log
 Thumbs.db
 package.json
 package-lock.json
+
+#debug
+debug.log
+test.js
