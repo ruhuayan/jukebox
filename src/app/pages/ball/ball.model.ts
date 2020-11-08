@@ -1,4 +1,4 @@
-export const COLORS = ['#663399', '#FF00FF', '#FFA500', '#6B8E23' ];
+export const COLORS = ['#663399', '#FF00FF', '#FFA500', '#6B8E23'];
 
 export const RA = Math.PI / 2;
 export const ANG = Math.PI / 120;
@@ -8,7 +8,7 @@ export interface Square {
     height: number;
 }
 
-export const conleft: Square = {
+export const Container: Square = {
     width: 570,
     height: 540
 }
@@ -19,6 +19,7 @@ export interface Margin {
 }
 export class Ball {
     static count = 0;
+    static width = Math.round(Container.width / COL);
 
     index: number;
     margin: Margin;
@@ -39,17 +40,29 @@ export class Ball {
     // Distance of the launching ball to dot when collide with ball
     launchDist: number;
 
-    constructor(status = null) {
+    constructor(status) {
 
         this.colorId = Math.floor(Math.random() * COLORS.length);
         this.color = COLORS[this.colorId];
         this.status = status;
-        this.index = Ball.count;
-        this.union = [this.index];
-        this.link = this.initLink();
         this.dist = 0;
-        Ball.count ++;
+        if (status !== Status.COPY) {
+
+            this.index = Ball.count;
+            this.union = [this.index];
+            this.link = this.initLink();
+            Ball.count++;
+        }
     }
+
+    static create(props): Ball {
+        const ball = new Ball(Status.COPY);
+        Object.assign(ball, props);
+        Ball.count = Math.max(Ball.count, props['index']);
+        Ball.count++;
+        return ball;
+    }
+
     static reset() {
         Ball.count = 0;
     }
@@ -66,8 +79,8 @@ export class Ball {
         b1.link.push(this.index);
     }
 
-    public setDist(cw: number, height:number = conleft.height): void {
-        const bw = cw / COL;
+    public setDist(cw: number, height: number = Container.height): void {
+        const bw = Ball.width;
         const opposite = height - bw / 2 - bw * Math.floor(this.index / COL);
         let adjacent: number;
         if (this.index % COL < COL / 2) {
@@ -106,7 +119,8 @@ export enum KEY {
 }
 
 export enum Status {
-    SHOW = 'show',
+    CONSTRUCT = 'construct',
+    COPY = 'copy',
     TOLAUNCH = 'toLaunch',
     STOPPED = 'stopped'
 }

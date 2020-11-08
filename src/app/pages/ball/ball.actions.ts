@@ -3,9 +3,6 @@ import { Ball, Margin, Square } from './ball.model';
 
 export enum ActionTypes {
     Load = '[Ball Component] Load State',
-    LoadSucces = '[Ball Component] Load State Success',
-    Save = '[Ball Component] Save State',
-    SaveSuccess = '[Ball Component] Save State Success',
     Move = '[Ball Component] Move',
     Add = '[Ball Component] Add',
     Update = '[Ball Component] Update',
@@ -13,7 +10,7 @@ export enum ActionTypes {
     Reset = '[Ball Component] Reset',
     Angle = '[Ball Component] Change_Angle',
     ToggleNumber = '[Ball Component] Toggle_Number',
-    UpdateConleft = '[Ball Component] Update_Conleft'
+    UpdateContainer = '[Ball Component] Update Container'
 }
 
 export class Load implements Action {
@@ -48,9 +45,9 @@ export class ToggleNumber implements Action {
     readonly type = ActionTypes.ToggleNumber;
 }
 
-export class UpdateConleft implements Action {
-    readonly type = ActionTypes.UpdateConleft;
+export class UpdateContainer implements Action {
+    readonly type = ActionTypes.UpdateContainer;
     constructor(public payload: Square) { }
 }
 
-export type ActionUnion = Get | Move | Add | Remove | Reset | Update | Angle | ToggleNumber | UpdateConleft;
+export type ActionUnion = Load | Move | Add | Remove | Reset | Update | Angle | ToggleNumber | UpdateContainer;

@@ -17,7 +17,7 @@ import { LocalStorageEffects } from './localStorage.effect';
                 component: BallComponent
             }
         ]),
-        StoreModule.forRoot({ iStates: ballReducer }),
+        StoreModule.forRoot({ iBallState: ballReducer }),
         EffectsModule.forRoot([LocalStorageEffects]),
     ],
     providers: [],

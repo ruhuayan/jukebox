@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
-import { Ball, Dot, KEY, RA, ANG, conleft, Margin, COL, Square } from './ball.model';
+import { Ball, Dot, Status, KEY, RA, ANG, Container, Margin, COL, Square } from './ball.model';
 import * as ballActions from './ball.actions';
 import { IBallState } from './ball.reducer';
 import { fromEvent, Observable, Subscription } from 'rxjs';
@@ -15,25 +15,25 @@ import { Title } from '@angular/platform-browser';
 export class BallComponent implements OnInit, OnDestroy {
     @ViewChild('container', { static: true }) container: ElementRef<HTMLElement>;
     balls: Ball[];
+    // balls$: Observable<Ball[]>;
     dots$: Observable<Dot[]>;
     numberShow$: Observable<boolean>;
     launching = false;
     private angle = RA;
     private speed = 10;
 
-    // container width
-    private cw: number;
-    // ball width
-    private bw: number;
     private subscription: Subscription;
     private evtSubscription: Subscription;
+    private resizeSubScription: Subscription;
     private isTouchStart = false;
 
     constructor(private store: Store<IBallState>, private titleService: Title) {
         this.titleService.setTitle('Ball - richyan.com');
+        this.store.dispatch(new ballActions.Load());
         // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
-        this.dots$ = store.pipe(select('iStates')).pipe(map(state => state.dots));
-        this.numberShow$ = store.pipe(select('iStates')).pipe(map(state => state.numberShow));
+        this.dots$ = this.store.pipe(select('iBallState'), map(state => state.dots));
+        this.numberShow$ = this.store.pipe(select('iBallState'), map(state => state.numberShow));
+
     }
 
     ngOnInit() {
@@ -54,26 +54,30 @@ export class BallComponent implements OnInit, OnDestroy {
                     return;
             }
         });
-        this.cw = this.container.nativeElement.offsetWidth;
-        if (this.cw !== conleft.width) {
-            if (this.cw < 480) {
-                conleft.height = 480;
-            }
-            const con: Square = { width: this.cw, height: conleft.height };
-            this.store.dispatch(new ballActions.UpdateConleft(con));
-        }
+        this.resetContainer();
 
-        this.bw = this.cw / COL;
-        this.subscription = this.store.pipe(select('iStates')).subscribe(state => {
-            this.balls = state.balls.map((ball: Ball) => {
-                if (this.cw !== conleft.width && ball.index < 40) {
-                    ball.setDist(this.cw, conleft.height);
-                }
-                return ball;
-            });
-            // this.dots = state.dots;
-            // this.numberShow = state.numberShow;
+        this.resizeSubScription = fromEvent(window, 'resize').subscribe(() => {
+            this.resetContainer();
         });
+        this.store.pipe(first(), select('iBallState'), map(state => state.angle)).subscribe(
+            angle => this.angle = angle
+        );
+        this.subscription = this.store.pipe(select('iBallState'), map(state => state.balls)).subscribe(
+            balls => this.balls = balls
+        );
+    }
+
+    resetContainer(): void {
+        const cw = this.container.nativeElement.offsetWidth;
+        if (cw !== Container.width) {
+            // reset container and ball's width
+            Container.width = cw;
+            Ball.width = Math.round(cw / COL);
+            Container.height = cw < 410 ? 480 : 540;
+
+            const c: Square = { width: cw, height: Container.height };
+            this.store.dispatch(new ballActions.UpdateContainer(c));
+        }
     }
 
     touchEvent(e: TouchEvent, direction: number): void {
@@ -89,12 +93,12 @@ export class BallComponent implements OnInit, OnDestroy {
         if (direction === KEY.LEFT) {
             if (this.angle > ANG) {
                 this.angle -= ANG;
-                this.store.dispatch(new ballActions.Angle(RA - this.angle));
+                this.store.dispatch(new ballActions.Angle(this.angle));
             }
         } else if (direction === KEY.RIGHT) {
             if (this.angle < Math.PI - ANG) {
                 this.angle += ANG;
-                this.store.dispatch(new ballActions.Angle(RA - this.angle));
+                this.store.dispatch(new ballActions.Angle(this.angle));
             }
         }
         if (this.isTouchStart) {
@@ -104,6 +108,7 @@ export class BallComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.subscription) this.subscription.unsubscribe();
         if (this.evtSubscription) this.evtSubscription.unsubscribe();
+        if (this.resizeSubScription) this.resizeSubScription.unsubscribe();
     }
 
     launch(): void {
@@ -111,8 +116,8 @@ export class BallComponent implements OnInit, OnDestroy {
         // move (x, y)
         const margin = this.calculateMargin(this.speed);
         // Distance of launching ball to left, right wall
-        const distanceToWall = Math.abs((this.cw / 2 - this.bw / 2) / Math.cos(this.angle));
-        const distanceToTop = Math.abs((conleft.height - this.bw / 2) / Math.sin(this.angle));
+        const distanceToWall = Math.abs((Container.width / 2 - Ball.width / 2) / Math.cos(this.angle));
+        const distanceToTop = Math.abs((Container.height - Ball.width / 2) / Math.sin(this.angle));
         const targetBalls = this.getTargetBalls(distanceToWall);
         const launchedBall = this.getLaunchBall();
         if (launchedBall) {
@@ -133,7 +138,7 @@ export class BallComponent implements OnInit, OnDestroy {
                 launchedBall.dist = distanceToWall < distanceToTop ? distanceToWall : distanceToTop;
                 launchedBall.link = [-1];
             }
-            // console.log(targetBalls, launchedBall, distanceToWall, distanceToTop);
+
             this.checkCollusion(targetBalls, launchedBall, margin);
         }
     }
@@ -147,11 +152,11 @@ export class BallComponent implements OnInit, OnDestroy {
      *   if their launchDist(s) are close to 1px;
      **/
     private getTargetBalls(distanceToWall: number): Ball[] {
-        let shortestDist = conleft.height;
-        return this.balls.filter((ball: Ball) => ball.status !== 'toLaunch' && ball.show)
+        let shortestDist = Container.height;
+        return this.balls.filter((ball: Ball) => ball.status !== Status.TOLAUNCH && ball.show)
             .filter((ball: Ball) => {
                 const ang = Math.abs(ball.angle - this.angle);
-                const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - this.bw ** 2);
+                const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - Ball.width ** 2);
 
                 if (D <= 0) return false;
 
@@ -164,7 +169,7 @@ export class BallComponent implements OnInit, OnDestroy {
     }
 
     private getLaunchBall(): Ball {
-        return this.balls.filter((ball) => ball.status === 'toLaunch')[0];
+        return this.balls.filter((ball) => ball.status === Status.TOLAUNCH)[0];
     }
 
     private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
@@ -183,22 +188,22 @@ export class BallComponent implements OnInit, OnDestroy {
                 }
             }
         } else {
-            const w = this.cw / 2 - this.bw / 2;
+            const w = Container.width / 2 - Ball.width / 2;
             if (w - Math.abs(launchedBall.marginLeft) < Math.abs(margin.left)) {
                 const left = margin.left < 0 ? -(w - Math.abs(launchedBall.marginLeft)) : w - Math.abs(launchedBall.marginLeft);
                 const lastMargin: Margin = { left: left, top: margin.top * left / margin.left }; // error
                 this.stopLaunchedBall(launchedBall, lastMargin);
                 this.resetLauchedBall(launchedBall);
                 return;
-            } else if (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - this.bw / 2 < margin.top) {
-                const top = launchedBall.margin.top - this.bw / 2;
+            } else if (launchedBall.margin && launchedBall.margin.top && launchedBall.margin.top - Ball.width / 2 < margin.top) {
+                const top = launchedBall.margin.top - Ball.width / 2;
                 const lastMargin: Margin = { left: top / margin.top * margin.left, top: top };
                 this.stopLaunchedBall(launchedBall, lastMargin);
                 this.resetLauchedBall(launchedBall);
                 return;
             }
         }
-        this.store.dispatch(new ballActions.Move(margin)); // console.log(launchedBall.margin, margin);
+        this.store.dispatch(new ballActions.Move(margin));
 
         setTimeout(() => {
             this.checkCollusion(targetBalls, launchedBall, margin);
@@ -208,7 +213,7 @@ export class BallComponent implements OnInit, OnDestroy {
     private stopLaunchedBall(launchedBall: Ball, lastMargin: Margin): void {
         this.store.dispatch(new ballActions.Move(lastMargin));
         this.launching = false;
-        launchedBall.status = 'stopped';
+        launchedBall.status = Status.STOPPED;
     }
     private resetLauchedBall(launchedBall, removed: boolean = false): void {
         if (removed) {
@@ -216,10 +221,10 @@ export class BallComponent implements OnInit, OnDestroy {
         } else {
             navigator.vibrate(100);
         }
-        if (launchedBall.dist < this.bw && launchedBall.show) {
-            setTimeout(() => window.alert('You lost !!!'), 100);
+        if (launchedBall.dist < Ball.width && launchedBall.show) {
+            setTimeout(window.alert, 100, 'You lost !!!');
         } else {
-            this.store.dispatch(new ballActions.Add(new Ball('toLaunch')));
+            this.store.dispatch(new ballActions.Add(new Ball(Status.TOLAUNCH)));
         }
     }
 
@@ -227,7 +232,7 @@ export class BallComponent implements OnInit, OnDestroy {
 
         if (ball.union.length > 2) {
 
-            const affects = this.balls.filter(b => b.show && b.status !== 'toLaunch')
+            const affects = this.balls.filter(b => b.show && b.status !== Status.TOLAUNCH)
                 .filter((b: Ball) => {
 
                     let affected = false;
@@ -276,18 +281,6 @@ export class BallComponent implements OnInit, OnDestroy {
 
     private calculateMargin(speed: number): Margin {
         return { left: Math.cos(this.angle) * speed, top: Math.sin(this.angle) * speed };
-    }
-
-    // add() {
-    //   const ball = new Ball();
-    //   if (Ball.count <= 48) {
-    //     this.store.dispatch(new ballActions.Add(ball));
-    //   }
-    // }
-
-    remove(ball: Ball, i: number): void {
-        ball.show = false;
-        this.store.dispatch(new ballActions.Remove(ball));
     }
 
     reset() {

@@ -1,14 +1,84 @@
 import { ActionTypes, ActionUnion } from './ball.actions';
-import { Ball, Dot, RA, conleft, COL, Square } from './ball.model';
+import { Ball, Dot, Status, Container, COL, RA } from './ball.model';
 
 export interface IBallState {
     balls: Ball[];
     dots: Dot[];
     numberShow: boolean;
+    angle: number;
+}
+
+export const initState: IBallState = { balls: [], dots: [], numberShow: false, angle: RA };
+
+export function ballReducer(state: IBallState = initState, action: ActionUnion) {
+    switch (action.type) {
+        case ActionTypes.Move:
+            return {
+                ...state,
+                balls: state.balls.map(ball => {
+                    if (ball.status === Status.TOLAUNCH) {
+                        const margin = ball.margin || { left: 0, top: Container.height };
+                        ball.margin = { left: margin.left - action.payload.left, top: margin.top - action.payload.top };
+                        ball.marginTop = `calc(${ball.margin.top}px - 100% / 16)`;
+                        ball.marginLeft = margin.left - action.payload.left;
+                    }
+                    return ball;
+                })
+            };
+
+        case ActionTypes.Update:
+            return { ...action.payload };
+
+        case ActionTypes.Add:
+            return {
+                ...state,
+                balls: [...state.balls, action.payload]
+            };
+
+        case ActionTypes.Remove:
+            action.payload.show = false;
+            return {
+                ...state,
+                balls: state.balls.filter((ball: Ball) => ball.index !== action.payload.index)
+                // balls: state.balls.map(ball =>
+                //     ball.index === action.payload.index ? action.payload : ball
+                // )
+            };
+
+        case ActionTypes.Reset:
+            return { ...createInitState() };
+
+        case ActionTypes.Angle:
+            return {
+                ...state,
+                angle: action.payload,
+                dots: state.dots.map((_, i) =>
+                    new Dot(Math.sin(RA - action.payload) * (-12 * i), Container.height - 12 + Math.cos(RA - action.payload) * (-12 * i)))
+            };
+
+        case ActionTypes.ToggleNumber:
+            return {
+                ...state,
+                numberShow: !state.numberShow
+            };
+        case ActionTypes.UpdateContainer:
+            return {
+                ...state,
+                balls: state.balls.map((ball: Ball) => {
+                    if (ball.index < 40) {
+                        ball.setDist(action.payload.width, action.payload.height);
+                    }
+                    return ball;
+                }),
+                dots: Array.from(new Array(10).keys()).map(i => new Dot(0, action.payload.height - 12 * (i + 1))),
+            };
+        default:
+            return state;
+    }
 }
 
 function createBalls(): Ball[] {
-    const balls = Array.from(new Array(40).keys()).map(i => new Ball());
+    const balls = Array.from(new Array(40).keys()).map(i => new Ball(Status.CONSTRUCT));
     balls.forEach((ball: Ball, i: number) => {
         // To find adjacent same colored balls
         if (i % COL > 0) {
@@ -23,91 +93,18 @@ function createBalls(): Ball[] {
                 ball.unionBall(balls[i - COL], balls);
             }
         }
-        ball.setDist(conleft.width);
+
+        ball.setDist(Container.width);
     });
-    return [...balls, new Ball('toLaunch')];
+    return [...balls, new Ball(Status.TOLAUNCH)];
 }
 
-export const initState: IBallState = {
-    balls: createBalls(),
-    dots: Array.from(new Array(10).keys()).map(i => new Dot(0, conleft.height - 12 * (i + 1))),
-    numberShow: false
-};
-
-const saveState = (_state: IBallState) => {
-    localStorage.setItem('__balls', JSON.stringify(_state));
-    return _state;
-};
-saveState(initState);
-export function ballReducer(state: IBallState = initState, action: ActionUnion) {
-    let newState: IBallState;
-    switch (action.type) {
-        case ActionTypes.Move:
-            newState = {
-                ...state,
-                balls: state.balls.map(ball => {
-                    if (ball.status === 'toLaunch') {
-                        const margin = ball.margin || { left: 0, top: conleft.height };
-                        ball.margin = { left: margin.left - action.payload.left, top: margin.top - action.payload.top };
-                        ball.marginTop = `calc(${ball.margin.top}px - 100% / 16)`;
-                        ball.marginLeft = margin.left - action.payload.left;
-                    }
-                    return ball;
-                })
-            };
-            saveState(newState);
-            return newState;
-
-        case ActionTypes.Update:
-            console.log(action.payload);
-            return { ...action.payload };
-
-        case ActionTypes.Add:
-            return saveState({
-                ...state,
-                balls: [...state.balls, action.payload]
-            });
-
-        case ActionTypes.Remove:
-            action.payload.show = false;
-            newState = {
-                ...state,
-                // balls: state.balls.filter(ball => ball.id !== action.payload.id)
-                balls: state.balls.map(ball =>
-                    ball.index === action.payload.index ? action.payload : ball
-                )
-            };
-            return saveState(newState);
-
-        case ActionTypes.Reset:
-            return saveState({ ...state, balls: createBalls() });
-
-        case ActionTypes.Angle:
-            return saveState({
-                ...state,
-                dots: state.dots.map((dot, i) =>
-                    new Dot(Math.sin(action.payload) * (-12 * i), conleft.height - 12 + Math.cos(action.payload) * (-12 * i)))
-            });
-
-        case ActionTypes.ToggleNumber:
-            return saveState({
-                ...state,
-                numberShow: !state.numberShow
-            });
-        case ActionTypes.UpdateConleft:
-            return saveState({
-                ...state,
-                // balls: state.balls.map((ball: Ball) => {
-                //     if (ball.index < 40) {
-                //       ball.setDist(action.payload.width, action.payload.width);
-                //     }
-                //     return ball;
-                // }),
-                dots: Array.from(new Array(10).keys()).map(i => new Dot(0, action.payload.height - 12 * (i + 1))),
-            })
-        default:
-            return state;
+export function createInitState(): IBallState {
+    return {
+        balls: createBalls(),
+        dots: Array.from(new Array(10).keys()).map(i => new Dot(0, Container.height - 12 * (i + 1))),
+        numberShow: false,
+        angle: RA
     }
 }
-
 
