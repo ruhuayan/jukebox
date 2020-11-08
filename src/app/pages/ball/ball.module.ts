@@ -4,9 +4,9 @@ import { RouterModule } from '@angular/router';
 import { PanelRightModule } from '../panel-right.module';
 import { BallComponent } from './ball.component';
 import { StoreModule } from '@ngrx/store';
-import { ballReducer } from './ball.reducer';
+import { ballReducer } from './state/ball.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { LocalStorageEffects } from './localStorage.effect';
+import { LocalStorageEffects } from './state/localStorage.effect';
 
 @NgModule({
     imports: [

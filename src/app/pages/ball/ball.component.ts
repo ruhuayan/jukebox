@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/co
 import { map, first } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { Ball, Dot, Status, KEY, RA, ANG, Container, Margin, COL, Square } from './ball.model';
-import * as ballActions from './ball.actions';
-import { IBallState } from './ball.reducer';
+import * as ballActions from './state/ball.actions';
+import { IBallState } from './state/ball.reducer';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 

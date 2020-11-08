@@ -1,26 +1,29 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { BallComponent } from './ball.component';
-import { IBallState, ballReducer, initState } from './ball.reducer';
+import { IBallState, ballReducer, initState } from './state/ball.reducer';
 import { PanelRightModule } from '../panel-right.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ActionTypes, Reset } from './ball.actions';
-import { Ball } from './ball.model';
+import { ActionTypes, Reset } from './state/ball.actions';
+import { Ball, RA, Status } from './ball.model';
 
 describe('BallComponent', () => {
     let component: BallComponent;
     let fixture: ComponentFixture<BallComponent>;
     let store: MockStore<IBallState>;
-    const initialState: IBallState = {balls: [...Array.from(new Array(40).keys()).map(i => new Ball()), new Ball('toLaunch')], 
-                                    dots: [], 
-                                    numberShow: false};
+    const initialState: IBallState = {
+        balls: [...Array.from(new Array(40).keys()).map(i => new Ball(Status.CONSTRUCT)), new Ball(Status.TOLAUNCH)],
+        dots: [],
+        numberShow: false,
+        angle: RA,
+    };
 
     beforeEach(async(() => {
-        
+
         TestBed.configureTestingModule({
             imports: [PanelRightModule, RouterTestingModule],
-            declarations: [ BallComponent ],
+            declarations: [BallComponent],
             providers: [provideMockStore({ initialState })]
         }).compileComponents();
 
