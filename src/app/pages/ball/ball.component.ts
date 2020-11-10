@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
-import { map, first } from 'rxjs/operators';
+import { map, first, debounceTime } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { Ball, Dot, Status, KEY, RA, ANG, Container, Margin, COL, Square } from './ball.model';
 import * as ballActions from './state/ball.actions';
@@ -24,7 +24,7 @@ export class BallComponent implements OnInit, OnDestroy {
 
     private subscription: Subscription;
     private evtSubscription: Subscription;
-    private resizeSubScription: Subscription;
+    private resizeSubscription: Subscription;
     private isTouchStart = false;
 
     constructor(private store: Store<IBallState>, private titleService: Title) {
@@ -56,9 +56,11 @@ export class BallComponent implements OnInit, OnDestroy {
         });
         this.resetContainer();
 
-        this.resizeSubScription = fromEvent(window, 'resize').subscribe(() => {
-            this.resetContainer();
-        });
+        this.resizeSubscription = fromEvent(window, 'resize')
+            .pipe(debounceTime(300))
+            .subscribe(() => {
+                this.resetContainer();
+            });
         this.store.pipe(first(), select('iBallState'), map(state => state.angle)).subscribe(
             angle => this.angle = angle
         );
@@ -108,7 +110,7 @@ export class BallComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.subscription) this.subscription.unsubscribe();
         if (this.evtSubscription) this.evtSubscription.unsubscribe();
-        if (this.resizeSubScription) this.resizeSubScription.unsubscribe();
+        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
     }
 
     launch(): void {
