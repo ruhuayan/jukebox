@@ -43,7 +43,7 @@ export class PointsComponent implements OnInit, OnDestroy {
             this.deck.shuffle();
         }
 
-        this.subscription = of(true).pipe(
+        this.subscription = of(null).pipe(
             delay(200),
             repeat(this.cardNumber)
         ).subscribe(
