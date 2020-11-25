@@ -287,6 +287,7 @@ export class BallComponent implements OnInit, OnDestroy {
 
     reset() {
         Ball.reset();
+        this.angle = RA;
         this.store.dispatch(new ballActions.Reset());
     }
 

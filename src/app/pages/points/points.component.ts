@@ -3,19 +3,23 @@ import { Card } from '../../card/models/card.model';
 import { Deck } from '../../card/models/deck.model';
 import { Title } from '@angular/platform-browser';
 import { Calculator } from './calculator.model';
+import { of, Subscription } from 'rxjs';
+import { delay, repeat } from 'rxjs/operators';
 
 @Component({
     selector: 'app-points',
     templateUrl: './points.component.html',
     styleUrls: ['./points.component.scss']
 })
-export class PointsComponent implements OnInit {
+export class PointsComponent implements OnInit, OnDestroy {
 
     dealedCards: Card[] = [];
     deck = new Deck();
     ondealing = false;
     solution: string;
     cardNumber = 4;
+    private subscription: Subscription;
+
     constructor(private titleService: Title) {
     }
     ngOnInit() {
@@ -38,21 +42,22 @@ export class PointsComponent implements OnInit {
         if (this.deck.getCards().length <= 4) {
             this.deck.shuffle();
         }
-        for (let i = 0; i < this.cardNumber; i++) {
-            setTimeout(() => {
-                this.dealOneCard();
-                if (i === this.cardNumber - 1) {
-                    this.ondealing = false;
-                }
-            }, 200 * i);
-        }
+
+        this.subscription = of(true).pipe(
+            delay(200),
+            repeat(this.cardNumber)
+        ).subscribe(
+            v => this.dealOneCard(),
+            e => console.log(e),
+            () => this.ondealing = false
+        )
     }
 
     setCardNumber(num: number): void {
         this.cardNumber = +num;
         this.refresh();
     }
-    findSolutions(): void { 
+    findSolutions(): void {
         if (this.dealedCards.length < 2) {
             return;
         }
@@ -66,14 +71,14 @@ export class PointsComponent implements OnInit {
                     this.solution = data;
                 };
                 worker.postMessage(JSON.stringify(numbers));
-                
+
             } else {
                 console.time('regular');
                 const calculator = new Calculator(numbers);
                 this.solution = calculator.getExp();
                 console.timeEnd('regular');
             }
-            
+
         }
     }
 
@@ -81,6 +86,12 @@ export class PointsComponent implements OnInit {
         const card: Card = this.deck.dealOneCard();
         if (card) {
             this.dealedCards.push(card);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
         }
     }
 }
