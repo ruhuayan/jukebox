@@ -3,22 +3,21 @@ import { Card } from '../../card/models/card.model';
 import { Deck } from '../../card/models/deck.model';
 import { Title } from '@angular/platform-browser';
 import { Calculator } from './calculator.model';
-import { of, Subscription } from 'rxjs';
-import { delay, repeat } from 'rxjs/operators';
+import { interval } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-points',
     templateUrl: './points.component.html',
     styleUrls: ['./points.component.scss']
 })
-export class PointsComponent implements OnInit, OnDestroy {
+export class PointsComponent implements OnInit {
 
     dealedCards: Card[] = [];
     deck = new Deck();
     ondealing = false;
     solution: string;
     cardNumber = 4;
-    private subscription: Subscription;
 
     constructor(private titleService: Title) {
     }
@@ -43,14 +42,15 @@ export class PointsComponent implements OnInit, OnDestroy {
             this.deck.shuffle();
         }
 
-        this.subscription = of(null).pipe(
-            delay(200),
-            repeat(this.cardNumber)
-        ).subscribe(
-            v => this.dealOneCard(),
-            e => console.log(e),
-            () => this.ondealing = false
-        )
+        interval(200).pipe(
+            tap(i => {
+                this.dealOneCard();
+                if (i === this.cardNumber - 1) {
+                    this.ondealing = false
+                }
+            }),
+            take(this.cardNumber)
+        ).subscribe();
     }
 
     setCardNumber(num: number): void {
@@ -86,12 +86,6 @@ export class PointsComponent implements OnInit, OnDestroy {
         const card: Card = this.deck.dealOneCard();
         if (card) {
             this.dealedCards.push(card);
-        }
-    }
-
-    ngOnDestroy(): void {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
         }
     }
 }

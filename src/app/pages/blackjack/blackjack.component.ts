@@ -3,6 +3,8 @@ import { Card } from '../../card/models/card.model';
 import { Deck } from '../../card/models/deck.model';
 import { Title } from '@angular/platform-browser';
 import { Status, Role, Player } from './player.model';
+import { interval } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 @Component({
     selector: 'app-blackjack',
     templateUrl: './blackjack.component.html',
@@ -39,14 +41,16 @@ export class BlackjackComponent implements OnInit {
         if (this.deck.getCards().length < 10) {
             this.deck.reset();
         }
-        for (let i = 0; i < 4; i++) {
-            setTimeout(() => {
-                this.dealOneCard(i % 2);
+
+        interval(200).pipe(
+            tap(i => {
+                this.dealOneCard(i % 2); console.log(i)
                 if (i === 3) {
                     this.updateStatus(Role.PLAYER);
                 }
-            }, 200 * i);
-        }
+            }),
+            take(4)
+        ).subscribe();
     }
 
     private dealOneCard(role: number): void {
@@ -68,9 +72,11 @@ export class BlackjackComponent implements OnInit {
             const total = this.dealer.sum;
 
             if (total < 21) {
-                setTimeout(() => {
-                    this.dealer.status = total + '';
-                }, 500);
+
+                interval(500).pipe(
+                    take(1),
+                    tap(_ => this.dealer.status = total + '')
+                ).subscribe();
 
                 this.status = Status.STAND;
 
@@ -89,11 +95,14 @@ export class BlackjackComponent implements OnInit {
                 }
             } else if (total > 21) {
                 this.status = Status.DEALER_BUSTED;
-                setTimeout(() => {
-                    this.dealer.status = 'Butsted';
-                    this.scores += 1;
-                    this.reset();
-                }, 500);
+                interval(500).pipe(
+                    take(1),
+                    tap(_ => {
+                        this.dealer.status = 'Butsted';
+                        this.scores += 1;
+                        this.reset();
+                    })
+                ).subscribe();
             } else {
                 this.status = Status.DEALER_BLACKJACK;
                 this.dealer.status = 'Blackjack';
@@ -108,23 +117,32 @@ export class BlackjackComponent implements OnInit {
 
             if (total < 21) {
                 this.status = Status.CANHIT;
-                setTimeout(() => {
-                    this.calProbalities();
-                    this.player.status = total + '';
-                }, 500);
+                interval(500).pipe(
+                    take(1),
+                    tap(_ => {
+                        this.calProbalities();
+                        this.player.status = total + '';
+                    })
+                ).subscribe();
             } else if (total > 21) {
                 this.status = Status.PLAYER_BUSTED;
-                setTimeout(() => {
-                    this.player.status = 'Busted';
-                    this.scores -= 1;
-                    this.reset();
-                }, 500);
+                interval(500).pipe(
+                    take(1),
+                    tap(_ => {
+                        this.player.status = 'Busted';
+                        this.scores -= 1;
+                        this.reset();
+                    })
+                ).subscribe();
             } else {
                 this.status = Status.PLAYER_BLACKJACK;
-                setTimeout(() => {
-                    this.player.status = 'Blackjack';
-                    this.stand();
-                }, 500);
+                interval(500).pipe(
+                    take(1),
+                    tap(_ => {
+                        this.player.status = 'Blackjack';
+                        this.stand();
+                    })
+                ).subscribe();
             }
         }
 
@@ -142,10 +160,12 @@ export class BlackjackComponent implements OnInit {
             this.dealOneCard(Role.DEALER);
         }
         this.updateStatus(Role.DEALER);
-        if (this.status === Status.STAND && this.dealer.cards.length <=5) {
-            setTimeout(() => {
-                this.stand(1);
-            }, 700);
+        if (this.status === Status.STAND && this.dealer.cards.length <= 5) {
+
+            interval(700).pipe(
+                take(1),
+                tap(_ => this.stand(1))
+            ).subscribe();
         }
     }
 
@@ -185,12 +205,15 @@ export class BlackjackComponent implements OnInit {
 
     private reset(): void {
         this.showHint = false;
-        setTimeout(() => {
-            this.status = Status.ONDEALING;
-            this.player.empty();
-            this.dealer.empty();
-            this.refresh();
-        }, 1500);
+        interval(1500).pipe(
+            take(1),
+            tap(_ => {
+                this.status = Status.ONDEALING;
+                this.player.empty();
+                this.dealer.empty();
+                this.refresh();
+            })
+        ).subscribe();
     }
     private roundToTwo(num) {
         return (Math.round(num * 10000) / 100);
