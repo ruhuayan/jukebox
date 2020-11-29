@@ -44,7 +44,7 @@ export class BlackjackComponent implements OnInit {
 
         interval(200).pipe(
             tap(i => {
-                this.dealOneCard(i % 2); console.log(i)
+                this.dealOneCard(i % 2);
                 if (i === 3) {
                     this.updateStatus(Role.PLAYER);
                 }
