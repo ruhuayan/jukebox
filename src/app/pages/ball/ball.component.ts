@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
-import { map, first, debounceTime } from 'rxjs/operators';
+import { map, debounceTime, takeWhile, tap, take } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { Ball, Dot, Status, KEY, RA, ANG, Container, Margin, COL, Square } from './ball.model';
 import * as ballActions from './state/ball.actions';
 import { IBallState } from './state/ball.reducer';
-import { fromEvent, Observable, Subscription } from 'rxjs';
+import { fromEvent, interval, Observable, of, Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -22,9 +22,7 @@ export class BallComponent implements OnInit, OnDestroy {
     private angle = RA;
     private speed = 10;
 
-    private subscription: Subscription;
-    private evtSubscription: Subscription;
-    private resizeSubscription: Subscription;
+    private subscriptions: Subscription = new Subscription();
     private isTouchStart = false;
 
     constructor(private store: Store<IBallState>, private titleService: Title) {
@@ -37,36 +35,41 @@ export class BallComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const keydown = fromEvent(document, 'keydown');
-        const keydownOb = keydown.pipe(map(ev => ev['which']));
-        this.evtSubscription = keydownOb.subscribe(keycode => {
-            if (this.launching) return;
-            switch (keycode) {
-                case KEY.LEFT:
-                case KEY.RIGHT:
-                    this.moveArrows(keycode);
-                    break;
-                case KEY.UP:
-                    this.launch();
-                    break;
+        const evtSubt = fromEvent(document, 'keydown')
+            .pipe(
+                map(ev => ev['which']),
+            ).subscribe(keycode => {
+                if (this.launching) return;
+                switch (keycode) {
+                    case KEY.LEFT:
+                    case KEY.RIGHT:
+                        this.moveArrows(keycode);
+                        break;
+                    case KEY.UP:
+                        this.launch();
+                        break;
 
-                default:
-                    return;
-            }
-        });
+                    default:
+                        return;
+                }
+            });
+        this.subscriptions.add(evtSubt);
         this.resetContainer();
 
-        this.resizeSubscription = fromEvent(window, 'resize')
-            .pipe(debounceTime(300))
-            .subscribe(() => {
-                this.resetContainer();
-            });
-        this.store.pipe(first(), select('iBallState'), map(state => state.angle)).subscribe(
+        const resizeSubt = fromEvent(window, 'resize')
+            .pipe(
+                debounceTime(300),
+                tap(_ => this.resetContainer())
+            ).subscribe();
+        this.subscriptions.add(resizeSubt);
+
+        this.store.pipe(take(1), select('iBallState'), map(state => state.angle)).subscribe(
             angle => this.angle = angle
         );
-        this.subscription = this.store.pipe(select('iBallState'), map(state => state.balls)).subscribe(
+        const ballSubt = this.store.pipe(select('iBallState'), map(state => state.balls)).subscribe(
             balls => this.balls = balls
         );
+        this.subscriptions.add(ballSubt);
     }
 
     resetContainer(): void {
@@ -85,32 +88,38 @@ export class BallComponent implements OnInit, OnDestroy {
     touchEvent(e: TouchEvent, direction: number): void {
         e.preventDefault();
         this.isTouchStart = true;
-        setTimeout(this.moveArrows, 200, direction);
+        this.moveArrows(direction);
     }
     endTouch(): void {
         this.isTouchStart = false;
     }
 
     private moveArrows(direction: KEY): void {
-        if (direction === KEY.LEFT) {
-            if (this.angle > ANG) {
-                this.angle -= ANG;
-                this.store.dispatch(new ballActions.Angle(this.angle));
-            }
-        } else if (direction === KEY.RIGHT) {
-            if (this.angle < Math.PI - ANG) {
-                this.angle += ANG;
+
+        if (direction === KEY.LEFT && this.angle > ANG ||
+            direction === KEY.RIGHT && this.angle < Math.PI - ANG) {
+
+            this.angle = direction === KEY.LEFT ? this.angle - ANG : this.angle + ANG;
+
+            if (this.isTouchStart) {
+                of(null).pipe(
+                    take(1),
+                    debounceTime(200),
+                    tap(_ => this.store.dispatch(new ballActions.Angle(this.angle)))
+                ).subscribe();
+            } else {
                 this.store.dispatch(new ballActions.Angle(this.angle));
             }
         }
-        if (this.isTouchStart) {
-            setTimeout(this.moveArrows, 100, direction);
-        }
+
+        // repeat until touchEnd
+        interval(200).pipe(
+            takeWhile(_ => this.isTouchStart),
+            tap(_ => this.moveArrows(direction))
+        ).subscribe(_ => console.log('test'));
     }
     ngOnDestroy() {
-        if (this.subscription) this.subscription.unsubscribe();
-        if (this.evtSubscription) this.evtSubscription.unsubscribe();
-        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        this.subscriptions.unsubscribe();
     }
 
     launch(): void {
@@ -224,7 +233,7 @@ export class BallComponent implements OnInit, OnDestroy {
             navigator.vibrate(100);
         }
         if (launchedBall.dist < Ball.width && launchedBall.show) {
-            setTimeout(window.alert, 100, 'You lost !!!');
+            setTimeout(() => window.alert('You lost !!!'), 100);
         } else {
             this.store.dispatch(new ballActions.Add(new Ball(Status.TOLAUNCH)));
         }
