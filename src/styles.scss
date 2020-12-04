@@ -84,6 +84,7 @@ body {
 }
 
 .content {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 800px;
@@ -94,6 +95,43 @@ body {
     z-index: 2;
     min-height: 500px;
     @include boxShadow(0 0 10px var(--main-rich-green));
+
+    &.loading::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        @include dimension(100%, 100%);
+        background: var(--main-rich-green);
+        opacity: 0.3;
+    }
+    &.loading::after {
+        content: ' ';
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        z-index: 1001;
+        left: 0;
+        right: 0;
+        top: 300px;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 5px solid var(--main-rich-green);
+        border-color: var(--main-rich-green) transparent var(--main-rich-green) transparent;
+        animation: loader 1.2s linear infinite;
+    }
+
+    @keyframes loader {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
     
     @media (max-width: 480px) {
         padding: 10px 0;

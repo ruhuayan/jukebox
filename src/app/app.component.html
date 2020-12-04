@@ -1,7 +1,6 @@
 <app-header></app-header>
-<div id="content" class="content">
+<div id="content" class="content" [ngClass]="{loading: loading}">
     <router-outlet>
-        <span class="loader" *ngIf="loading"></span>
     </router-outlet>
 </div>
 <app-footer></app-footer>
