@@ -92,10 +92,11 @@ body {
     border-left: 1px solid var(--main-rich-green);
     border-right: 1px solid var(--main-rich-green);
     margin: 0 auto;
-    z-index: 2;
-    min-height: 500px;
     @include boxShadow(0 0 10px var(--main-rich-green));
 
+    &.loading {
+        min-height: 600px;
+    }
     &.loading::before {
         content: "";
         position: absolute;
@@ -103,8 +104,8 @@ body {
         left: 0;
         z-index: 1000;
         @include dimension(100%, 100%);
-        background: var(--main-rich-green);
-        opacity: 0.3;
+        background: var(--main-green-dark);
+        opacity: 0.1;
     }
     &.loading::after {
         content: ' ';
@@ -277,6 +278,9 @@ a:link, a:visited {
 }
 
 @media (max-width: 480px) {
+    .content.loading {
+        min-height: 540px;
+    }
     .content, .footer > .fContent {
         width: 96%;
     }
