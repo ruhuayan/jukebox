@@ -21,12 +21,12 @@ class Dimension {
 })
 export class ImagegameComponent implements OnInit, OnDestroy {
 
-    @ViewChild('conLeft', {static: true}) conLeft: ElementRef;
+    @ViewChild('conLeft', { static: true }) conLeft: ElementRef;
+    @ViewChild('emptyThumb', { static: true }) emptyThumb: ElementRef;
     img: HTMLImageElement;
     private imgSubscription: Subscription;
     private thumbs: any[];
     private arrows: any[];
-    private emptyThumb: any;
     private height = 0;
     private width = 0;
     private tw = 0;
@@ -38,9 +38,11 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     numOfCan = Array.from(new Array(this.row * this.row).keys());
     loaded = false;
     imgs = ['assets/igame/picture_1.jpg', 'assets/igame/picture_2.jpg', 'assets/igame/picture_3.jpg'];
-    constructor(private titleService: Title,
-                private el: ElementRef,
-                private renderer: Renderer2) { }
+    constructor(
+        private titleService: Title,
+        private el: ElementRef,
+        private renderer: Renderer2
+    ) { }
 
     ngOnInit() {
         this.titleService.setTitle('Image Game - richyan.com');
@@ -61,9 +63,9 @@ export class ImagegameComponent implements OnInit, OnDestroy {
             if (res) {
                 this.width = res.width;
                 this.height = res.height;
+                this.loaded = true;
                 this.setCanvas(this.width, this.height, this.row);
                 this.shuffle();
-                this.loaded = true;
             }
         });
     }
@@ -79,11 +81,10 @@ export class ImagegameComponent implements OnInit, OnDestroy {
             ih = this.contextRect.height - this.row;
             st = (imageH - ih) / 2;
         }
-    
+
         this.th = Math.floor(ih / row), this.tw = Math.floor(iw / row);
 
         this.thumbs = this.el.nativeElement.querySelectorAll('.canvas-wrap');
-        this.emptyThumb = this.el.nativeElement.querySelector('.empty-wrap');
         for (let i = 0; i < this.thumbs.length; i++) {
             this.setThumbStyle(this.thumbs[i], i);
             this.setThumbNumber(this.thumbs[i], i, i);
@@ -92,21 +93,23 @@ export class ImagegameComponent implements OnInit, OnDestroy {
             canvas.height = this.th;
             const context = canvas.getContext('2d');
             context.drawImage(this.img, sl + this.tw * (i % this.row), st + this.th * Math.floor(i / this.row),
-                                    this.tw, this.th, 0, 0, this.tw, this.th);
+                this.tw, this.th, 0, 0, this.tw, this.th);
         }
-        this.setThumbStyle(this.emptyThumb, this.row ** 2);
-        this.setThumbNumber(this.emptyThumb, this.row ** 2);
-        this.renderer.setStyle(this.emptyThumb, 'width', this.tw + 'px');
-        this.renderer.setStyle(this.emptyThumb, 'height', this.th + 'px');
+
+        const emptyThumb = this.emptyThumb.nativeElement;
+        this.setThumbStyle(emptyThumb, this.row ** 2);
+        this.setThumbNumber(emptyThumb, this.row ** 2);
+        this.renderer.setStyle(emptyThumb, 'width', this.tw + 'px');
+        this.renderer.setStyle(emptyThumb, 'height', this.th + 'px');
         this.setArrowStyle(this.row ** 2);
     }
 
     private setThumbStyle(thumb: any, i: number): void {
-        
+
         const marginLeft = i < this.row ** 2 ? (this.tw + 1) * (i % this.row) :
-        this.contextRect.width < 400 ? (this.tw + 1) * (this.row - 1) : (this.tw + 1) * this.row;
+            this.contextRect.width < 400 ? (this.tw + 1) * (this.row - 1) : (this.tw + 1) * this.row;
         const marginTop = i < this.row ** 2 ? (this.th + 1) * Math.floor(i / this.row) :
-        this.contextRect.width < 400 ? (this.th + 1) * this.row : (this.th + 1) * (this.row - 1);
+            this.contextRect.width < 400 ? (this.th + 1) * this.row : (this.th + 1) * (this.row - 1);
         this.renderer.setStyle(thumb, 'margin-left', marginLeft + 'px');
         this.renderer.setStyle(thumb, 'margin-top', marginTop + 'px');
     }
@@ -189,16 +192,16 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     }
     shift(event: MouseEvent, i: number) {
         if (this.paused) { return; }
-        const num_empty = +this.emptyThumb.getAttribute('data-num');
+        const num_empty = +this.emptyThumb.nativeElement.getAttribute('data-num');
         const index = +this.thumbs[i].getAttribute('data-num');
 
         if ((num_empty === this.row ** 2 && num_empty - index === 1)
             || (index === this.row ** 2 && num_empty - index === -1)
-            || (num_empty - index === 1 && (index + 1) % this.row !== 0 )
+            || (num_empty - index === 1 && (index + 1) % this.row !== 0)
             || (num_empty - index === -1 && index % this.row !== 0)
             || (Math.abs(num_empty - index) === this.row && num_empty !== this.row ** 2)) {
 
-            this.swap(this.emptyThumb, this.thumbs[i]);
+            this.swap(this.emptyThumb.nativeElement, this.thumbs[i]);
             if (this.checkGame()) {
                 setTimeout(() => alert('you won !!!'), 300);
             }
@@ -215,7 +218,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     }
 
     private checkGame(): boolean {
-        const num_empty = +this.emptyThumb.getAttribute('data-num');
+        const num_empty = +this.emptyThumb.nativeElement.getAttribute('data-num');
 
         // show arrows
         this.setArrowStyle(num_empty);
@@ -237,12 +240,12 @@ export class ImagegameComponent implements OnInit, OnDestroy {
         this.thumbs.forEach((thumb, i) => {
             const image = thumb.querySelector('canvas').toDataURL('image/png');
             const base64_img = image.split(',')[1];
-            img.file(`thumb_${i + 1}.png`, base64_img, {base64: true});
+            img.file(`thumb_${i + 1}.png`, base64_img, { base64: true });
         });
-        zip.generateAsync({type: 'blob'})
-                .then(function(content) {
-                    FileSaver.saveAs(content, 'download_from_richyan_com.zip');
-                });
+        zip.generateAsync({ type: 'blob' })
+            .then(function (content) {
+                FileSaver.saveAs(content, 'download_from_richyan_com.zip');
+            });
     }
 
     onFileUploaded(path: string): void {
