@@ -59,7 +59,7 @@
 
 @font-face {
     font-family: 'arial-black';
-    src: local('Arial Black');
+    src: local('Arial Black')/*, url("/assets/fonts/ArialBlack.woff");*/;
 }
 
 body, html {

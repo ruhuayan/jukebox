@@ -1,10 +1,10 @@
 <div class="conTitle" id="conTitle">JukeBox 0.1 </div>
 <div class="conSubTitle" id="conSubTitle" #lyricDiv>Music Loading, please wait....</div>
 <div class="conText row">
-    <div class="conLeft" id="conLeft">
+    <div class="conLeft" id="conLeft" [ngClass]="{loading: isLoading}">
 
-        <div class="canvas">
-            <canvas id="canvas" #canvas height="250" style="width: 100%;"></canvas>
+        <div class="canvasWrap">
+            <canvas id="canvas" #canvas height="250" width="570" style="width: 100%;"></canvas>
         </div>
         <div id="myProgress">
             <div id="myBar" #progressbar></div>
@@ -15,7 +15,7 @@
                     <!-- <i class="fa fa-step-backward" aria-hidden="true"></i> -->
                     <img src="assets/jukebox/icons/prev.svg" alt="previous track" />
                 </a>
-                <a id="toggle" #playpause title="toggle play/pause" (click)="toggle()">
+                <a id="toggle" title="toggle play/pause" (click)="togglePlay()" [ngClass]="{playing: isPlaying}">
                     <!-- <i class="fa fa-pause" aria-hidden="true"></i> -->
                     <img src="assets/jukebox/icons/pause.svg" alt="toggle play/pause" class="pause" />
                     <img src="assets/jukebox/icons/play.svg" alt="toggle play/pause" class="play" />
@@ -38,18 +38,18 @@
                     (change)="onChangeVolume($event.target.value)">
 
             </div>
-            <!-- <div id="theme" title="next theme">
-          </div> -->
             <app-uploader [appAcceptType]="'audio/*'" [appFileTypes]="['audio/mp3', 'audio/wav']" [appFileSizeInMB]="3"
                 (onUploaded)="onFileUploaded($event)">
             </app-uploader>
         </div>
         <div id="musicInfo">
-            <div id="album" #albumDiv>Loading album cover ...</div>
+            <div id="album">
+                <img [src]="info?.album_url" width='200px' height='200px' *ngIf="info?.album_url" />
+            </div>
             <div id="musicMeta">
-                <span id='mTitle' style='font-weight: bold; font-size: 20px;'>{{metadata['title']}}</span><br />
-                <span id='mArtist'>{{metadata['artist']}}</span><br />
-                <span id='mAlbum'>{{metadata['album']}}</span>
+                <span id='mTitle' style='font-weight: bold; font-size: 20px;'>{{info?.title}}</span><br />
+                <span id='mArtist'>{{info?.artist}}</span><br />
+                <span id='mAlbum'>{{info?.album}}</span>
             </div>
         </div>
 

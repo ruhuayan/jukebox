@@ -116,7 +116,7 @@ export class BallComponent implements OnInit, OnDestroy {
         interval(200).pipe(
             takeWhile(_ => this.isTouchStart),
             tap(_ => this.moveArrows(direction))
-        ).subscribe(_ => console.log('test'));
+        ).subscribe();
     }
     ngOnDestroy() {
         this.subscriptions.unsubscribe();

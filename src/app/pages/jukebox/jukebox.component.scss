@@ -2,11 +2,12 @@
     Created on : Oct 28, 2017, 3:28:53 PM
     Author     : ruhua
 */
-.conText .conLeft canvas {
-  width: 570px;
-  // width: calc(100% - 1px);
-  // margin: 0 auto;
-  height: 250px;
+.conText .conLeft .canvasWrap {
+  background: #000;
+  canvas {
+    width: 570px;
+    height: 250px;
+  }
 }
 .conSubTitle {
   padding-bottom: 0;
@@ -164,6 +165,12 @@ input[type=range]:focus::-ms-fill-upper {
     background: #000;
     text-align: center;
     line-height: 200px;
+    position: relative;
+    &::before {
+      content: 'Loading album cover ...';
+      position: absolute;
+      left: 15%;
+    }
   }
   #musicInfo #musicMeta {
     width: 40%;

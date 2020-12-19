@@ -1,10 +1,12 @@
 import { Component, OnInit, ElementRef, Renderer2, OnDestroy, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Jukebox, Metadata } from './jukebox.model';
-import { BeatService } from './beat.service';
-import { JukeService } from './jukebox.service';
+import { Metadata } from './model/metadata.interface';
 import { Subscription } from 'rxjs';
-declare let window: any;
+import { select, Store } from '@ngrx/store';
+import { IJukeboxState } from './state/jukebox.reducer';
+import * as jukeboxActions from './state/jukebox.actions';
+import { LoaderService } from './model/loader.service';
+import { Info } from './model/info.interface';
 
 @Component({
   selector: 'app-jukebox',
@@ -12,170 +14,78 @@ declare let window: any;
   styleUrls: ['./jukebox.component.scss']
 })
 export class JukeboxComponent implements OnInit, OnDestroy {
-  private context: AudioContext;
-  private musics =  ['assets/jukebox/musics/iLoveRocknRoll.mp3', 'assets/jukebox/musics/bailando.mp3'];
-                      // ,'assets/jukebox/musics/SeuOlharMeChama.mp3'];
-  private jukebox: Jukebox;
-  private theme = 1;
-  private beatSubsription: Subscription;
-  private loadSubscription: Subscription;
-  private metadataSubscription: Subscription;
-  private playingSubscription: Subscription;
-  private infoSubscription: Subscription;
-  private infos: any;
-  metadata: Metadata;
-  private isPlaying = false;
 
-  @ViewChild('canvas', {static: true}) canvasRef: ElementRef<HTMLCanvasElement>;
-  @ViewChild('progressbar', {static: true}) progressbarRef: ElementRef<HTMLElement>;
-  @ViewChild('lyricDiv', {static: true}) lyricRef: ElementRef<HTMLElement>;
-  @ViewChild('albumDiv', {static: true}) albumRef: ElementRef<HTMLElement>;
-  @ViewChild('playpause', {static: true}) toggleRef: ElementRef<HTMLElement>;
-  private drawContext: CanvasRenderingContext2D;
+  private musics = ['assets/jukebox/musics/iLoveRocknRoll.mp3', 'assets/jukebox/musics/bailando.mp3'];
+  private subscriptions: Subscription = new Subscription();
+  info: Info;
+  metadata: Metadata = { title: '' };
+  isLoading = false;
+  isPlaying = false;
+  // lyric = 'Music Loading, please wait....';
 
-  constructor(private titleService: Title,
-              private beatService: BeatService,
-              private el: ElementRef,
-              private render: Renderer2,
-              private jukeService: JukeService) {
-    this.context = new (window.AudioContext || window.webkitAudioContext)();
+  @ViewChild('canvas', { static: true }) canvasRef: ElementRef<HTMLCanvasElement>;
+  @ViewChild('progressbar', { static: true }) progressbarRef: ElementRef<HTMLElement>;
+  @ViewChild('lyricDiv', { static: true }) lyricRef: ElementRef<HTMLElement>;
+  constructor(
+    private titleService: Title,
+    private store: Store<IJukeboxState>,
+    private loadService: LoaderService,
+    private render: Renderer2
+  ) {
+    this.store.dispatch(new jukeboxActions.LoadInfos());
+    this.store.dispatch(new jukeboxActions.LoadMusic(this.musics[1]));
   }
   ngOnInit() {
-    this.titleService.setTitle('Jukebox 1.3 - richyan.com');
-    document.body.classList.add('loading');
-    this.infoSubscription = this.jukeService.getMusicInfo().subscribe(res => {
-      if (res && res.length) {
-        this.infos = res;
-      }
-    });
+    this.titleService.setTitle('Jukebox - richyan.com');
 
-    this.jukebox = new Jukebox(this.context, this.musics, this.beatService);
-    this.drawContext = this.canvasRef.nativeElement.getContext('2d');
+    const sbt = this.store.pipe(select('iJukeboxState')).subscribe(state => {
 
-    this.loadSubscription = this.jukebox.load().subscribe((res: boolean) => {
-      document.body.classList.remove('loading');
-      this.playMusic(res);
-    }, err => { console.log(err); });
-    this.metadataSubscription = this.beatService.metadata$.subscribe(m => {
-      this.metadata = m;
-      // if (m.title) {
-      //   this.jukeService.getLyrics(m.artist, m.title).subscribe(res => {
-      //     if (res['text']) {
-      //       this.lyricArr = res['text'].split('<br>').filter(str => str !== '').map((str, i) => `{${3*i}}${str}`);
-      //       console.log(this.lyricArr);
-      //     } else {
-      //       this.lyric = '  Lyric Not available';
-      //     }
-      //   });
-      // }
-    });
+      this.isLoading = state.loading;
+      this.isPlaying = state.isPlaying;
+      if (state.loaded) {
+        this.info = state.infos[1];
+        const lyrics = this.info?.lyrics;
 
-    this.playingSubscription = this.beatService.isPlaying$.subscribe(p => {
-      this.isPlaying = p;
-      this.render[this.isPlaying ? 'addClass' : 'removeClass'](this.toggleRef.nativeElement, 'playing');
-    });
-  }
+        this.loadService.setup(this.canvasRef.nativeElement).subscribe(res => {
+          let percent = res.curr * 100 / res.duration;
+          percent = percent < 100 ? percent : 100;
+          this.render.setStyle(this.progressbarRef.nativeElement, 'width', `${percent}%`);
 
-  private playMusic(res: boolean) {
-    if (res) {
-      const HEIGHT = 250;
-      let lyrics = [];
-      const info = this.infos[this.jukebox.mIndex];
-      if (info) {
-        lyrics = info.lyrics;
-        this.render.setProperty(this.albumRef.nativeElement, 'innerHTML', `<img src=${info.album_url} width='200px' height='200px' />` );
-      } else {
-        this.render.setProperty(this.lyricRef.nativeElement, 'innerHTML', '  Lyric Not Available');
-        this.render.setProperty(this.albumRef.nativeElement, 'innerHTML', ' Album Cover Not Found' );
-      }
-      this.beatSubsription = this.beatService.getBeat().subscribe( beat => {
-        const WIDTH = this.el.nativeElement.querySelector('#conLeft').offsetWidth;
-        this.canvasRef.nativeElement.width = WIDTH;
-        this.render.setStyle(this.progressbarRef.nativeElement, 'width', beat.timelapse + '%');
-
-        if (lyrics) {
-          const lyric = lyrics.filter(str => +str.match(/\d+/)[0] === Math.round(beat.timelapse))[0];
-          if (typeof lyric !== 'undefined') {
-            this.render.setProperty(this.lyricRef.nativeElement, 'innerHTML', lyric.replace(/{[^}]*}/g, '').replace(/<\/?[^>]+(>|$)/g, ''));
-          }
-        }
-        const barWidth = WIDTH / beat.frequencyBinCount;
-        let x = 0;
-        const rowbar = HEIGHT / 15;
-        const bar = (WIDTH - 36) / 10;
-        this.drawContext.fillStyle = this.theme === 1 ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)';
-        this.drawContext.fillRect(0, 0, WIDTH, HEIGHT);
-
-        for (let i = 0; i < beat.frequencyBinCount; i++) {
-          const value = beat.freqs[i];
-
-          if (this.theme === 1) {
-            this.drawContext.fillStyle = 'rgb(0, 0, 0)';
-            if (beat.timelapse >= 100) { console.log(beat.timelapse)
-              this.drawContext.fillRect(x, 0 , bar, HEIGHT);
-            } else {
-              this.drawContext.fillRect(x, HEIGHT - value, bar, value);
-            }
-            x += bar + 4;
-            for (let j = 0; j < 15; j++) {
-                this.drawContext.fillStyle = 'rgb(255,255,255)';
-                this.drawContext.fillRect(0, HEIGHT - rowbar * j, WIDTH, 2);
-            }
-
-          } else {
-            const ROWS = 10, COLS = 10, PADDING = 2;
-            const w = WIDTH / COLS;
-            const h = HEIGHT / ROWS;
-
-            this.drawContext.fillStyle = 'rgb(255,255,255)';
-            for (let j = 1; j < ROWS; j++) {
-                this.drawContext.fillRect(0, h * j, WIDTH, PADDING);
-                this.drawContext.fillRect(w * j, 0, PADDING, HEIGHT);
-            }
-            const percent = value / 256;
-            const height = HEIGHT * percent;
-            const offset = HEIGHT - height;
-            if (beat.timelapse >= 100) { this.drawContext.fillStyle = 'rgb(0,0,0)'; }
-            const n = Math.round(offset / (h - PADDING)) * ROWS + Math.round(i * barWidth / (w  - PADDING)) ;
-            if (n < ROWS * COLS) {
-              this.drawContext.fillRect((n % COLS) * w, Math.round(n / ROWS) * h, w - 2, h - 2);
+          if (lyrics) {
+            const lyric = lyrics.filter(str => +str.match(/\d+/)[0] === Math.round(res.curr))[0];
+            if (lyric) {
+              this.render.setProperty(this.lyricRef.nativeElement, 'innerHTML', lyric.replace(/{[^}]*}/g, '').replace(/<\/?[^>]+(>|$)/g, ''));
             }
           }
 
-        }
-      });
-    }
+        });
+      }
+    });
+    this.subscriptions.add(sbt);
+    this.togglePlay();
+
   }
+
   ngOnDestroy() {
-    if (this.infoSubscription) this.infoSubscription.unsubscribe();
-    if (this.jukebox) this.jukebox.pause();
-    if (this.loadSubscription) this.loadSubscription.unsubscribe();
-    if (this.beatSubsription) this.beatSubsription.unsubscribe();
-    if (this.playingSubscription) this.playingSubscription.unsubscribe();
-    if (this.metadataSubscription) this.metadataSubscription.unsubscribe();
+    this.loadService.close();
+    if (this.subscriptions) this.subscriptions.unsubscribe();
   }
 
   previous(): void {
-    // this.jukebox.previous().subscribe(res => { this.playMusic(res); }, err => console.log(err));
   }
 
   next(): void {
-    // this.jukebox.next().subscribe(res => { this.playMusic(res); }, err => console.log(err));
   }
 
   changeTheme(): void {
-    this.theme = this.theme === 1 ? 2 : 1;
+    this.loadService.toggleTheme();
   }
 
-  toggle(): void {
-    if (this.isPlaying) {
-      this.jukebox.pause();
-    } else {
-      this.jukebox.start();
-    }
+  togglePlay(): void {
+    this.store.dispatch(new jukeboxActions.TogglePlay());
   }
   onChangeVolume(value: number) {
-    this.jukebox.setVolumn(value);
+    this.loadService.setVolumn(value);
   }
 
   onFileUploaded(path: string): void {
