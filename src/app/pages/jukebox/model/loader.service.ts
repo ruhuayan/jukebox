@@ -168,9 +168,9 @@ export class LoaderService {
 
     close(): void {
         this.audioCtx.suspend();
-        // this.source.disconnect(0);
-        // this.analyser.disconnect(0);
-        // this.gainNode.disconnect(0);
+        this.source.disconnect(0);
+        this.analyser.disconnect(0);
+        this.gainNode.disconnect(0);
         // this.audioCtx.close();
     }
 }

@@ -59,27 +59,24 @@ export class Animation {
         }
     }
 
-    private getLengths(h): any {
-        const _this = this;
-        return h.map(function (e) {
-            return _this.getLength(e) + t
-        })
+    private getLengths(medians): any {
+        return medians.map((m) => this.getLength(m) + t);
     }
     private getDistance(p1: Point, p2: Point): number {
         const p3 = new Point(p1.x - p2.x, p1.y - p2.y);
         return Math.round(Math.sqrt(p3.x * p3.x + p3.y * p3.y));
     }
 
-    private getLength(t): number {
+    private getLength(median): number {
         let s = 0;
-        for (let i = 0; i < t.length - 1; i++) {
-            s += this.getDistance(Point.from(t[i]), Point.from(t[i + 1]));
+        for (let i = 0; i < median.length - 1; i++) {
+            s += this.getDistance(Point.from(median[i]), Point.from(median[i + 1]));
         }
         return s
     }
 
-    private transform(t): string {
-        for (var e = [], s = t, i = Array.isArray(s), n = 0, s = i ? s : s[Symbol.iterator](); ;) {
+    private transform(medians): string {
+        for (var e = [], s = medians, i = Array.isArray(s), n = 0, s = i ? s : s[Symbol.iterator](); ;) {
             var a;
             if (i) {
                 if (n >= s.length)

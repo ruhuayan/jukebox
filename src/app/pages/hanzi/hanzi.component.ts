@@ -35,7 +35,7 @@ export class HanziComponent implements OnInit, OnDestroy {
                 //     map((res: Record[]) => res)
                 // );
             }
-        })
+        });
     }
 
     onMatch(hanzis: string[]): void {

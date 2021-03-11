@@ -87,7 +87,7 @@ export class WritingPadComponent implements OnInit, OnDestroy {
     @HostListener('touchstart', ['$event'])
     onStart(event: any) {
         event.preventDefault();
-        this.dragging = !0;
+        this.dragging = true;
         let point: Point;
         if (event.touches) {
             point = new Point(event['touches'][0]['clientX'] - this.padRect.left, event['touches'][0]['clientY'] - this.padRect.top);
@@ -109,7 +109,7 @@ export class WritingPadComponent implements OnInit, OnDestroy {
         if (event.touches) {
             point = new Point(event['touches'][0]['clientX'] - this.padRect.left, event['touches'][0]['clientY'] - this.padRect.top);
         } else {
-            point = new Point(event.clientX - this.padRect.left, event.clientY - this.padRect.top); // console.log(point)
+            point = new Point(event.clientX - this.padRect.left, event.clientY - this.padRect.top);
         }
 
         this._pushPoint(point);
@@ -125,7 +125,7 @@ export class WritingPadComponent implements OnInit, OnDestroy {
             return;
         }
         event.preventDefault();
-        this.dragging = !1;
+        this.dragging = false;
         if (this.stroke.length > 1) {
             this._endStroke();
             const result = this.matcher.match(this.strokes, 8);
@@ -176,23 +176,23 @@ export class WritingPadComponent implements OnInit, OnDestroy {
             graphics.beginStroke("black"),
             graphics.moveTo(p1.x, p1.y),
             // graphics.moveTo(t[0], t[1]),
-            p3 ? graphics.curveTo(p3.x, p3.y, p2.x, p2.y) : graphics.lineTo(p2.x, p2.y),
-            this.stage.update();
+            p3 ? graphics.curveTo(p3.x, p3.y, p2.x, p2.y) : graphics.lineTo(p2.x, p2.y);
+        this.stage.update();
     }
 
-    private _endStroke(): void { // console.log(this.stroke);
-        this.shape && ( //this.callback(this.stroke),
-            this.shape.cache(0, 0, this.stageWidth, this.stageHeight)),
-            this.strokes.push(this.stroke);
+    private _endStroke(): void {
+        if (this.shape) {
+            this.shape.cache(0, 0, this.stageWidth, this.stageHeight)
+        }
+        // this.shape && ( //this.callback(this.stroke),
+        //     this.shape.cache(0, 0, this.stageWidth, this.stageHeight)),
+        this.strokes.push(this.stroke);
         this.reset();
     }
-    // private _maybePushPoint(p: Point): void {
-    //     0 === this.stroke.length && this._pushPoint(p)
-    // }
 
     private _pushPoint(p: Point): any {
         if (p.x != null && p.y != null) {
-            const p1 = new Point(Math.round(p.x / ZOOM), Math.round(p.y / ZOOM));
+            const p1 = new Point(Math.round(p.x / ZOOM), Math.round(p.y / ZOOM)); console.log(p1)
             this.stroke.push(p1);
             this.refresh();
         }
@@ -200,11 +200,20 @@ export class WritingPadComponent implements OnInit, OnDestroy {
     private refresh(): void {
         if (!(this.stroke.length < 2)) {
             const t = this.stroke.length - 2, i = this.midpoint;
-            this.midpoint = this.getMidpoint(this.stroke[t], this.stroke[t + 1]),
-                this.shape ? (this.updateWidth(this.distance(this.stroke[t], this.stroke[t + 1])),
-                    this.draw(i, this.midpoint, this.stroke[t])) : (this.shape = new createjs.Shape,
-                        this.container.addChild(this.shape),
-                        this.draw(this.stroke[t], this.midpoint))
+            this.midpoint = this.getMidpoint(this.stroke[t], this.stroke[t + 1]);
+            if (this.shape) {
+                console.log(this.stroke[t])
+                this.updateWidth(this.distance(this.stroke[t], this.stroke[t + 1]));
+                this.draw(i, this.midpoint, this.stroke[t]);
+            } else {
+                this.shape = new createjs.Shape;
+                this.container.addChild(this.shape);
+                this.draw(this.stroke[t], this.midpoint);
+            }
+            // this.shape ? (this.updateWidth(this.distance(this.stroke[t], this.stroke[t + 1])),
+            //     this.draw(i, this.midpoint, this.stroke[t])) : (this.shape = new createjs.Shape,
+            //         this.container.addChild(this.shape),
+            //         this.draw(this.stroke[t], this.midpoint))
         }
     }
 

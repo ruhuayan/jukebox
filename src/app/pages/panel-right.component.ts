@@ -6,9 +6,7 @@ import { Component, OnInit } from '@angular/core';
         <div class="categories">
             <a href="javascript:;">Angular Games</a>
         </div>
-        <div class="category">
-            <a routerLink="/jukebox" routerLinkActive="active">JukeBox</a>
-        </div>
+        
         <div class="category">
             <a routerLink="/igame" routerLinkActive="active">Image Game</a>
         </div>
@@ -30,6 +28,6 @@ import { Component, OnInit } from '@angular/core';
        `
 })
 export class PanelRightComponent implements OnInit {
-  constructor() {}
-  ngOnInit() {}
+  constructor() { }
+  ngOnInit() { }
 }

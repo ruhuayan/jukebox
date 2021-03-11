@@ -62,7 +62,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.add(sbt);
-    this.togglePlay();
+    // this.togglePlay();
 
   }
 
