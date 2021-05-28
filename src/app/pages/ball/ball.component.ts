@@ -39,7 +39,7 @@ export class BallComponent implements OnInit, OnDestroy {
             .pipe(
                 map(ev => ev['which']),
             ).subscribe(keycode => {
-                if (this.launching) return;
+                if (this.launching) { return; }
                 switch (keycode) {
                     case KEY.LEFT:
                     case KEY.RIGHT:
@@ -169,7 +169,7 @@ export class BallComponent implements OnInit, OnDestroy {
                 const ang = Math.abs(ball.angle - this.angle);
                 const D = (2 * ball.dist * Math.cos(ang)) ** 2 - 4 * (ball.dist ** 2 - Ball.width ** 2);
 
-                if (D <= 0) return false;
+                if (D <= 0) { return false; }
 
                 ball.launchDist = (Math.abs(2 * ball.dist * Math.cos(ang)) - Math.sqrt(D)) / 2;
                 shortestDist = shortestDist > ball.launchDist ? ball.launchDist : shortestDist;
@@ -186,7 +186,7 @@ export class BallComponent implements OnInit, OnDestroy {
     private checkCollusion(targetBalls: Ball[], launchedBall: Ball, margin: Margin): void {
 
         if (targetBalls.length) {
-            for (let ball of targetBalls) {
+            for (const ball of targetBalls) {
                 if (ball.launchDist <= this.speed) {
                     const lastMargin: Margin = this.calculateMargin(ball.launchDist);
 
@@ -261,7 +261,7 @@ export class BallComponent implements OnInit, OnDestroy {
                     return affected && b.show;
                 });
 
-            //affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
+            // affects.sort((b1: Ball, b2: Ball) => b2.index - b1.index)
             affects.forEach((b: Ball) => {
                 const brokenLinks = this.getBrokenLinks(b, []);
                 if (b.show && brokenLinks.length) {
@@ -281,7 +281,7 @@ export class BallComponent implements OnInit, OnDestroy {
 
         if (arr.indexOf(ball.index) < 0) {
             arr.push(ball.index);
-            for (let n of ball.link) {
+            for (const n of ball.link) {
                 if (arr.indexOf(n) < 0) {
                     return this.getBrokenLinks(this.balls[n], arr);
                 }

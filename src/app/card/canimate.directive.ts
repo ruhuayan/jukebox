@@ -46,8 +46,8 @@ export class CardAnimateDirective implements OnInit {
                 cardBack.style.left = '0px';
                 cardBack.style.top = '0px';
             }),
-            switchMap(_ => 
-                iif(() => !!this.appCard.show, 
+            switchMap(_ =>
+                iif(() => !!this.appCard.show,
                     of(true).pipe(
                         take(1),
                         delay(100),

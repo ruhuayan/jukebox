@@ -81,7 +81,7 @@ export class DraggableDirective {
     @HostListener('document:mouseup', ['$event'])
     @HostListener('document:touchend', ['$event'])
     onEnd(event: any) {
-        
+
         // document:touchend cause other buttons malfuntion
         // if $this not dragging, return to regular click event
         if (!this.dragging && !this.appCard['grouped']) {

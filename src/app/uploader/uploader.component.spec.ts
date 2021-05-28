@@ -11,9 +11,9 @@ describe('UploaderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
-      declarations: [ UploaderComponent, BytesPipe ]
+      declarations: [UploaderComponent, BytesPipe]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -29,5 +29,5 @@ describe('UploaderComponent', () => {
   it('should have upload button', () => {
     const button = fixture.debugElement.nativeElement.querySelector('.appUpload');
     expect(button).toBeTruthy();
-  }); 
+  });
 });

@@ -5,14 +5,8 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 export const routes: Routes = [
     { path: '', redirectTo: 'igame', pathMatch: 'full' },
     {
-        path: 'jukebox',
-        loadChildren: () => import('./pages/jukebox/jukebox.module').then(m => m.JukeboxModule)
-    }, {
         path: 'igame',
         loadChildren: () => import('./pages/imagegame/imagegame.module').then(m => m.ImagegameModule)
-    }, {
-        path: 'hanzi',
-        loadChildren: () => import('./pages/hanzi/hanzi.module').then(m => m.HanziModule)
     }, {
         path: 'points',
         loadChildren: () => import('./pages/points/points.module').then(m => m.PointsModule)

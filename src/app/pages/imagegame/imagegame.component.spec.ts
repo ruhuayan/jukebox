@@ -27,12 +27,12 @@ describe('ImagegameComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [UploaderModule, PanelRightModule, RouterTestingModule],
-            declarations: [ ImagegameComponent ],
+            declarations: [ImagegameComponent],
             providers: [Title]
         }).compileComponents();
     }));
 
-    beforeEach(async() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(ImagegameComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -48,7 +48,7 @@ describe('ImagegameComponent', () => {
         expect(component.numberShow).toBe(false);
     });
 
-    it(`has array of 3 valid images`, async() => {
+    it(`has array of 3 valid images`, async () => {
         expect(component.imgs.length).toBe(3);
 
         img.src = component.imgs[1];
@@ -65,7 +65,7 @@ describe('ImagegameComponent', () => {
             titleService = TestBed.get(Title);
             expect(titleService.getTitle()).toBe('Image Game - richyan.com');
         });
-        
+
     });
 
     it('should load an image which width > 300', () => {
@@ -83,7 +83,7 @@ describe('ImagegameComponent', () => {
             }
         }
         expect(shuffled).toBe(true);
-        expect(thumbs.length).toBe(component.row **2);
+        expect(thumbs.length).toBe(component.row ** 2);
     });
 
     it(`should change format / rows`, () => {
@@ -109,18 +109,19 @@ describe('ImagegameComponent', () => {
         expect(numberShowed).toBe(true);
     });
 
-    it('should compose an image', async() => {
+    it('should compose an image', async () => {
         const row = component.row;
         const th = Math.floor(img.height / row), tw = Math.floor(img.width / row);
         component.showImage();
         await fixture.whenStable();
         fixture.detectChanges();
 
-        thumbs.forEach(thumb => { console.log(thumbs)
-        // getComputedStyle(thumb, null).getPropertyValue('marginLeft') - does not work 
-            const marginLeft = thumb.style.marginLeft; 
+        thumbs.forEach(thumb => {
+            console.log(thumbs)
+            // getComputedStyle(thumb, null).getPropertyValue('marginLeft') - does not work 
+            const marginLeft = thumb.style.marginLeft;
             const marginTop = thumb.style.marginTop;
-            const num = +thumb.getAttribute('data-ori'); 
+            const num = +thumb.getAttribute('data-ori');
             const marginLeftExpected = num < row ** 2 ? (tw + 1) * (num % row) : (tw + 1) * row;
             const marginTopExpected = num < row ** 2 ? (th + 1) * Math.floor(num / row) : (th + 1) * (row - 1);
 
@@ -145,5 +146,5 @@ describe('ImagegameComponent', () => {
         // component.ngOnDestroy();
         // expect(subscription).toHaveBeenCalled();
     });
-  
+
 });

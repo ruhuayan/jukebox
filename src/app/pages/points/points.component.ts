@@ -46,7 +46,7 @@ export class PointsComponent implements OnInit {
             tap(i => {
                 this.dealOneCard();
                 if (i === this.cardNumber - 1) {
-                    this.ondealing = false
+                    this.ondealing = false;
                 }
             }),
             take(this.cardNumber)
@@ -73,10 +73,10 @@ export class PointsComponent implements OnInit {
                 worker.postMessage(JSON.stringify(numbers));
 
             } else {
-                console.time('regular');
+                // console.time('regular');
                 const calculator = new Calculator(numbers);
                 this.solution = calculator.getExp();
-                console.timeEnd('regular');
+                // console.timeEnd('regular');
             }
 
         }

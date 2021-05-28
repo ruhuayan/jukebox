@@ -24,7 +24,7 @@ export class UploaderComponent implements OnInit, OnDestroy {
 
     onChange(event: MouseEvent) {
         this.file = event.target['files'][0];
-        if (!this.file) return;
+        if (!this.file) { return; }
 
         this.validateFile(this.file).subscribe(
             res => { if (res) { this.upload(); } },
@@ -35,7 +35,7 @@ export class UploaderComponent implements OnInit, OnDestroy {
     @HostListener('drop', ['$event'])
     public onDrop(event: DragEvent): void {
         this.file = event.dataTransfer.files[0];
-        if (!this.file) return;
+        if (!this.file) { return; }
         event.preventDefault();
         event.stopPropagation();
         this.validateFile(this.file).subscribe(
@@ -70,7 +70,7 @@ export class UploaderComponent implements OnInit, OnDestroy {
                 reader.onload = () => {
                     const img = new Image();
                     img.src = reader.result.toString();
-                    
+
                     img.onload = () => {
                         if (img.width < 300 || img.height < 538) {
                             _this.setError(`Image size must be 300 X 538`);

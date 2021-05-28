@@ -11,6 +11,13 @@ export interface Square {
 export const Container: Square = {
     width: 570,
     height: 540
+};
+
+export enum Status {
+    CONSTRUCT = 'construct',
+    COPY = 'copy',
+    TOLAUNCH = 'toLaunch',
+    STOPPED = 'stopped'
 }
 
 export interface Margin {
@@ -116,11 +123,4 @@ export enum KEY {
     UP = 38,
     RIGHT = 39,
     DOWN = 40
-}
-
-export enum Status {
-    CONSTRUCT = 'construct',
-    COPY = 'copy',
-    TOLAUNCH = 'toLaunch',
-    STOPPED = 'stopped'
 }

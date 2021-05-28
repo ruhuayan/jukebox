@@ -28,7 +28,7 @@ export class Player {
     }
 
     get sum(): number {
-        if (this.cards.length === 0) return 0;
+        if (this.cards.length === 0) { return 0; }
         const nums = this.cards.map(card => card.value < 10 ? card.value : 10);
         const numsNotOne = nums.filter(v => v > 1);
         const numOnes = nums.filter(v => v === 1);

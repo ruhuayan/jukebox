@@ -1,12 +1,12 @@
 import { Card, Face, Suit } from './card.model';
 import { forkJoin } from 'rxjs';
-import { take } from 'rxjs/operators'
+import { take } from 'rxjs/operators';
 
 export class Deck {
-    private cards: Card[] = [];
-    private numOfDeck: number;
     // all card images loaded
     static isLoaded: boolean;
+    private cards: Card[] = [];
+    private numOfDeck: number;
     // cardBackImg: string;
 
     /**
@@ -55,7 +55,7 @@ export class Deck {
     public loadCardImages(callback: any): void {
         const promises = [];
         this.cards.forEach(card => {
-            const promise = new Promise((resolve, reject) => {
+            const promise = new Promise((resolve, _) => {
                 const img = new Image();
                 img.onload = () => { resolve(); };
                 img.src = card.imgUrl;
@@ -74,9 +74,11 @@ export class Deck {
      * Deal one card - pop one card in deck
      */
     public dealOneCard(): Card {
-        if (this.cards.length)
+        if (this.cards.length) {
             return this.cards.pop();
-        else return null;
+        } else {
+            return null;
+        }
     }
 
     /***
@@ -84,11 +86,11 @@ export class Deck {
      */
     private createCards(): Deck {
         for (let i = 0; i < this.numOfDeck; i++) {
-                for (const face in Face) {
-                    for (const suit in Suit) {
-                        if(!Number(face) && !Number(suit)) this.cards.push(new Card(Face[face], Suit[suit]));
-                    }
+            for (const face in Face) {
+                for (const suit in Suit) {
+                    if (!Number(face) && !Number(suit)) { this.cards.push(new Card(Face[face], Suit[suit])); }
                 }
+            }
         }
         return this;
     }

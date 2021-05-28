@@ -17,7 +17,7 @@ export class SolitaireComponent implements OnInit {
     // 0 - 6: 7 rows in main screen; 7 - 10: 4 rows on top right corner; 11 - top left (openedCards); 12 - leftCards
     cols = new Array(13);
     format = 1;
-    private formatCards: Card[] = []
+    private formatCards: Card[] = [];
     private groupedCards: Card[] = [];
     actions: Action[] = [];
     constructor(private titleService: Title) {
@@ -45,7 +45,7 @@ export class SolitaireComponent implements OnInit {
             this.newGame();
         }
     }
-    
+
     newGame() {
         this.deck.reset();
         this.refresh();
@@ -108,7 +108,7 @@ export class SolitaireComponent implements OnInit {
         }
         if (this.cols[LEFT_CARD_ZONE].length > 0) {
             if (this.format === 3) {
-                for(let i = 0; i < this.format; i++) {
+                for (let i = 0; i < this.format; i++) {
                     const card: Card = this.cols[LEFT_CARD_ZONE].pop();
                     if (card) {
                         card.show = true;
@@ -194,14 +194,14 @@ export class SolitaireComponent implements OnInit {
         // }
     }
 
-    private getLastFormatCards(actionId: number): Card[]{
+    private getLastFormatCards(actionId: number): Card[] {
         const action = this.actions[actionId];
-        if (!action) return [];
-        if (action.cards.length === 3 && action.toId === OPEN_CARD_ZONE && action.fromId === LEFT_CARD_ZONE) 
-            return action.cards.map((card, i) => {card['formatId'] = i + 1; return card});
-        else if (action.cards.length === 1) {
+        if (!action) { return []; }
+        if (action.cards.length === 3 && action.toId === OPEN_CARD_ZONE && action.fromId === LEFT_CARD_ZONE) {
+            return action.cards.map((card, i) => { card['formatId'] = i + 1; return card; });
+        } else if (action.cards.length === 1) {
             return this.getLastFormatCards(actionId - 1);
-        } else return [];
+        } else { return []; }
     }
     private gameFinished(): boolean {
         const cards = this.cols.concat(this.cols[LEFT_CARD_ZONE]).reduce((acc, curr) => acc.concat(curr), []);
