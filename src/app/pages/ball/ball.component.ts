@@ -6,6 +6,7 @@ import * as ballActions from './state/ball.actions';
 import { IBallState } from './state/ball.reducer';
 import { fromEvent, interval, Observable, of, Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { selectAngle, selectBalls, selectDots, selectNumberShow } from './state/ball.selector';
 
 @Component({
     selector: 'app-ball',
@@ -29,9 +30,9 @@ export class BallComponent implements OnInit, OnDestroy {
         this.titleService.setTitle('Ball - richyan.com');
         this.store.dispatch(new ballActions.Load());
         // this.balls$ = store.pipe(select('iStates')).pipe(map(state => state.balls));
-        this.dots$ = this.store.pipe(select('iBallState'), map(state => state.dots));
-        this.numberShow$ = this.store.pipe(select('iBallState'), map(state => state.numberShow));
-
+        this.dots$ = this.store.pipe(select(selectDots));
+        // this.dots$.subscribe(v => console.log(v))
+        this.numberShow$ = this.store.pipe(select(selectNumberShow));
     }
 
     ngOnInit() {
@@ -63,10 +64,10 @@ export class BallComponent implements OnInit, OnDestroy {
             ).subscribe();
         this.subscriptions.add(resizeSubt);
 
-        this.store.pipe(take(1), select('iBallState'), map(state => state.angle)).subscribe(
+        this.store.pipe(take(1), select(selectAngle)).subscribe(
             angle => this.angle = angle
         );
-        const ballSubt = this.store.pipe(select('iBallState'), map(state => state.balls)).subscribe(
+        const ballSubt = this.store.pipe(select(selectBalls)).subscribe(
             balls => this.balls = balls
         );
         this.subscriptions.add(ballSubt);
