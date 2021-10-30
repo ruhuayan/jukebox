@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { BallComponent } from './ball.component';
 import { IBallState, ballReducer, initState } from './state/ball.reducer';
@@ -19,7 +19,7 @@ describe('BallComponent', () => {
         angle: RA,
     };
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
 
         TestBed.configureTestingModule({
             imports: [PanelRightModule, RouterTestingModule],
