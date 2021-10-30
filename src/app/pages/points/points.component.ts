@@ -65,7 +65,7 @@ export class PointsComponent implements OnInit {
             const numbers = this.dealedCards.map((card) => card.value);
             if (typeof Worker !== 'undefined') {
                 // Create a new
-                const worker = new Worker('./points.worker', { type: 'module' });
+                const worker = new Worker(new URL('./points.worker', import.meta.url), { type: 'module' });
                 worker.onmessage = ({ data }) => {
                     console.log(`return: ${data}`);
                     this.solution = data;
