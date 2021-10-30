@@ -100,7 +100,7 @@ export class DraggableDirective {
         this.dragging = false;
     }
 
-    private getDroppableZone(): Dropzone {
+    private getDroppableZone(): Dropzone | null {
         if (!this.dropzones) {
             this.dropzones = [].slice.call(document.querySelectorAll('.appDropzone'));
         }
