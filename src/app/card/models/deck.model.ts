@@ -57,7 +57,7 @@ export class Deck {
         this.cards.forEach(card => {
             const promise = new Promise((resolve, _) => {
                 const img = new Image();
-                img.onload = () => { resolve(); };
+                img.onload = () => { resolve(true); };
                 img.src = card.imgUrl;
             });
             promises.push(promise);

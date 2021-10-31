@@ -21,7 +21,7 @@ export class BallComponent implements OnInit, OnDestroy {
     numberShow$: Observable<boolean>;
     launching = false;
     private angle = RA;
-    private speed = 10;
+    private speed = 1000 / 60;
 
     private subscriptions: Subscription = new Subscription();
     private isTouchStart = false;
