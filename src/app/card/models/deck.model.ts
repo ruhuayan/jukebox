@@ -7,7 +7,7 @@ export class Deck {
     static isLoaded: boolean;
     private cards: Card[] = [];
     private numOfDeck: number;
-    // cardBackImg: string;
+    private imgs: string[] = ['assets/svg-cards/Card_back.svg', 'assets/svg-cards/cards.svg'];
 
     /**
      * Constructor
@@ -54,11 +54,11 @@ export class Deck {
      */
     public loadCardImages(callback: any): void {
         const promises = [];
-        this.cards.forEach(card => {
+        this.imgs.forEach(url => {
             const promise = new Promise((resolve, _) => {
                 const img = new Image();
                 img.onload = () => { resolve(true); };
-                img.src = card.imgUrl;
+                img.src = url;
             });
             promises.push(promise);
         });

@@ -32,7 +32,7 @@ export class Card {
         this.face = face;
         this.suit = suit;
         this.show = true;
-        this.imgUrl = `assets/svg-cards/${this.value}${this.suit}.svg`;
+        this.imgUrl = `assets/svg-cards/cards.svg#card_${this.value}${this.suit}`;
     }
     get value(): number {
         switch (this.face) {
