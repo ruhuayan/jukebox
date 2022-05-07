@@ -12,7 +12,7 @@ export class Calculator {
 
         const verify = result => result > 23.99 && result < 24.01;
 
-        const combinationes = this.numbers.combination();
+        const combinationes = this.permuteUnique(this.numbers); //this.numbers.combination();
         const probabilities = Calculator.operations.propabilities(this.numbers.length - 1);
 
         for (const nums of combinationes) {
@@ -149,22 +149,30 @@ export class Calculator {
         }
     }
 
-    /*private combination(arr: number[]) : number[][] {
-
-        if (arr.length === 1) return [[...arr]];
-        else if (arr.length === 2) return [[...arr], [arr[1], arr[0]]];
-        else return arr.reduce((acc, curr, i) => {
-                return [...acc, ...this.combination([...arr.slice(0, i), ...arr.slice(i + 1)]).map(a => [arr[i], ...a])];
-            }, []);
-
+    private permuteUnique(nums: number[]): number[][] {
+        if (!nums.length) {
+            return [];
+        }
+        
+        const result = [];
+        this.calcPermutation(nums, 0, result);
+        return result;
     }
 
-    private propabilities(len: number, arr: string[] = ['+', '-', '*', '/']): string[][] {
-
-        if (len === 1) return arr.map(op => [op]);
-        else if (len === 2) return arr.map(op1 => arr.map(op2 => [op1, op2])).reduce((acc, cur) => [...acc, ...cur], []);
-        else {
-            return arr.map(op => this.propabilities(len - 1, arr).map(a => [op, ...a])).reduce((acc, cur) => [...acc, ...cur], [])
+    private calcPermutation(nums: number[], offset: number, result: number[][]) {
+        if (offset === nums.length) {
+            result.push([...nums]);
+            return;
         }
-    }*/
+        
+        const set = new Set();
+        for (let i = offset; i < nums.length; ++i) {
+            if (!set.has(nums[i])) {
+                set.add(nums[i]);
+                [nums[offset], nums[i]] = [nums[i], nums[offset]];
+                this.calcPermutation(nums, offset + 1, result);
+                [nums[offset], nums[i]] = [nums[i], nums[offset]];
+            }
+        }
+    }
 }

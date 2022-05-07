@@ -28,7 +28,7 @@ export class Card {
     imgUrl: string;
     show: boolean;
 
-    constructor(face: string, suit: string) {
+    constructor(face: Face, suit: Suit) {
         this.face = face;
         this.suit = suit;
         this.show = true;
