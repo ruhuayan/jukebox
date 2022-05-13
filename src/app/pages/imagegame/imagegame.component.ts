@@ -104,7 +104,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
         this.setArrowStyle(this.row ** 2);
     }
 
-    private setThumbStyle(thumb: any, i: number): void {
+    private setThumbStyle(thumb: HTMLElement, i: number): void {
 
         const marginLeft = i < this.row ** 2 ? (this.tw + 1) * (i % this.row) :
             this.contextRect.width < 400 ? (this.tw + 1) * (this.row - 1) : (this.tw + 1) * this.row;
@@ -207,9 +207,9 @@ export class ImagegameComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private swap(iThumb: any, jThumb: any): void {
-        const jNum = jThumb.getAttribute('data-num');
-        const iNum = iThumb.getAttribute('data-num');
+    private swap(iThumb: HTMLElement, jThumb: HTMLElement): void {
+        const jNum = +jThumb.getAttribute('data-num');
+        const iNum = +iThumb.getAttribute('data-num');
 
         this.setThumbStyle(iThumb, jNum);
         this.setThumbNumber(iThumb, jNum);

@@ -27,7 +27,7 @@ describe('Deck', () => {
 
     it('should contain cards with image source', () => {
         for (const card of deck.getCards()) {
-            expect(card.imgUrl).toContain(`${card.value}${card.suit}.svg`);
+            expect(card.imgUrl).toContain(`cards.svg#card_${card.value}${card.suit}`);
         }
     });
 
