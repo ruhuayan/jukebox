@@ -25,8 +25,8 @@ export class ImagegameComponent implements OnInit, OnDestroy {
     @ViewChild('emptyThumb', { static: true }) emptyThumb: ElementRef;
     img: HTMLImageElement;
     private imgSubscription: Subscription;
-    private thumbs: any[];
-    private arrows: any[];
+    private thumbs: HTMLElement[];
+    private arrows: HTMLElement[];
     private height = 0;
     private width = 0;
     private tw = 0;
@@ -114,7 +114,7 @@ export class ImagegameComponent implements OnInit, OnDestroy {
         this.renderer.setStyle(thumb, 'margin-top', marginTop + 'px');
     }
 
-    private setThumbNumber(thumb: any, dataNum: number, dataOri: number = 0): void {
+    private setThumbNumber(thumb: HTMLElement, dataNum: number, dataOri: number = 0): void {
         this.renderer.setAttribute(thumb, 'data-num', dataNum + '');
         if (dataOri) {
             this.renderer.setAttribute(thumb, 'data-ori', dataOri + '');

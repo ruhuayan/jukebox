@@ -8,8 +8,8 @@ import { Component, OnInit } from '@angular/core';
         <div class="alink">|
             <a href="https://www.richyan.com"> Home </a>|
             <a href="https://javascript.richyan.com/"> Javascript </a>|
-            <a href="https://java.richyan.com"> Java </a>|
-            <a href="https://android.richyan.com"> Android </a>|</div>
+            <a href="https://dushu.richyan.com"> Dushu </a>|
+            <a href="https://blog.richyan.com"> Blog </a>|</div>
         <div class="copyright"> Copyright @ richyan.com</div>
     </div>
   </footer>`

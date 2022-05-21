@@ -2,7 +2,7 @@
 <div class="conSubTitle" id="conSubTitle">
     <div class="form-group">
         <select id="images" (change)="changeImage($event.target.value)">
-            <option *ngFor="let img of imgs; let x = index" [value]="x" [selected]="x==0">Picture-{{x+1}}</option>
+            <option *ngFor="let img of imgs; let x = index" [value]="x" [selected]="x===0">Picture-{{x+1}}</option>
         </select>
         <i class="bar"></i>
     </div>

@@ -31,13 +31,13 @@ export class DraggableDirective {
 
     @HostListener('mousedown', ['$event'])
     @HostListener('touchstart', ['$event'])
-    onStart(event: any) {
+    onStart(event: MouseEvent | TouchEvent) {
         event.preventDefault();
         if (!this.appCard.show || this.dragDisabled) {
             return;
         }
         this.dragging = true;
-        if (event.touches) {
+        if (event instanceof TouchEvent) {
             this.draggingStartPosition = {
                 x: event['touches'][0]['clientX'] - this.position.x,
                 y: event['touches'][0]['clientY'] - this.position.y
@@ -53,14 +53,14 @@ export class DraggableDirective {
 
     @HostListener('document:mousemove', ['$event'])
     @HostListener('document:touchmove', ['$event'])
-    onMove(event: any) {
+    onMove(event: MouseEvent | TouchEvent) {
 
         if (!this.dragging && !this.appCard['grouped']) {
             return;
         }
         event.preventDefault();
         if (this.dragging) {
-            if (event.touches) {
+            if (event instanceof TouchEvent) {
                 this.position = {
                     x: event['touches'][0]['clientX'] - this.draggingStartPosition.x,
                     y: event['touches'][0]['clientY'] - this.draggingStartPosition.y
@@ -80,7 +80,7 @@ export class DraggableDirective {
 
     @HostListener('document:mouseup', ['$event'])
     @HostListener('document:touchend', ['$event'])
-    onEnd(event: any) {
+    onEnd(event: MouseEvent | TouchEvent) {
 
         // document:touchend cause other buttons malfuntion
         // if $this not dragging, return to regular click event

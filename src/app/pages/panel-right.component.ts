@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
     selector: 'app-panel-right',
     template: `
         <div class="categories">
-            <a href="javascript:;">Angular Games</a>
+            <a href="javascript:;">Games</a>
         </div>
 
         <div class="category">

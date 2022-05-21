@@ -52,7 +52,7 @@ export class Deck {
      * load card images in deck
      * @param callback function after load image
      */
-    public loadCardImages(callback: any): void {
+    public loadCardImages(callback: Function): void {
         const promises = [];
         this.imgs.forEach(url => {
             const promise = new Promise((resolve, _) => {
