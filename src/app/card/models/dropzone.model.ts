@@ -14,7 +14,7 @@ export class Dropzone {
         const cardSuit = this.dropzone.getAttribute('data-suit');
 
         if (homogeneous) {
-            // only one card 
+            // only one card
             if (card['grouped']) {
                 return false;
             }

@@ -51,7 +51,7 @@ export class CardAnimateDirective implements OnInit {
                     of(true).pipe(
                         take(1),
                         delay(100),
-                        tap(_ => {
+                        tap(() => {
                             this.show = true;
                         })
                     )
