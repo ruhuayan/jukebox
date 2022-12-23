@@ -9,23 +9,27 @@ import { EffectsModule } from '@ngrx/effects';
 import { LocalStorageEffects } from './state/localStorage.effect';
 
 @NgModule({
-    imports: [
-        CommonModule, PanelRightModule,
-        RouterModule.forChild([
-            {
-                path: '',
-                component: BallComponent
-            }
-        ]),
-        StoreModule.forRoot({ iBallState: ballReducer }, 
-            {runtimeChecks: { 
-                strictStateImmutability: false, 
-                strictActionImmutability: false,
-            } 
-        }),
-        EffectsModule.forRoot([LocalStorageEffects]),
-    ],
-    providers: [],
-    declarations: [BallComponent]
+  imports: [
+    CommonModule,
+    PanelRightModule,
+    RouterModule.forChild([
+      {
+        path: '',
+        component: BallComponent,
+      },
+    ]),
+    StoreModule.forRoot(
+      { iBallState: ballReducer },
+      {
+        runtimeChecks: {
+          strictStateImmutability: false,
+          strictActionImmutability: false,
+        },
+      }
+    ),
+    EffectsModule.forRoot([LocalStorageEffects]),
+  ],
+  providers: [],
+  declarations: [BallComponent],
 })
-export class BallModule { }
+export class BallModule {}
