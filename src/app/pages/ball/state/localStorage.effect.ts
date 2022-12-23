@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions, ofType } from '@ngrx/effects';
+import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { map, tap, withLatestFrom } from 'rxjs/operators';
 import * as ballActions from './ball.actions';
@@ -9,8 +9,8 @@ import { IBallState } from './ball.reducer';
 @Injectable()
 export class LocalStorageEffects {
 
-    @Effect({ dispatch: false })
-    SaveState = this.actions.pipe(
+    
+    SaveState = createEffect(() => this.actions.pipe(
         ofType(
             ballActions.ActionTypes.Add,
             ballActions.ActionTypes.Move,
@@ -24,10 +24,10 @@ export class LocalStorageEffects {
         tap(([_, state]) => {
             window.localStorage.setItem('__IBallState', JSON.stringify(state));
         }),
-    );
+    ), { dispatch: false });
 
-    @Effect({ dispatch: true })
-    LoadState = this.actions.pipe(
+    
+    LoadState = createEffect(() => this.actions.pipe(
         ofType(
             ballActions.ActionTypes.Load
         ),
@@ -53,7 +53,7 @@ export class LocalStorageEffects {
                 return { type: ballActions.ActionTypes.Reset };
             }
         })
-    );
+    ), { dispatch: true });
 
     // change this to `dispatch: true` to sync state with state 😊
     // @Effect({ dispatch: true })
