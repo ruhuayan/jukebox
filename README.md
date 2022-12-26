@@ -1,4 +1,4 @@
-# Jukebox - Angular 12.2
+# Jukebox - Angular 14.2
 
 To see it working, visit https://www.richyan.com/
 
