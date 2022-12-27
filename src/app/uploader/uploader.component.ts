@@ -1,12 +1,15 @@
 import { Component, OnInit, OnDestroy, Input, HostListener, Output, EventEmitter } from '@angular/core';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpEventType } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-uploader',
+    standalone: true,
     templateUrl: './uploader.component.html',
-    styleUrls: ['./uploader.component.scss']
+    styleUrls: ['./uploader.component.scss'],
+    imports: [CommonModule, HttpClientModule]
 })
 export class UploaderComponent implements OnInit, OnDestroy {
     file: File = null;

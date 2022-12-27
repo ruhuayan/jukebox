@@ -4,6 +4,9 @@ import { tap, delay, take } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
+import { PanelRightComponent } from '../panel-right.component';
+import { UploaderComponent } from 'src/app/uploader/uploader.component';
+import { CommonModule } from '@angular/common';
 
 class Dimension {
     width: number;
@@ -16,8 +19,10 @@ class Dimension {
 
 @Component({
     selector: 'app-imagegame',
+    standalone: true,
     templateUrl: './imagegame.component.html',
-    styleUrls: ['./imagegame.component.scss']
+    styleUrls: ['./imagegame.component.scss'],
+    imports: [CommonModule, PanelRightComponent, UploaderComponent]
 })
 export class ImagegameComponent implements OnInit, OnDestroy {
 

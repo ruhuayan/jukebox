@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-panel-right',
+    standalone: true,
+    imports: [CommonModule, RouterModule],
     template: `
         <div class="categories">
             <a href="javascript:;">Games</a>

@@ -3,11 +3,16 @@ import { Card } from '../../card/models/card.model';
 import { Deck } from '../../card/models/deck.model';
 import { Position } from '../../card/models/position.model';
 import { Title } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { PanelRightComponent } from '../panel-right.component';
+import { CardModule } from 'src/app/card/card.module';
 
 const OPEN_CARD_ZONE = 11, LEFT_CARD_ZONE = 12;
 
 @Component({
     selector: 'app-points',
+    standalone: true,
+    imports: [CommonModule, CardModule, PanelRightComponent],
     templateUrl: './solitaire.component.html',
     styleUrls: ['./solitaire.component.scss']
 })

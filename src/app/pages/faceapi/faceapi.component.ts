@@ -2,11 +2,15 @@ import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/co
 import * as faceapi from 'face-api.js';
 import { forkJoin, interval, Subscription, from } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { PanelRightComponent } from '../panel-right.component';
 
 @Component({
     selector: 'app-faceapi',
+    standalone: true,
     templateUrl: './faceapi.component.html',
-    styleUrls: ['./faceapi.component.scss']
+    styleUrls: ['./faceapi.component.scss'],
+    imports: [CommonModule, PanelRightComponent]
 })
 export class FaceapiComponent implements OnInit, OnDestroy {
     @ViewChild('videoEl', { static: true }) videoEl: ElementRef<HTMLElement>;

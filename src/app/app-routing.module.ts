@@ -6,22 +6,22 @@ export const routes: Routes = [
     { path: '', redirectTo: 'igame', pathMatch: 'full' },
     {
         path: 'igame',
-        loadChildren: () => import('./pages/imagegame/imagegame.module').then(m => m.ImagegameModule)
+        loadComponent: () => import('./pages/imagegame/imagegame.component').then(m => m.ImagegameComponent)
     }, {
         path: 'points',
-        loadChildren: () => import('./pages/points/points.module').then(m => m.PointsModule)
+        loadComponent: () => import('./pages/points/points.component').then(m => m.PointsComponent)
     }, {
         path: 'blackjack',
-        loadChildren: () => import('./pages/blackjack/blackjack.module').then(m => m.BlackjackModule)
+        loadComponent: () => import('./pages/blackjack/blackjack.component').then(m => m.BlackjackComponent)
     }, {
         path: 'solitaire',
-        loadChildren: () => import('./pages/solitaire/solitaire.module').then(m => m.SolitaireModule)
+        loadComponent: () => import('./pages/solitaire/solitaire.component').then(m => m.SolitaireComponent)
     }, {
         path: 'balls',
         loadChildren: () => import('./pages/ball/ball.module').then(m => m.BallModule)
     }, {
         path: 'faceapi',
-        loadChildren: () => import('./pages/faceapi/faceapi.module').then(m => m.FaceapiModule)
+        loadComponent: () => import('./pages/faceapi/faceapi.component').then(m => m.FaceapiComponent)
     }, {
         path: '**',
         redirectTo: '404',

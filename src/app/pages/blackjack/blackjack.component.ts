@@ -5,10 +5,16 @@ import { Title } from '@angular/platform-browser';
 import { Status, Role, Player } from './player.model';
 import { interval } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { PanelRightComponent } from '../panel-right.component';
+import { CardModule } from 'src/app/card/card.module';
+
 @Component({
     selector: 'app-blackjack',
+    standalone: true,
     templateUrl: './blackjack.component.html',
-    styleUrls: ['./blackjack.component.scss']
+    styleUrls: ['./blackjack.component.scss'],
+    imports: [CommonModule, CardModule, PanelRightComponent],
 })
 export class BlackjackComponent implements OnInit {
 

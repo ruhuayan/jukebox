@@ -5,11 +5,17 @@ import { Title } from '@angular/platform-browser';
 import { Calculator } from './calculator.model';
 import { interval } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { PanelRightComponent } from '../panel-right.component';
+import { UploaderComponent } from 'src/app/uploader/uploader.component';
+import { CardModule } from 'src/app/card/card.module';
 
 @Component({
     selector: 'app-points',
+    standalone: true,
     templateUrl: './points.component.html',
-    styleUrls: ['./points.component.scss']
+    styleUrls: ['./points.component.scss'],
+    imports: [CommonModule, CardModule, PanelRightComponent, UploaderComponent]
 })
 export class PointsComponent implements OnInit {
 
