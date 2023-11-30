@@ -9,7 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { ChatbotModule } from './chatbot/chatbox.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { StoreModule } from '@ngrx/store';
 
 
 @NgModule({
@@ -22,7 +21,6 @@ import { StoreModule } from '@ngrx/store';
         BrowserAnimationsModule,
         // ChatbotModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-        StoreModule.forRoot({}, {})
     ],
     providers: [],
     bootstrap: [AppComponent]
